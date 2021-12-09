@@ -7,7 +7,7 @@ jobs:
       - name: Deploy Tickr Premarket Evaluation Python app to server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into....
+          host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into
           key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
           username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
           script:
