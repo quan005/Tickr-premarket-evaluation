@@ -5,5 +5,4 @@ beautifulsoup4==4.10.0
 td-ameritrade-python-api==0.3.5
 numpy==1.21.4
 confluent-kafka[avro]==1.7.0
-TA-Lib
-click==7.1.2
+click
