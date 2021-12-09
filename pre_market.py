@@ -17,11 +17,13 @@ from indicators import Indicators
 
 class Pre_Market:
     def __init__(self):
-        self.CLIENT_ID = os.environ.get('CLIENT_ID')
-        self.REDIRECT_URI = os.environ.get('REDIRECT_URI')
-        self.ACCOUNT_ID = os.environ.get('ACCOUNT_ID')
-        self.BOOTSTRAP_SERVER = os.environ.get('BOOTSTRAP_SERVER')
-        self.SCHEMA_REGISTRY_URL = os.environ.get('SCHEMA_REGISTRY_URL')
+        config = ConfigParser()
+        config.read('configs.ini')
+        self.CLIENT_ID = config.get('main', 'CLIENT_ID')
+        self.REDIRECT_URI = config.get('main', 'REDIRECT_URI')
+        self.ACCOUNT_ID = config.get('main', 'ACCOUNT_ID')
+        self.BOOTSTRAP_SERVER = config.get('main', 'BOOTSTRAP_SERVER')
+        self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
         self.small_watchlist = ['AMD', 'EA', 'NKE', 'AAL',
                                 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL']
         self.medium_watchlist = ['AMD', 'EA', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL',

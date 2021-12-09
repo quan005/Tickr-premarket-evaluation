@@ -11,11 +11,13 @@ from datetime import datetime, time, timezone, timedelta, date
 class HistoricalAnalysis:
     def __init__(self, ticker=None):
 
+        config = ConfigParser()
+        config.read('configs.ini')
         self.ticker = ticker.upper()
         self.date = date.today().weekday()
-        self.CLIENT_ID = os.environ.get('CLIENT_ID')
-        self.REDIRECT_URI = os.environ.get('REDIRECT_URI')
-        self.ACCOUNT_ID = os.environ.get('ACCOUNT_ID')
+        self.CLIENT_ID = config.get('main', 'CLIENT_ID')
+        self.REDIRECT_URI = config.get('main', 'REDIRECT_URI')
+        self.ACCOUNT_ID = config.get('main', 'ACCOUNT_ID')
         self.start_date = datetime.today() - timedelta(days=2920)
         self.end_date = datetime.today()
 
