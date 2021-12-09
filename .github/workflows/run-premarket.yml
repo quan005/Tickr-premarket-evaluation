@@ -21,11 +21,11 @@ jobs:
           fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
           envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL #add envs
           script: |
-            ACCOUNT_ID=$ACCOUNT_ID
-            CLIENT_ID=$CLIENT_ID
-            REDIRECT_URI=$REDIRECT_URI
-            BOOTSTRAP_SERVER=$BOOTSTRAP_SERVER
-            SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
+            echo "export ACCOUNT_ID=$ACCOUNT_ID" >> ~/.bashrc
+            echo "export CLIENT_ID=$CLIENT_ID" >> ~/.bashrc
+            echo "export REDIRECT_URI=$REDIRECT_URI" >> ~/.bashrc
+            echo "export BOOTSTRAP_SERVER=$BOOTSTRAP_SERVER" >> ~/.bashrc
+            echo "export SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL" >> ~/.bashrc
             cd "tickr-premarket/"
             cd "Tickr-premarket-evaluation/"
             python3 pre_market.py
