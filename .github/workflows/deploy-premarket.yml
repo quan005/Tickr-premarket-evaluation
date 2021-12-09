@@ -4,6 +4,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Deploy Tickr Premarket Evaluation Python app to server
         uses: appleboy/ssh-action@master
         with:
