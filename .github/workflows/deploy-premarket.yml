@@ -1,5 +1,7 @@
 name: Build & Deploy Tickr Premarket Evaluation
-on: [push]
+on: 
+  schedule:
+    - cron: '0 5 * * 1-5'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,6 +16,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
           fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
           script: |
+            rm -rf tickr-premarket
             mkdir -p tickr-premarket
             cd "tickr-premarket/"
             git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
