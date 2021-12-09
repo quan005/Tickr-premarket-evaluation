@@ -1,7 +1,5 @@
 name: Build & Deploy Tickr Premarket Evaluation
-on:
-  push:
-    branches: [master]
+on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
