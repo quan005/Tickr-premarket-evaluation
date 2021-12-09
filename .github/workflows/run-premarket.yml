@@ -1,35 +1,35 @@
-name: Run Tickr Premarket Evaluation on a Cron Schedule
-on: [push]
-  # schedule:
-    # - cron: '0 5 * * 1-5'
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: ssh into server
-        uses: appleboy/ssh-action@master
-        env:
-          ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
-          BOOTSTRAP_SERVER: ${{ secrets.BOOTSTRAP_SERVER }}
-          SCHEMA_REGISTRY_URL: ${{ secrets.SCHEMA_REGISTRY_URL }}
-        with:
-          host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into
-          key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
-          username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
-          passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
-          fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
-          envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL
-          script: |
-            ACCOUNT_ID=$ACCOUNT_ID
-            CLIENT_ID=$CLIENT_ID
-            REDIRECT_URI=$REDIRECT_URI
-            BOOTSTRAP_SERVER=$BOOTSTRAP_SERVER
-            SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
-            cd "tickr-premarket/"
-            cd "Tickr-premarket-evaluation/"
-            pip3 install -r requirements.txt
-            python3 pre_market.py
-            echo 'Tickr Premarket Evaluation Complete'
+# name: Run Tickr Premarket Evaluation on a Cron Schedule
+# on: [push]
+#   # schedule:
+#     # - cron: '0 5 * * 1-5'
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: ssh into server
+#         uses: appleboy/ssh-action@master
+#         env:
+#           ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+#           CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#           REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+#           BOOTSTRAP_SERVER: ${{ secrets.BOOTSTRAP_SERVER }}
+#           SCHEMA_REGISTRY_URL: ${{ secrets.SCHEMA_REGISTRY_URL }}
+#         with:
+#           host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into
+#           key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
+#           username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
+#           passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
+#           fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
+#           envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL
+#           script: |
+#             ACCOUNT_ID=$ACCOUNT_ID
+#             CLIENT_ID=$CLIENT_ID
+#             REDIRECT_URI=$REDIRECT_URI
+#             BOOTSTRAP_SERVER=$BOOTSTRAP_SERVER
+#             SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
+#             cd "tickr-premarket/"
+#             cd "Tickr-premarket-evaluation/"
+#             pip3 install -r requirements.txt
+#             python3 pre_market.py
+#             echo 'Tickr Premarket Evaluation Complete'
