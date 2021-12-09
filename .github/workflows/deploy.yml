@@ -1,0 +1,20 @@
+name: Build & Deploy Tickr Premarket Evaluation
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Tickr Premarket Evaluation Python app to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script:
+            mkdir tickr-premarket && cd tickr-premarket
+            git clone git@github.com:quan005/Tickr-premarket-evaluation.git
+            echo 'Deployment Successful'
+            

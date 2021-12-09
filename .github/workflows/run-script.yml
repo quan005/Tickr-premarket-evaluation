@@ -1,0 +1,25 @@
+name: Run Tickr Premarket Evaluation on a Cron Schedule
+on:
+  schedule:
+    - cron: '0 5 * * 1-5'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh into server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script:
+            ACCOUNT_ID=${{ secrets.ACCOUNT_ID }}
+            CLIENT_ID=${{ secrets.CLIENT_ID }}
+            REDIRECT_URI=${{ secrets.REDIRECT_URI }}
+            BOOTSTRAP_SERVER=${{ secrets.BOOTSTRAP_SERVER }}
+            SCHEMA_REGISTRY_URL=${{ secrets.SCHEMA_REGISTRY_URL }}
+            cd tickr-premarket
+            pip3 install -r requirements.txt
+            python3 pre_market.py
+            echo 'Tickr Premarket Evaluation Complete'
