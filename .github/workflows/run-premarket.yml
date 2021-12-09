@@ -34,6 +34,6 @@ jobs:
             output="${output//$'\r'/'%0D'}" 
             echo "::set-output name=changelog::$output"
             echo 'Tickr Premarket Evaluation Complete'
-          id: step1
+        id: step1
       - name: print changelog
         run: echo "${{ steps.step1.outputs.changelog }}"
