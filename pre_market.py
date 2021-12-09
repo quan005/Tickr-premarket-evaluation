@@ -41,6 +41,9 @@ class Pre_Market:
         config = ConfigParser()
         config.read('configs.ini')
         credential_path = config.get('main', 'CREDENTIALS_PATH')
+        print(self.CLIENT_ID)
+        print(self.REDIRECT_URI)
+        print(self.ACCOUNT_ID)
 
         # initialize bot
         bot = PyTrader(
