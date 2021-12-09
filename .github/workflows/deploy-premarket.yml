@@ -15,7 +15,7 @@ jobs:
           fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
           script:
             mkdir -p tickr-premarket
-            cd tickr-premarket/
-            git clone https://github.com/quan005/Tickr-premarket-evaluation.git
+            cd "tickr-premarket/"
+            git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
             echo 'Deployment Successful'
             
