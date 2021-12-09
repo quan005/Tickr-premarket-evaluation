@@ -1,7 +1,6 @@
 name: Build & Deploy Tickr Premarket Evaluation
 on:
-  push:
-    branches: [master]
+  push: [push]
 
 jobs:
   deploy:
