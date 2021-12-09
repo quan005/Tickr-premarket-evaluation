@@ -1,5 +1,7 @@
 name: Build & Deploy Tickr Premarket Evaluation
-on: [push]
+on: 
+  schedule:
+    - cron: '0 5 * * 1-5'
 jobs:
   deploy:
     runs-on: ubuntu-latest
