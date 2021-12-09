@@ -9,9 +9,9 @@ jobs:
       - name: ssh into server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_KEY }}
-          username: ${{ secrets.SSH_USERNAME }}
+          host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into
+          key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
+          username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
           script:
             ACCOUNT_ID=${{ secrets.ACCOUNT_ID }}
             CLIENT_ID=${{ secrets.CLIENT_ID }}
