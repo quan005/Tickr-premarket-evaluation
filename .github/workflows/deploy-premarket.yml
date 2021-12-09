@@ -26,11 +26,11 @@ jobs:
             cd "tickr-premarket/"
             git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
             cd "Tickr-premarket-evaluation/"
-            echo "export ACCOUNT_ID=$ACCOUNT_ID" >> configs.ini
-            echo "export CLIENT_ID=$CLIENT_ID" >> configs.ini
-            echo "export REDIRECT_URI=$REDIRECT_URI" >> configs.ini
-            echo "export BOOTSTRAP_SERVER=$BOOTSTRAP_SERVER" >> configs.ini
-            echo "export SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL" >> configs.ini
+            echo "ACCOUNT_ID = $ACCOUNT_ID" >> configs.ini
+            echo "CLIENT_ID = $CLIENT_ID" >> configs.ini
+            echo "REDIRECT_URI = $REDIRECT_URI" >> configs.ini
+            echo "BOOTSTRAP_SERVER = $BOOTSTRAP_SERVER" >> configs.ini
+            echo "SCHEMA_REGISTRY_URL = $SCHEMA_REGISTRY_URL" >> configs.ini
             pip3 install --upgrade --force-reinstall TA-Lib
             pip3 install -r requirements.txt
             echo 'Deployment Successful'
