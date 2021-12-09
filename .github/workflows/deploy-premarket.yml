@@ -13,7 +13,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
           passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
           fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
-          script:
+          script: |
             mkdir -p tickr-premarket
             cd "tickr-premarket/"
             git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
