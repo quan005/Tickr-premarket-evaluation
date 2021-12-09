@@ -19,7 +19,7 @@ jobs:
             cd "tickr-premarket/"
             git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
             cd "Tickr-premarket-evaluation/"
-            pip3 install --upgrade --force-install TA-Lib
+            pip3 install --upgrade --force-reinstall TA-Lib
             pip3 install -r requirements.txt
             echo 'Deployment Successful'
             
