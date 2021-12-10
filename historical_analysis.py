@@ -23,9 +23,6 @@ class HistoricalAnalysis:
 
     def get_daily_historical_data(self):
 
-        # write config file with credential path
-        Write_Config()
-
         # get credential path
         config = ConfigParser()
         config.read('configs.ini')

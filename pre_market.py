@@ -36,8 +36,6 @@ class Pre_Market:
         self.opportunities = []
 
     def start_pre_market_analysis(self):
-        # write config file with credential path
-        Write_Config()
 
         # get credential path
         config = ConfigParser()
