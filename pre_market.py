@@ -1,4 +1,5 @@
 import os
+import json
 from uuid import uuid4
 from typing import OrderedDict
 from datetime import datetime, time, timezone, timedelta, date
@@ -8,7 +9,7 @@ from confluent_kafka.serialization import StringSerializer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer
 
-from write_config import Write_Config
+from get_token import TokenInitiator
 from historical_analysis import HistoricalAnalysis
 from news_scraper import NewsScraper
 from py_trader import PyTrader
@@ -24,6 +25,7 @@ class Pre_Market:
         self.ACCOUNT_ID = config.get('main', 'ACCOUNT_ID')
         self.BOOTSTRAP_SERVER = config.get('main', 'BOOTSTRAP_SERVER')
         self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
+        self.ACCESS_TOKEN = None
         self.small_watchlist = ['AMD', 'EA', 'NKE', 'AAL',
                                 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL']
         self.medium_watchlist = ['AMD', 'EA', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL',
@@ -36,6 +38,15 @@ class Pre_Market:
         self.opportunities = []
 
     def start_pre_market_analysis(self):
+
+        # initiate and get token
+        getToken = TokenInitiator()
+        getToken.get_access_token()
+
+        # set access token to self.ACCESS_TOKEN
+        with open("token.json") as token_json:
+            data = json.load(token_json)
+            self.ACCESS_TOKEN = data['access_token']
 
         # get credential path
         config = ConfigParser()
@@ -97,6 +108,7 @@ class Pre_Market:
             new_opportunity = {}
 
             # add ticker and score to new_opportunity object
+            new_opportunity['Access Token'] = self.ACCESS_TOKEN
             new_opportunity['Symbol'] = i
             new_opportunity['Score'] = 0
 
@@ -280,7 +292,7 @@ class Pre_Market:
             Returns:
                 dict: Dict populated with premarket_data attributes to be serialized.
         """
-        return dict(symbol=premarket_data['Symbol'], score=premarket_data['Score'], sentiment=premarket_data['Sentiment'], keyLevels=premarket_data['Key Levels'], supportResistance=premarket_data['Support Resistance'], demandZones=premarket_data['Demand Zones'], supplyZones=premarket_data['Supply Zones'])
+        return dict(access_token=premarket_data['Access Token'], symbol=premarket_data['Symbol'], score=premarket_data['Score'], sentiment=premarket_data['Sentiment'], keyLevels=premarket_data['Key Levels'], supportResistance=premarket_data['Support Resistance'], demandZones=premarket_data['Demand Zones'], supplyZones=premarket_data['Supply Zones'])
 
     def delivery_report(self, err, msg):
         """
@@ -303,6 +315,7 @@ class Pre_Market:
             "name": "premarket",
             "type": "record",
             "fields": [
+                {"name": "access_token", "type": "string"},
                 {"name": "symbol", "type": "string"},
                 {"name": "score", "type": "int"},
                 {"name": "sentiment", "type": "string"},
