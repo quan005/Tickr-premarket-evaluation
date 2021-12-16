@@ -103,8 +103,3 @@ class TokenInitiator:
 
         with open("token.json", "w+") as f:
             json.dump(token, f)
-
-
-if __name__ == '__main__':
-    getToken = TokenInitiator()
-    getToken.get_access_token()
