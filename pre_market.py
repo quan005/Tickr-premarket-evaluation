@@ -41,7 +41,7 @@ class Pre_Market:
 
         # initiate and get token
         getToken = TokenInitiator()
-        getToken.get_access_token()
+        userPrinciples = getToken.get_access_token()
 
         # set access token to self.ACCESS_TOKEN
         with open("token.json") as token_json:
@@ -109,6 +109,7 @@ class Pre_Market:
 
             # add ticker and score to new_opportunity object
             new_opportunity['Access Token'] = self.ACCESS_TOKEN
+            new_opportunity['User Principles'] = userPrinciples
             new_opportunity['Symbol'] = i
             new_opportunity['Score'] = 0
 
@@ -292,7 +293,17 @@ class Pre_Market:
             Returns:
                 dict: Dict populated with premarket_data attributes to be serialized.
         """
-        return dict(access_token=premarket_data['Access Token'], symbol=premarket_data['Symbol'], score=premarket_data['Score'], sentiment=premarket_data['Sentiment'], keyLevels=premarket_data['Key Levels'], supportResistance=premarket_data['Support Resistance'], demandZones=premarket_data['Demand Zones'], supplyZones=premarket_data['Supply Zones'])
+        return dict(
+            access_token=premarket_data['Access Token'],
+            symbol=premarket_data['Symbol'],
+            score=premarket_data['Score'],
+            sentiment=premarket_data['Sentiment'],
+            keyLevels=premarket_data['Key Levels'],
+            supportResistance=premarket_data['Support Resistance'],
+            demandZones=premarket_data['Demand Zones'],
+            supplyZones=premarket_data['Supply Zones'],
+            userPrinciples=premarket_data['User Principles']
+        )
 
     def delivery_report(self, err, msg):
         """
@@ -360,6 +371,91 @@ class Pre_Market:
                         }
                     }, 
                     "default": []
+                },
+                {
+                    "name": "userPrinciples",
+                    "type": {
+                        "name": "userPrinciplesRecord",
+                        "type": "record",
+                        "fields": [
+                            {"name": "userId", "type": "string"},
+                            {"name": "userCdDomainId", "type": "string"},
+                            {"name": "primaryAccountId", "type": "string"},
+                            {"name": "lastLoginTime", "type": "string"},
+                            {"name": "tokenExpirationTime", "type": "string"},
+                            {"name": "loginTime", "type": "string"},
+                            {"name": "accessLevel", "type": "string"},
+                            {"name": "stalePassword", "type": "string"},
+                            {
+                                "name": "streamerInfo", 
+                                "type": {
+                                    "type": "map",
+                                    "values": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {"name": "professionalStatus", "type": "string"},
+                            {
+                                "name": "quotes", 
+                                "type": {
+                                    "type": "map",
+                                    "values": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "streamerSubscriptionKeys", 
+                                "type": {
+                                    "type": "map",
+                                    "values": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "map",
+                                            "values": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "name": "exchangeAgreements", 
+                                "type": {
+                                    "type": "map",
+                                    "values": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "accounts",
+                                "type": {
+                                    "type": "array",
+                                    "items": {
+                                        "name": "accountItems",
+                                        "type": "record",
+                                        "fields": [
+                                            {"name": "accountId", "type": "string"},
+                                            {"name": "displayName", "type": "string"},
+                                            {"name": "accountCdDomainId", "type": "string"},
+                                            {"name": "company", "type": "string"},
+                                            {"name": "segment", "type": "string"},
+                                            {"name": "acl", "type": "string"},
+                                            {
+                                                "name": "authorizations",
+                                                "type": {
+                                                    "type": "map",
+                                                    "values": ["boolean", "string"]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
         }

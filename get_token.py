@@ -1,10 +1,14 @@
+from os import access
 import time
 import urllib
 import requests
 import json
+import dateutil.parser
+import datetime
 from configparser import ConfigParser
-from splinter import Browser, browser
+from splinter import Browser
 from chromedriver_py import binary_path
+from datetime import datetime
 
 
 class TokenInitiator:
@@ -22,6 +26,10 @@ class TokenInitiator:
         self.ANSWER_3 = config.get('main', 'ANSWER_3')
         self.ANSWER_4 = config.get('main', 'ANSWER_4')
         self.selected_answer = None
+
+    def unix_time_millis(dt):
+        epoch = datetime.datetime.utcfromtimestamp(0)
+        return (dt - epoch).total_seconds() * 1000.0
 
     def get_access_token(self):
 
@@ -103,3 +111,17 @@ class TokenInitiator:
 
         with open("token.json", "w+") as f:
             json.dump(token, f)
+
+        access_token = token['access_token']
+
+        headers = {'Authorization': "Bearer {}".format(access_token)}
+
+        endpoint = "https://api.tdameritrade.com/v1/userprincipals"
+
+        params = {'fields': 'streamerSubscriptionKeys,streamerConnectionInfo'}
+
+        userprinciples_request = requests.get(
+            url=endpoint, params=params, headers=headers)
+        userprinciples_response = userprinciples_request.json()
+
+        return userprinciples_response
