@@ -33,7 +33,7 @@ class TokenInitiator:
 
     def get_access_token(self):
 
-        executable_path = {'executable_path': binary_path}
+        executable_path = {'executable_path': '~/bin/'}
 
         browser = Browser('chrome', **executable_path, headless=True)
 
