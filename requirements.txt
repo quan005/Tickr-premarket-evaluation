@@ -8,4 +8,4 @@ confluent-kafka[avro]==1.7.0
 click
 selenium==4.1.0
 urllib3==1.26.7
-chromedriver-py==95.0.4638.17
+chromedriver-py==97.0.4692.37
