@@ -41,7 +41,8 @@ class TokenInitiator:
         executable_path = {
             'executable_path': '/usr/bin/chromedriver'}
 
-        browser = webdriver.Chrome(executable_path=binary_path, options=opts)
+        browser = webdriver.Chrome(
+            executable_path=executable_path, options=opts)
 
         method = 'GET'
         url = 'https://auth.tdameritrade.com/auth?'
