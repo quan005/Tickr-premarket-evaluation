@@ -3,12 +3,9 @@ import time
 import urllib
 import requests
 import json
-import dateutil.parser
 import datetime
 from configparser import ConfigParser
-from splinter import Browser
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from chromedriver_py import binary_path
 from datetime import datetime
 
@@ -35,16 +32,15 @@ class TokenInitiator:
 
     def get_access_token(self):
 
-        opts = Options()
+        opts = webdriver.ChromeOptions()
         opts.add_argument("--disable-gpu")
         opts.add_argument("--disable-dev-shm-usage")
         opts.add_argument("--no-sandbox")
-        selenium_opts = {'options': opts}
+        opts.add_argument("--headless")
         executable_path = {
             'executable_path': '/usr/bin/chromedriver'}
 
-        browser = Browser('chrome', headless=True,
-                          options=selenium_opts, **executable_path)
+        browser = webdriver.Chrome(executable_path=binary_path, options=opts)
 
         method = 'GET'
         url = 'https://auth.tdameritrade.com/auth?'
@@ -55,22 +51,28 @@ class TokenInitiator:
         p = requests.Request(method=method, url=url, params=payload).prepare()
         url_update = p.url
 
-        browser.visit(url_update)
+        browser.get(url_update)
 
-        browser.find_by_id("username0").first.fill(self.USERNAME)
-        browser.find_by_id("password1").first.fill(self.PASSWORD)
+        username = browser.find_element_by_id("username0")
+        username.send_keys(self.USERNAME)
+        password = browser.find_element_by_id("password1")
+        password.send_keys(self.PASSWORD)
         time.sleep(.3)
 
-        browser.find_by_id("accept").first.click()
+        accept_login = browser.find_element_by_id("accept")
+        accept_login.click()
         time.sleep(.3)
 
-        browser.find_by_tag("summary").first.click()
+        summary = browser.find_element_by_tag_name("summary")
+        summary.click()
         time.sleep(.5)
 
-        browser.find_by_name("init_secretquestion").first.click()
+        secret_question = browser.find_element_by_name("init_secretquestion")
+        secret_question.click()
         time.sleep(.5)
 
-        security_question = browser.find_by_tag("p")[2].text
+        security_question_text = browser.find_elements_by_tag_name("p")[2]
+        security_question = security_question_text.text
 
         if security_question == "Question: What was your high school mascot?":
             self.selected_answer = self.ANSWER_1
@@ -81,22 +83,27 @@ class TokenInitiator:
         else:
             self.selected_answer = self.ANSWER_4
 
-        browser.find_by_id("secretquestion0").first.fill(self.selected_answer)
+        secret_question_answer = browser.find_element_by_id("secretquestion0")
+        secret_question_answer.send_keys(self.selected_answer)
         time.sleep(.5)
 
-        browser.find_by_id("accept").first.click()
+        accept_secret_question = browser.find_element_by_id("accept")
+        accept_secret_question.click()
         time.sleep(.5)
 
-        browser.find_by_css("div.option")[1].click()
+        div_option = browser.find_elements_by_css_selector("div.option")[1]
+        div_option.click()
         time.sleep(.5)
 
-        browser.find_by_id("accept").first.click()
+        accept_1 = browser.find_element_by_id("accept")
+        accept_1.click()
         time.sleep(.5)
 
-        browser.find_by_id("accept").first.click()
+        accept_2 = browser.find_element_by_id("accept")
+        accept_2.click()
         time.sleep(1)
 
-        new_url = browser.url
+        new_url = browser.current_url
         parse_url = urllib.parse.unquote(new_url.split('code=')[1])
 
         browser.quit()

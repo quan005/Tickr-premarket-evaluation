@@ -6,6 +6,6 @@ td-ameritrade-python-api==0.3.5
 numpy==1.21.4
 confluent-kafka[avro]==1.7.0
 click
-splinter==0.16.0
+selenium==4.1.0
 urllib3==1.26.7
 chromedriver-py==95.0.4638.17
