@@ -8,6 +8,7 @@ import datetime
 from configparser import ConfigParser
 from splinter import Browser
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from chromedriver_py import binary_path
 from datetime import datetime
 
@@ -34,15 +35,16 @@ class TokenInitiator:
 
     def get_access_token(self):
 
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
+        opts = Options()
+        opts.add_argument("--disable-gpu")
+        opts.add_argument("--disable-dev-shm-usage")
+        opts.add_argument("--no-sandbox")
+        selenium_opts = {'options': opts}
         executable_path = {
             'executable_path': '/usr/bin/chromedriver'}
 
-        browser = Browser('chrome', options=chrome_options,
-                          **executable_path, headless=True)
+        browser = Browser('chrome', headless=True,
+                          options=selenium_opts, **executable_path)
 
         method = 'GET'
         url = 'https://auth.tdameritrade.com/auth?'
