@@ -34,7 +34,7 @@ class TokenInitiator:
     def get_access_token(self):
 
         executable_path = {
-            'executable_path': '/root/bin/chromedriver'}
+            'executable_path': '/usr/bin/chromedriver'}
 
         browser = Browser('chrome', **executable_path, headless=True)
 
