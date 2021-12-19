@@ -38,8 +38,7 @@ class TokenInitiator:
         opts.add_argument("--disable-dev-shm-usage")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--headless")
-        executable_path = {
-            'executable_path': '/usr/bin/chromedriver'}
+        executable_path = '/usr/bin/chromedriver'
 
         browser = webdriver.Chrome(
             executable_path=executable_path, options=opts)
