@@ -125,6 +125,13 @@ class TokenInitiator:
             url=auth_url, headers=headers, data=payload)
 
         token = auth_response.json()
+        access_token_expire = time.time() + int(token['expires_in'])
+        refresh_token_expire = time.time(
+        ) + int(token['refresh_token_expires_in'])
+        token['access_token_expires_at_date'] = datetime.datetime.fromtimestamp(
+            access_token_expire).isoformat()
+        token['refresh_token_expires_at_date'] = datetime.datetime.fromtimestamp(
+            refresh_token_expire).isoformat()
 
         with open("token.json", "w+") as f:
             json.dump(token, f)
