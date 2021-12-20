@@ -317,13 +317,13 @@ class Pre_Market:
                 msg.key(), msg.topic(), msg.partition()))
 
     def send_find_position_event(self, premarket_data):
-        topic = 'find-position'
+        topic = 'discover-position'
 
         # establish premarket schema and value schema
         premarket_schema_str = """
         {
             "namspace": "tickr",
-            "name": "premarket",
+            "name": "premarket_opportunities",
             "type": "record",
             "fields": [
                 {"name": "access_token", "type": "string"},
