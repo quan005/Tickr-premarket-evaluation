@@ -323,7 +323,7 @@ class Pre_Market:
         premarket_schema_str = """
         {
             "namspace": "tickr",
-            "name": "premarket_opportunities",
+            "name": "premarket_opportunities_new",
             "type": "record",
             "fields": [
                 {"name": "access_token", "type": "string"},
