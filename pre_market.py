@@ -385,7 +385,7 @@ class Pre_Market:
                             {"name": "tokenExpirationTime", "type": "string"},
                             {"name": "loginTime", "type": "string"},
                             {"name": "accessLevel", "type": "string"},
-                            {"name": "stalePassword", "type": "string"},
+                            {"name": "stalePassword", "type": "boolean"},
                             {
                                 "name": "streamerInfo", 
                                 "type": {
