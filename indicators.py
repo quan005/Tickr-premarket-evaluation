@@ -386,6 +386,7 @@ class Indicators():
                 close_series = dataframe_slice['close']
                 open_series = dataframe_slice['open']
                 volume_series = dataframe_slice['volume']
+                print('close_series', close_series)
                 demand_check = self.isDemandCheck(
                     close_series, open_series, volume_series)
 
