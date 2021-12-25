@@ -25,7 +25,7 @@ class Pre_Market:
         self.ACCOUNT_ID = config.get('main', 'ACCOUNT_ID')
         self.BOOTSTRAP_SERVER = config.get('main', 'BOOTSTRAP_SERVER')
         self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
-        self.ACCESS_TOKEN = None
+        self.TOKEN = None
         self.small_watchlist = ['AMD', 'NKE', 'AAL',
                                 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL']
         self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL',
@@ -43,10 +43,10 @@ class Pre_Market:
         getToken = TokenInitiator()
         userPrinciples = getToken.get_access_token()
 
-        # set access token to self.ACCESS_TOKEN
+        # set token to self.TOKEN
         with open("token.json") as token_json:
             data = json.load(token_json)
-            self.ACCESS_TOKEN = data['access_token']
+            self.TOKEN = data
 
         # get credential path
         config = ConfigParser()
@@ -108,7 +108,7 @@ class Pre_Market:
             new_opportunity = {}
 
             # add ticker and score to new_opportunity object
-            new_opportunity['Access Token'] = self.ACCESS_TOKEN
+            new_opportunity['Token'] = self.TOKEN
             new_opportunity['User Principles'] = userPrinciples
             new_opportunity['Symbol'] = i
             new_opportunity['Score'] = 0
@@ -294,7 +294,7 @@ class Pre_Market:
                 dict: Dict populated with premarket_data attributes to be serialized.
         """
         return dict(
-            access_token=premarket_data['Access Token'],
+            token=premarket_data['Token'],
             symbol=premarket_data['Symbol'],
             score=premarket_data['Score'],
             sentiment=premarket_data['Sentiment'],
@@ -317,7 +317,7 @@ class Pre_Market:
                 msg.key(), msg.topic(), msg.partition()))
 
     def send_find_position_event(self, premarket_data):
-        topic = 'detect-position'
+        topic = 'find-position'
 
         # establish premarket schema and value schema
         premarket_schema_str = """
@@ -326,7 +326,23 @@ class Pre_Market:
             "name": "premarket_opportunities",
             "type": "record",
             "fields": [
-                {"name": "access_token", "type": "string"},
+                {
+                    "name": "token",
+                    "type": "record",
+                    "fields": [
+                        {"name": "access_token", "type": "string"},
+                        {"name": "refresh_token", "type": "string"},
+                        {"name": "scope", "type": "string"},
+                        {"name": "expires_in", "type": "number"},
+                        {"name": "refresh_token_expires_in", "type": "number"},
+                        {"name": "token_type", "type": "string"},
+                        {"name": "access_token_expires_at", "type": "number"},
+                        {"name": "refresh_token_expires_at", "type": "number"},
+                        {"name": "logged_in", "type": "boolean"},
+                        {"name": "access_token_expires_at_date", "type": "string"},
+                        {"name": "refresh_token_expires_at_date", "type": "string"},
+                    ]
+                },
                 {"name": "symbol", "type": "string"},
                 {"name": "score", "type": "int"},
                 {"name": "sentiment", "type": "string"},
