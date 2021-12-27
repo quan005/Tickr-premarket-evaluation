@@ -46,7 +46,19 @@ class Pre_Market:
         # set token to self.TOKEN
         with open("token.json") as token_json:
             data = json.load(token_json)
-            self.TOKEN = data
+            self.TOKEN = {
+                "access_token": data["access_token"],
+                "refresh_token": data["refresh_token"],
+                "scope": data["scope"],
+                "expires_in": data["expires_in"],
+                "refresh_token_expires_in": data["refresh_token_expires_in"],
+                "token_type": data["token_type"],
+                "access_token_expires_at": data["access_token_expires_at"],
+                "refresh_token_expires_at": data["refresh_token_expires_at"],
+                "logged_in": data["logged_in"],
+                "access_token_expires_at_date": data["access_token_expires_at_date"],
+                "refresh_token_expires_at_date": data["refresh_token_expires_at_date"],
+            }
 
         # get credential path
         config = ConfigParser()
