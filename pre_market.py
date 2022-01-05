@@ -81,9 +81,9 @@ class Pre_Market:
         available_cash = account_info['securitiesAccount']['currentBalances']['cashAvailableForTrading']
 
         # set budget
-        if available_cash >= 500 and available_cash < 1000:
+        if available_cash >= 500 and available_cash < 1500:
             budget = .9 * available_cash
-        elif available_cash >= 1000 and available_cash < 5715:
+        elif available_cash >= 1500 and available_cash < 5715:
             budget = .45 * available_cash
         elif available_cash >= 5715:
             budget = .35 * available_cash
@@ -92,8 +92,6 @@ class Pre_Market:
             return 'Not Enough Capital'
 
         # based on budget determine which watchlist to use and total opportunity's limit aka self.limit
-        watchlist = None
-
         if budget >= 500 and budget < 1000:
             self.limit = 2
             watchlist = self.small_watchlist
@@ -106,6 +104,8 @@ class Pre_Market:
         elif budget >= 15000:
             self.limit = 10
             watchlist = self.xtra_large_watchlist
+        else:
+            watchlist = None
 
         # create a portfolio
         bot_portfolio = bot.create_portfolio()
@@ -335,31 +335,76 @@ class Pre_Market:
         premarket_schema_str = """
         {
             "namspace": "tickr",
-            "name": "premarket_opportunities",
+            "name": "premarket",
             "type": "record",
             "fields": [
                 {
                     "name": "token",
-                    "type": "record",
-                    "fields": [
-                        {"name": "access_token", "type": "string"},
-                        {"name": "refresh_token", "type": "string"},
-                        {"name": "scope", "type": "string"},
-                        {"name": "expires_in", "type": "number"},
-                        {"name": "refresh_token_expires_in", "type": "number"},
-                        {"name": "token_type", "type": "string"},
-                        {"name": "access_token_expires_at", "type": "number"},
-                        {"name": "refresh_token_expires_at", "type": "number"},
-                        {"name": "logged_in", "type": "boolean"},
-                        {"name": "access_token_expires_at_date", "type": "string"},
-                        {"name": "refresh_token_expires_at_date", "type": "string"},
-                    ]
+                    "type": {
+                        "type": "record",
+                        "name": "tokenRecord",
+                        "fields": [
+                            {
+                                "name": "access_token",
+                                "type": "string"
+                            },
+                            {
+                                "name": "refresh_token",
+                                "type": "string"
+                            },
+                            {
+                                "name": "scope",
+                                "type": "string"
+                            },
+                            {
+                                "name": "expires_in",
+                                "type": "int"
+                            },
+                            {
+                                "name": "refresh_token_expires_in",
+                                "type": "int"
+                            },
+                            {
+                                "name": "token_type",
+                                "type": "string"
+                            },
+                            {
+                                "name": "access_token_expires_at",
+                                "type": "double"
+                            },
+                            {
+                                "name": "refresh_token_expires_at",
+                                "type": "double"
+                            },
+                            {
+                                "name": "logged_in",
+                                "type": "boolean"
+                            },
+                            {
+                                "name": "access_token_expires_at_date",
+                                "type": "string"
+                            },
+                            {
+                                "name": "refresh_token_expires_at_date",
+                                "type": "string"
+                            }
+                        ]
+                    }
                 },
-                {"name": "symbol", "type": "string"},
-                {"name": "score", "type": "int"},
-                {"name": "sentiment", "type": "string"},
                 {
-                    "name": "keyLevels", 
+                    "name": "symbol",
+                    "type": "string"
+                },
+                {
+                    "name": "score",
+                    "type": "int"
+                },
+                {
+                    "name": "sentiment",
+                    "type": "string"
+                },
+                {
+                    "name": "keyLevels",
                     "type": {
                         "type": "array",
                         "items": {
@@ -369,24 +414,27 @@ class Pre_Market:
                     "default": []
                 },
                 {
-                    "name": "supportResistance", 
+                    "name": "supportResistance",
                     "type": {
                         "type": "map",
                         "values": {
                             "type": "double"
                         }
-                    }, 
+                    },
                     "default": {}
                 },
                 {
-                    "name": "demandZones", 
+                    "name": "demandZones",
                     "type": {
                         "type": "array",
                         "items": {
                             "type": "array",
-                            "items": ["double", "string"]
+                            "items": [
+                                "double",
+                                "string"
+                            ]
                         }
-                    }, 
+                    },
                     "default": []
                 },
                 {
@@ -395,9 +443,12 @@ class Pre_Market:
                         "type": "array",
                         "items": {
                             "type": "array",
-                            "items": ["double", "string"]
+                            "items": [
+                                "double",
+                                "string"
+                            ]
                         }
-                    }, 
+                    },
                     "default": []
                 },
                 {
@@ -406,16 +457,40 @@ class Pre_Market:
                         "name": "userPrinciplesRecord",
                         "type": "record",
                         "fields": [
-                            {"name": "userId", "type": "string"},
-                            {"name": "userCdDomainId", "type": "string"},
-                            {"name": "primaryAccountId", "type": "string"},
-                            {"name": "lastLoginTime", "type": "string"},
-                            {"name": "tokenExpirationTime", "type": "string"},
-                            {"name": "loginTime", "type": "string"},
-                            {"name": "accessLevel", "type": "string"},
-                            {"name": "stalePassword", "type": "boolean"},
                             {
-                                "name": "streamerInfo", 
+                                "name": "userId",
+                                "type": "string"
+                            },
+                            {
+                                "name": "userCdDomainId",
+                                "type": "string"
+                            },
+                            {
+                                "name": "primaryAccountId",
+                                "type": "string"
+                            },
+                            {
+                                "name": "lastLoginTime",
+                                "type": "string"
+                            },
+                            {
+                                "name": "tokenExpirationTime",
+                                "type": "string"
+                            },
+                            {
+                                "name": "loginTime",
+                                "type": "string"
+                            },
+                            {
+                                "name": "accessLevel",
+                                "type": "string"
+                            },
+                            {
+                                "name": "stalePassword",
+                                "type": "boolean"
+                            },
+                            {
+                                "name": "streamerInfo",
                                 "type": {
                                     "type": "map",
                                     "values": {
@@ -423,9 +498,12 @@ class Pre_Market:
                                     }
                                 }
                             },
-                            {"name": "professionalStatus", "type": "string"},
                             {
-                                "name": "quotes", 
+                                "name": "professionalStatus",
+                                "type": "string"
+                            },
+                            {
+                                "name": "quotes",
                                 "type": {
                                     "type": "map",
                                     "values": {
@@ -434,7 +512,7 @@ class Pre_Market:
                                 }
                             },
                             {
-                                "name": "streamerSubscriptionKeys", 
+                                "name": "streamerSubscriptionKeys",
                                 "type": {
                                     "type": "map",
                                     "values": {
@@ -449,7 +527,7 @@ class Pre_Market:
                                 }
                             },
                             {
-                                "name": "exchangeAgreements", 
+                                "name": "exchangeAgreements",
                                 "type": {
                                     "type": "map",
                                     "values": {
@@ -465,17 +543,38 @@ class Pre_Market:
                                         "name": "accountItems",
                                         "type": "record",
                                         "fields": [
-                                            {"name": "accountId", "type": "string"},
-                                            {"name": "displayName", "type": "string"},
-                                            {"name": "accountCdDomainId", "type": "string"},
-                                            {"name": "company", "type": "string"},
-                                            {"name": "segment", "type": "string"},
-                                            {"name": "acl", "type": "string"},
+                                            {
+                                                "name": "accountId",
+                                                "type": "string"
+                                            },
+                                            {
+                                                "name": "displayName",
+                                                "type": "string"
+                                            },
+                                            {
+                                                "name": "accountCdDomainId",
+                                                "type": "string"
+                                            },
+                                            {
+                                                "name": "company",
+                                                "type": "string"
+                                            },
+                                            {
+                                                "name": "segment",
+                                                "type": "string"
+                                            },
+                                            {
+                                                "name": "acl",
+                                                "type": "string"
+                                            },
                                             {
                                                 "name": "authorizations",
                                                 "type": {
                                                     "type": "map",
-                                                    "values": ["boolean", "string"]
+                                                    "values": [
+                                                        "boolean",
+                                                        "string"
+                                                    ]
                                                 }
                                             }
                                         ]
@@ -489,7 +588,7 @@ class Pre_Market:
         }
         """
 
-        schema_registry_config = {'url': self.SCHEMA_REGISTRY_URL}
+        schema_registry_config = {'url': 'http://137.184.135.78:8081'}
         schema_registry_client = SchemaRegistryClient(schema_registry_config)
         avro_serializer = AvroSerializer(schema_registry_client=schema_registry_client,
                                          schema_str=premarket_schema_str, to_dict=self.premarket_data_to_dict)
