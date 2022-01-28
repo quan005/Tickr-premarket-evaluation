@@ -124,6 +124,10 @@ class Pre_Market:
             new_opportunity['User Principles'] = userPrinciples
             new_opportunity['Symbol'] = i
             new_opportunity['Score'] = 0
+            new_opportunity['Limit'] = self.limit
+            new_opportunity['Budget'] = budget // self.limit
+            new_opportunity['Client Id'] = self.CLIENT_ID
+            new_opportunity['Account Id'] = self.ACCOUNT_ID
 
             # inititialize NewsScraper ie. ns = NewsScraper('aapl')
             ns = NewsScraper(i)
@@ -306,6 +310,10 @@ class Pre_Market:
                 dict: Dict populated with premarket_data attributes to be serialized.
         """
         return dict(
+            limit=premarket_data['Limit'],
+            budget=premarket_data['Budget'],
+            client_id=premarket_data['Client Id'],
+            account_id=premarket_data['Account Id'],
             token=premarket_data['Token'],
             symbol=premarket_data['Symbol'],
             score=premarket_data['Score'],
@@ -338,6 +346,22 @@ class Pre_Market:
             "name": "premarket",
             "type": "record",
             "fields": [
+                {
+                    "name": "limit",
+                    "type": "int"
+                },
+                {
+                    "name": "budget",
+                    "type": "int"
+                },
+                {
+                    "name": "client_id",
+                    "type": "string"
+                },
+                {
+                    "name": "account_id",
+                    "type": "string"
+                },
                 {
                     "name": "token",
                     "type": {
