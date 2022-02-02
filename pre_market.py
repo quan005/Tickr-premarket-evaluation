@@ -156,7 +156,7 @@ class Pre_Market:
             start_date = datetime.today()
 
             # weekly end date
-            weekly_end_date = start_date - timedelta(weeks=50)
+            weekly_end_date = start_date - timedelta(weeks=105)
 
             # grab historical prices using the weekly interval
             weekly_historical_prices = bot.grab_single_historical_prices(
@@ -165,7 +165,7 @@ class Pre_Market:
                 end=start_date,
                 period_type='month',
                 bar_size=1,
-                bar_type='weekly'
+                bar_type='daily'
             )
 
             # convert historical prices to a pandas dataframe using the stock frame
