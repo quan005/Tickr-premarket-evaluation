@@ -360,6 +360,8 @@ class Indicators():
 
                 key_levels.append(price_mean)
 
+        key_levels.remove(0.0)
+
         key_levels.sort(reverse=True)
 
         return key_levels
