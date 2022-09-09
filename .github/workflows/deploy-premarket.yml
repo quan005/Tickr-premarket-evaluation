@@ -19,14 +19,22 @@ jobs:
           TD_ANSWER_4: ${{secrets.TD_ANSWER_4}}
           BOOTSTRAP_SERVER: ${{ secrets.BOOTSTRAP_SERVER }}
           SCHEMA_REGISTRY_URL: ${{ secrets.SCHEMA_REGISTRY_URL }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+          SSH_FINGERPRINT: ${{ secrets.SSH_FINGERPRINT }}
         with:
           host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into....
           key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
           username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
           passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
           fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
-          envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL,TD_USERNAME,TD_PASSWORD,TD_ANSWER_1,TD_ANSWER_2,TD_ANSWER_3,TD_ANSWER_4 #add envs
+          envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL,TD_USERNAME,TD_PASSWORD,TD_ANSWER_1,TD_ANSWER_2,TD_ANSWER_3,TD_ANSWER_4,SSH_HOST,SSH_KEY,SSH_PASSPHRASE,SSH_FINGERPRINT #add envs
           script: |
+            echo "host = $SSH_HOST"
+            echo "key = $SSH_KEY"
+            echo "passphrase = $SSH_PASSPHRASE"
+            echo "fingerprint = $SSH_FINGERPRINT"
             rm -rf tickr-premarket
             mkdir -p tickr-premarket
             cd "tickr-premarket/"
