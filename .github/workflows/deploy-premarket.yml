@@ -4,9 +4,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: Deploy Tickr Premarket Evaluation Python app to server
-        # uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master
         env:
           ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -19,42 +19,32 @@ jobs:
           TD_ANSWER_4: ${{secrets.TD_ANSWER_4}}
           BOOTSTRAP_SERVER: ${{ secrets.BOOTSTRAP_SERVER }}
           SCHEMA_REGISTRY_URL: ${{ secrets.SCHEMA_REGISTRY_URL }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
-          SSH_FINGERPRINT: ${{ secrets.SSH_FINGERPRINT }}
-        run: |
-            echo host: "${SSH_HOST}"
-            echo "key: "${SSH_KEY }"
-            echo passphrase: "${SSH_PASSPHRASE}"
-            echo fingerprint: "${SSH_FINGERPRINT}"
-            echo fingerprint: "${SSH_FINGERPRINT}"
-        # with:
-        #   host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into....
-        #   key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
-        #   username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
-        #   passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
-        #   fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
-        #   envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL,TD_USERNAME,TD_PASSWORD,TD_ANSWER_1,TD_ANSWER_2,TD_ANSWER_3,TD_ANSWER_4,SSH_HOST,SSH_KEY,SSH_PASSPHRASE,SSH_FINGERPRINT #add envs
-        #   script: |
-        #     rm -rf tickr-premarket
-        #     mkdir -p tickr-premarket
-        #     cd "tickr-premarket/"
-        #     git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
-        #     cd "Tickr-premarket-evaluation/"
-        #     echo "ACCOUNT_ID = $ACCOUNT_ID" >> configs.ini
-        #     echo "CLIENT_ID = $CLIENT_ID" >> configs.ini
-        #     echo "REDIRECT_URI = $REDIRECT_URI" >> configs.ini
-        #     echo "USERNAME = $TD_USERNAME" >> configs.ini
-        #     echo "PASSWORD = $TD_PASSWORD" >> configs.ini
-        #     echo "ANSWER_1 = $TD_ANSWER_1" >> configs.ini
-        #     echo "ANSWER_2 = $TD_ANSWER_2" >> configs.ini
-        #     echo "ANSWER_3 = $TD_ANSWER_3" >> configs.ini
-        #     echo "ANSWER_4 = $TD_ANSWER_4" >> configs.ini
-        #     echo "BOOTSTRAP_SERVER = $BOOTSTRAP_SERVER" >> configs.ini
-        #     echo "SCHEMA_REGISTRY_URL = $SCHEMA_REGISTRY_URL" >> configs.ini
-        #     pip3 install --upgrade --force-reinstall TA-Lib
-        #     pip3 install -r requirements.txt
-        #     python3 -m nltk.downloader -d /usr/share/nltk_data all
-        #     echo 'Deployment Successful'
+        with:
+          host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into....
+          key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
+          username: ${{ secrets.SSH_USERNAME }} # User of the server you wish to ssh into
+          passphrase: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for ssh key
+          fingerprint: ${{ secrets.SSH_FINGERPRINT }} # Fingerprint for ssh key
+          envs: ACCOUNT_ID,CLIENT_ID,REDIRECT_URI,BOOTSTRAP_SERVER,SCHEMA_REGISTRY_URL,TD_USERNAME,TD_PASSWORD,TD_ANSWER_1,TD_ANSWER_2,TD_ANSWER_3,TD_ANSWER_4 #add envs
+          script: |
+            rm -rf tickr-premarket
+            mkdir -p tickr-premarket
+            cd "tickr-premarket/"
+            git clone "https://github.com/quan005/Tickr-premarket-evaluation.git"
+            cd "Tickr-premarket-evaluation/"
+            echo "ACCOUNT_ID = $ACCOUNT_ID" >> configs.ini
+            echo "CLIENT_ID = $CLIENT_ID" >> configs.ini
+            echo "REDIRECT_URI = $REDIRECT_URI" >> configs.ini
+            echo "USERNAME = $TD_USERNAME" >> configs.ini
+            echo "PASSWORD = $TD_PASSWORD" >> configs.ini
+            echo "ANSWER_1 = $TD_ANSWER_1" >> configs.ini
+            echo "ANSWER_2 = $TD_ANSWER_2" >> configs.ini
+            echo "ANSWER_3 = $TD_ANSWER_3" >> configs.ini
+            echo "ANSWER_4 = $TD_ANSWER_4" >> configs.ini
+            echo "BOOTSTRAP_SERVER = $BOOTSTRAP_SERVER" >> configs.ini
+            echo "SCHEMA_REGISTRY_URL = $SCHEMA_REGISTRY_URL" >> configs.ini
+            pip3 install --upgrade --force-reinstall TA-Lib
+            pip3 install -r requirements.txt
+            python3 -m nltk.downloader -d /usr/share/nltk_data all
+            echo 'Deployment Successful'
             
