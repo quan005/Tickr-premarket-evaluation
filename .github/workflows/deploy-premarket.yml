@@ -4,9 +4,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      # - uses: actions/checkout@v2
       - name: Deploy Tickr Premarket Evaluation Python app to server
-        uses: appleboy/ssh-action@master
+        # uses: appleboy/ssh-action@master
         env:
           ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -23,11 +23,11 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
           SSH_FINGERPRINT: ${{ secrets.SSH_FINGERPRINT }}
-        run: 
-            echo "host = ${{ env.SSH_HOST }}"
-            echo "key = ${{ env.SSH_KEY }}"
-            echo "passphrase = ${{ env.SSH_PASSPHRASE }}"
-            echo "fingerprint = ${{ env.SSH_FINGERPRINT }}"
+        run: |
+            echo host: "${SSH_HOST}"
+            echo "key: "${SSH_KEY }"
+            echo passphrase: "${SSH_PASSPHRASE}"
+            echo fingerprint: "${SSH_FINGERPRINT}"
         with:
           host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into....
           key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
