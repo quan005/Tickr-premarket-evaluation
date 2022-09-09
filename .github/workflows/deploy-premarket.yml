@@ -28,6 +28,7 @@ jobs:
             echo "key: "${SSH_KEY }"
             echo passphrase: "${SSH_PASSPHRASE}"
             echo fingerprint: "${SSH_FINGERPRINT}"
+            echo fingerprint: "${SSH_FINGERPRINT}"
         # with:
         #   host: ${{ secrets.SSH_HOST }} # IP address of the server you wish to ssh into....
         #   key: ${{ secrets.SSH_KEY }} # Private or Public key of the server
