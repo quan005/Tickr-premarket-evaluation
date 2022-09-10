@@ -129,7 +129,7 @@ class Pre_Market:
             new_opportunity['Client Id'] = self.CLIENT_ID
             new_opportunity['Account Id'] = self.ACCOUNT_ID
 
-            # inititialize NewsScraper ie. ns = NewsScraper('aapl')
+            # inititialize NewsScraper ie. ns = NewsScraper('aapl') ///
             ns = NewsScraper(i)
 
             # start news_analyzer ie. ns.startNewsAnalyzer() and apply result to score
