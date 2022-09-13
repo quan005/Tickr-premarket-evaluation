@@ -1,7 +1,6 @@
 name: Run Tickr Premarket Evaluation on a Cron Schedule
 on:
-  schedule:
-    - cron: '0 11 * * 1-5'
+  [push]
 jobs:
   build:
     runs-on: ubuntu-latest
