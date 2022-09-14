@@ -442,7 +442,7 @@ class NewsScraper:
     def startNewsAnalyzer(self):
 
         self.getCompanyName()
-        self.getFinwizNews()
+        # self.getFinwizNews()
         self.getMarketwatchNews()
         self.getSeekingalphaNews()
         self.getBarronNews()
