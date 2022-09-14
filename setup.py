@@ -31,13 +31,17 @@ setup(
     long_description_content_type="text/markdown",
 
     install_requires=[
-        'pandas==1.3.4',
-        'yfinance==0.1.67',
-        'nltk==3.6.5',
-        'beautifulsoup4==4.10.0',
-        'td-ameritrade-python-api==0.3.5',
-        'numpy==1.21.4',
-        'confluent-kafka==1.7.0'
+        'pandas==1.3.4'
+        'yfinance==0.1.67'
+        'nltk==3.6.5'
+        'beautifulsoup4==4.10.0'
+        'td-ameritrade-python-api==0.3.5'
+        'numpy==1.21.4'
+        'confluent-kafka[avro]==1.7.0'
+        'click'
+        'selenium==4.1.0'
+        'urllib3==1.26.7'
+        'chromedriver-py==97.0.4692.37'
     ],
 
     keywords='finance, td ameritrade, api, trading robot',
