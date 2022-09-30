@@ -45,6 +45,7 @@ class Pre_Market:
         # set token to self.TOKEN
         with open("token.json") as token_json:
             data = json.load(token_json)
+            print(data)
             self.TOKEN = {
                 "access_token": data["access_token"],
                 "refresh_token": data["refresh_token"],
