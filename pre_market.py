@@ -1,8 +1,7 @@
-import os
 import json
 from uuid import uuid4
 from typing import OrderedDict
-from datetime import datetime, time, timezone, timedelta, date
+from datetime import datetime, timedelta
 from configparser import ConfigParser
 from confluent_kafka import SerializingProducer
 from confluent_kafka.serialization import StringSerializer
