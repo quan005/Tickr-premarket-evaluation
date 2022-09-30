@@ -348,13 +348,14 @@ class Indicators():
                     else:
                         continue
 
-        price_dic = {price_key: {count: count_value for count, count_value in price_val.items() if isinstance(count_value, int) and count_value > 5}
-                     for price_key, price_val in price_dic.items() if float(price_key) >= current_price_diff_below and float(price_key) <= current_price_diff_above}
+        # price_dic = {price_key: {count: count_value for count, count_value in price_val.items() if isinstance(count_value, int) and count_value > 5}
+        #              for price_key, price_val in price_dic.items() if float(price_key) >= current_price_diff_below and float(price_key) <= current_price_diff_above}
         print('price_dic', price_dic)
 
         key_levels = [high, low]
 
         for price in price_dic.items():
+            print('price', price)
             if float(price[0]) >= current_price_diff_below and float(price[0]) <= current_price_diff_above and price[1]['count'] > 5:
 
                 price_mean = round(mean(price[1]['mean']), 2)

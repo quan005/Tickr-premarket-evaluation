@@ -177,7 +177,7 @@ class Pre_Market:
                 price_data_frame=weekly_stock_frame)
 
             # add weekly key levels
-            print('new_opportunity', new_opportunity)
+            print('new_opportunity', new_opportunity['Symbol'])
             new_opportunity['Key Levels'] = weekly_stock_indicator_client.s_r_levels(
                 weekly_stock_frame.frame)
 
