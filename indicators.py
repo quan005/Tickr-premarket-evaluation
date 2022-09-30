@@ -355,7 +355,6 @@ class Indicators():
         key_levels = [high, low]
 
         for price in price_dic.items():
-            print('price', price)
             if float(price[0]) >= current_price_diff_below and float(price[0]) <= current_price_diff_above and price[1]['count'] > 5:
 
                 price_mean = round(mean(price[1]['mean']), 2)
@@ -364,8 +363,6 @@ class Indicators():
 
         if 0.0 in key_levels:
             key_levels.remove(0.0)
-
-        print('key_levels', key_levels)
 
         key_levels.sort(reverse=True)
 
