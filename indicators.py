@@ -360,7 +360,10 @@ class Indicators():
 
                 key_levels.append(price_mean)
 
-        key_levels.remove(0.0)
+        print(key_levels)
+
+        if 0.0 in key_levels:
+            key_levels.remove(0.0)
 
         key_levels.sort(reverse=True)
 
