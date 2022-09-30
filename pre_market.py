@@ -289,8 +289,8 @@ class Pre_Market:
 
         print('opportunities', sorted_temp)
 
-        # establish a limit_count
-        limit_count = 0
+        # # establish a limit_count
+        # limit_count = 0
 
         # # loop through the sorted_temp
         # while limit_count < self.limit:
@@ -299,6 +299,8 @@ class Pre_Market:
 
         #     # increase limit_count by 1
         #     limit_count += 1
+
+        return sorted_temp
 
     def premarket_data_to_dict(self, premarket_data, ctx):
         """
