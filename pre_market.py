@@ -177,7 +177,6 @@ class Pre_Market:
                 price_data_frame=weekly_stock_frame)
 
             # add weekly key levels
-            print('new_opportunity', new_opportunity['Symbol'])
             new_opportunity['Key Levels'] = weekly_stock_indicator_client.s_r_levels(
                 weekly_stock_frame.frame)
 
@@ -288,16 +287,18 @@ class Pre_Market:
         sorted_temp = sorted(temp_opportunity_list,
                              key=lambda i: i['Score'], reverse=True)
 
+        print('opportunities', sorted_temp)
+
         # establish a limit_count
         limit_count = 0
 
-        # loop through the sorted_temp
-        while limit_count < self.limit:
-            # create and send a find position event for the current company
-            self.send_find_position_event(sorted_temp[limit_count])
+        # # loop through the sorted_temp
+        # while limit_count < self.limit:
+        #     # create and send a find position event for the current company
+        #     self.send_find_position_event(sorted_temp[limit_count])
 
-            # increase limit_count by 1
-            limit_count += 1
+        #     # increase limit_count by 1
+        #     limit_count += 1
 
     def premarket_data_to_dict(self, premarket_data, ctx):
         """
