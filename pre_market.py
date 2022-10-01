@@ -235,6 +235,11 @@ class Pre_Market:
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
+            print('Symbol = ', new_opportunity['Symbol'])
+            print('Key Levels = ', new_opportunity['Key Levels'])
+            print('Support Resistance = ',
+                  new_opportunity['Support Resistance'])
+
             # five minute end date
             five_minute_end_date = start_date - timedelta(weeks=75)
 
