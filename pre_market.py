@@ -96,7 +96,8 @@ class Pre_Market:
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:
             self.limit = 6
-            watchlist = self.medium_watchlist
+            # watchlist = self.medium_watchlist
+            watchlist = self.small_watchlist
         elif budget >= 5000 and budget < 15000:
             self.limit = 10
             watchlist = self.large_watchlist
