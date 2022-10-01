@@ -40,7 +40,7 @@ class Pre_Market:
 
         # initiate and get token
         getToken = TokenInitiator()
-        userPrinciples = getToken.get_access_token()
+        getToken.get_access_token()
 
         # set token to self.TOKEN
         with open("token.json") as token_json:
@@ -96,8 +96,7 @@ class Pre_Market:
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:
             self.limit = 6
-            # watchlist = self.medium_watchlist
-            watchlist = self.small_watchlist
+            watchlist = self.medium_watchlist
         elif budget >= 5000 and budget < 15000:
             self.limit = 10
             watchlist = self.large_watchlist
@@ -120,8 +119,6 @@ class Pre_Market:
             new_opportunity = {}
 
             # add ticker and score to new_opportunity object
-            new_opportunity['Token'] = self.TOKEN
-            new_opportunity['User Principles'] = userPrinciples
             new_opportunity['Symbol'] = i
             new_opportunity['Score'] = 0
             new_opportunity['Limit'] = self.limit
