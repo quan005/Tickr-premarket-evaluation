@@ -98,6 +98,8 @@ class StockFrame():
         {pd.DataFrame} -- A pandas dataframe.
         """
 
+        print('price_df', price_df)
+
         price_df['datetime'] = pd.to_datetime(
             price_df['datetime'],
             unit='ms',
