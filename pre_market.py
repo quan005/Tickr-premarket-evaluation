@@ -27,8 +27,10 @@ class Pre_Market:
         self.TOKEN = None
         self.small_watchlist = ['AMD', 'NKE', 'AAL',
                                 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL']
-        self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL',
-                                 'MSFT', 'FB', 'CRM', 'BABA', 'PYPL', 'PTON', 'DKNG', 'WMT', 'JPM', 'DIS']
+        # self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL',
+        #                          'MSFT', 'FB', 'CRM', 'BABA', 'PYPL', 'PTON', 'DKNG', 'WMT', 'JPM', 'DIS']
+        self.medium_watchlist = [
+            'MSFT', 'FB', 'CRM', 'BABA', 'PYPL', 'PTON', 'DKNG', 'WMT', 'JPM', 'DIS']
         self.large_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL', 'MSFT', 'FB', 'CRM', 'BABA',
                                 'PYPL', 'PTON', 'DKNG', 'WMT', 'JPM', 'DIS', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
         self.xtra_large_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL', 'MSFT', 'FB', 'CRM', 'BABA', 'PYPL', 'PTON', 'DKNG',
