@@ -138,6 +138,7 @@ class Pre_Market:
                 new_opportunity['Score'] + news_analyzer['score'])
 
             # initialize HistoricalAnalysis ie. ha = HistoricalAnalysis('aapl')
+            print('symbol', new_opportunity['Symbol'])
             ha = HistoricalAnalysis(i)
 
             # start historical_analysis ie. ha.start_historical_analysis() and apply result to score
