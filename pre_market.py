@@ -25,14 +25,14 @@ class Pre_Market:
         self.BOOTSTRAP_SERVER = config.get('main', 'BOOTSTRAP_SERVER')
         self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
         self.TOKEN = None
-        self.small_watchlist = ['AMD', 'NKE', 'AAL',
-                                'SPY', 'PFE', 'BAC', 'CGC', 'AAPL']
-        self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL',
-                                 'MSFT', 'CRM', 'BABA', 'PYPL', 'PTON', 'DKNG', 'WMT', 'JPM', 'DIS']
-        self.large_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL', 'MSFT', 'CRM', 'BABA',
-                                'PYPL', 'PTON', 'DKNG', 'WMT', 'JPM', 'DIS', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
-        self.xtra_large_watchlist = ['AMD', 'NKE', 'AAL', 'SPY', 'PFE', 'BAC', 'CGC', 'AAPL', 'MSFT', 'CRM', 'BABA', 'PYPL', 'PTON', 'DKNG',
-                                     'WMT', 'JPM', 'DIS', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID', 'GOOG', 'FL', 'EBAY', 'CMG', 'BA', 'MU', 'BYND', 'DOCU']
+        self.small_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI',
+                                'SPY', 'PFE', 'BAC', 'CCL', 'AAPL']
+        self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI ', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL',
+                                 'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU']
+        self.large_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA',
+                                'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
+        self.xtra_large_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG',
+                                     'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID', 'GOOG', 'FL', 'EBAY', 'CMG', 'BA', 'MU', 'BYND', 'DOCU']
         self.limit = 0
         self.opportunities = []
 
