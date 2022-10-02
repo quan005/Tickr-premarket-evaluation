@@ -368,6 +368,9 @@ class Indicators():
 
         return key_levels
 
+    def scrub_key_levels(self, key_levels: list):
+        pass
+
     def get_demand_zones(self, dataframe, ticker):
         demand_zone_dic = {}
         demand_zones = []
@@ -1197,7 +1200,6 @@ class Indicators():
 #     KST = pd.Series(pd.rolling_sum(ROC1, n1) + pd.rolling_sum(ROC2, n2) * 2 + pd.rolling_sum(ROC3, n3) * 3 + pd.rolling_sum(ROC4, n4) * 4, name = 'KST_' + str(r1) + '_' + str(r2) + '_' + str(r3) + '_' + str(r4) + '_' + str(n1) + '_' + str(n2) + '_' + str(n3) + '_' + str(n4))
 #     df = df.join(KST)
 #     return df
-
 
     def refresh(self):
         """Updates the Indicator columns after adding the new rows."""
