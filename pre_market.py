@@ -27,7 +27,7 @@ class Pre_Market:
         self.TOKEN = None
         self.small_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI',
                                 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL']
-        self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI ', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL',
+        self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL',
                                  'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU']
         self.large_watchlist = ['AMD', 'NKE', 'AAL', 'TEVA', 'UAA', 'SOFI', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA',
                                 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
