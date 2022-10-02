@@ -401,7 +401,7 @@ class Indicators():
 
                     # find the lowest low of the previous three candles
                     area_low = lowPrice[i]
-                    area_top = openPrice[i] + .40
+                    area_top = openPrice[i] + .50
                     date_time = str(dateAndTime[i][1])
 
                     for j in range(1, 3):
@@ -517,7 +517,7 @@ class Indicators():
 
                     # find the highest high of the previous three candles
                     area_top = highPrice[i]
-                    area_low = openPrice[i] - .40
+                    area_low = openPrice[i] - .50
                     date_time = str(dateAndTime[i][1])
 
                     for j in range(1, 3):
@@ -704,15 +704,15 @@ class Indicators():
         two_candle_ahead = main_close_price + 2
         three_candle_ahead = main_close_price + 3
         three_candle_increase = (
-            open_price_series[three_candle_ahead] * .0035) + open_price_series[three_candle_ahead]
+            open_price_series[three_candle_ahead] * .0025) + open_price_series[three_candle_ahead]
         three_candle_close = close_price_series[three_candle_ahead]
         four_candle_ahead = main_close_price + 4
         four_candle_increase = (
-            open_price_series[four_candle_ahead] * .0035) + open_price_series[four_candle_ahead]
+            open_price_series[four_candle_ahead] * .0025) + open_price_series[four_candle_ahead]
         four_candle_close = close_price_series[four_candle_ahead]
 
-        # find the point with a significant price increase (which is any price increase of .40% and above)
-        if close_price_series[main_close_price] >= ((open_price_series[main_close_price] * .004) + open_price_series[main_close_price]) and volume_series[main_close_price] >= 500000:
+        # find the point with a significant price increase (which is any price increase of .30% and above)
+        if close_price_series[main_close_price] >= ((open_price_series[main_close_price] * .003) + open_price_series[main_close_price]) and volume_series[main_close_price] >= 500000:
             # check if candle ahead have higher highs
             if close_price_series[one_candle_ahead] > close_price_series[main_close_price] or close_price_series[one_candle_ahead] > close_price_series[main_close_price] and close_price_series[two_candle_ahead] > close_price_series[one_candle_ahead] or three_candle_close >= three_candle_increase or four_candle_close >= four_candle_increase:
                 if close_price_series[one_previous_close_price] < close_price_series[main_close_price] and close_price_series[one_previous_close_price] < close_price_series[two_previous_close_price]:
@@ -746,11 +746,11 @@ class Indicators():
         three_candle_ahead = main_close_price + 3
         three_candle_close = close_price_series[three_candle_ahead]
         three_candle_decrease = (
-            open_price_series[three_candle_ahead] * .003) - open_price_series[three_candle_ahead]
+            open_price_series[three_candle_ahead] * .0025) - open_price_series[three_candle_ahead]
         four_candle_ahead = main_close_price + 4
         four_candle_close = close_price_series[four_candle_ahead]
         four_candle_decrease = (
-            open_price_series[four_candle_ahead] * .003) - open_price_series[four_candle_ahead]
+            open_price_series[four_candle_ahead] * .0025) - open_price_series[four_candle_ahead]
         one_previous_candle = main_close_price - 1
         one_previous_candle_close_price_diff_above = close_price_series[one_previous_candle] + .45
         one_previous_candle_close_price_diff_below = close_price_series[one_previous_candle] - .45
@@ -765,7 +765,7 @@ class Indicators():
         four_previous_candle = main_close_price - 4
 
         # find the point with a significant price decrease (which is any price decrease of .30% and below)
-        if close_price_series[main_close_price] <= (open_price_series[main_close_price] - (open_price_series[main_close_price] * .0046)) and volume_series[main_close_price] >= 500000:
+        if close_price_series[main_close_price] <= (open_price_series[main_close_price] - (open_price_series[main_close_price] * .0036)) and volume_series[main_close_price] >= 500000:
             # check if candles ahead have lower highs
             if close_price_series[one_candle_ahead] < close_price_series[main_close_price] or close_price_series[one_candle_ahead] < close_price_series[main_close_price] and close_price_series[two_candle_ahead] < close_price_series[one_candle_ahead] or three_candle_close <= three_candle_decrease or four_candle_close <= four_candle_decrease:
                 if close_price_series[one_previous_candle] > close_price_series[main_close_price] and close_price_series[two_previous_candle] < close_price_series[one_previous_candle]:
