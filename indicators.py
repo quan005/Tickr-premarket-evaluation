@@ -401,7 +401,7 @@ class Indicators():
 
                     # find the lowest low of the previous three candles
                     area_low = lowPrice[i]
-                    area_top = openPrice[i] + .50
+                    area_top = openPrice[i] + .40
                     date_time = str(dateAndTime[i][1])
 
                     for j in range(1, 3):
@@ -517,7 +517,7 @@ class Indicators():
 
                     # find the highest high of the previous three candles
                     area_top = highPrice[i]
-                    area_low = openPrice[i] - .50
+                    area_low = openPrice[i] - .40
                     date_time = str(dateAndTime[i][1])
 
                     for j in range(1, 3):
