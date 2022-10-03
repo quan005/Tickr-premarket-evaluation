@@ -154,7 +154,7 @@ class Pre_Market:
             start_date = datetime.today()
 
             # weekly end date
-            weekly_end_date = start_date - timedelta(weeks=209)
+            weekly_end_date = start_date - timedelta(weeks=157)
 
             # grab historical prices using the weekly interval
             weekly_historical_prices = bot.grab_single_historical_prices(
@@ -180,7 +180,7 @@ class Pre_Market:
                 weekly_stock_frame.frame)
 
             # thirty minute end date
-            thirty_minute_end_date = start_date - timedelta(weeks=209)
+            thirty_minute_end_date = start_date - timedelta(weeks=157)
 
             # grab thirty minute historical prices using the 30 min interval
             thirty_minute_historical_prices = bot.grab_single_historical_prices(
@@ -239,7 +239,7 @@ class Pre_Market:
                   new_opportunity['Support Resistance'])
 
             # five minute end date
-            five_minute_end_date = start_date - timedelta(weeks=209)
+            five_minute_end_date = start_date - timedelta(weeks=157)
 
             # grab five minute historical prices using the 5 min interval
             five_minute_historical_prices = bot.grab_single_historical_prices(
