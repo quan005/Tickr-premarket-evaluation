@@ -651,8 +651,10 @@ class Indicators():
     def get_support_resistance(self, sr_list: list, close_price_series):
         # Find which support/resistance lines
         # are surrounding the current price.
+        print('sr_list', sr_list)
+        print('close_price_series', close_price_series)
         if len(sr_list) > 1:
-            for i in range(len(sr_list) - 1):
+            for i in range(len(sr_list)):
 
                 if close_price_series[-1] <= sr_list[i] and close_price_series[-1] >= sr_list[i + 1]:
                     return {
