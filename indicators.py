@@ -652,7 +652,7 @@ class Indicators():
         # Find which support/resistance lines
         # are surrounding the current price.
         if len(sr_list) > 1:
-            for i in range(len(sr_list)):
+            for i in range(len(sr_list) - 1):
 
                 if close_price_series[-1] <= sr_list[i] and close_price_series[-1] >= sr_list[i + 1]:
                     return {
