@@ -180,7 +180,7 @@ class Pre_Market:
                 weekly_stock_frame.frame)
 
             # thirty minute end date
-            thirty_minute_end_date = start_date - timedelta(weeks=105)
+            thirty_minute_end_date = start_date - timedelta(weeks=209)
 
             # grab thirty minute historical prices using the 30 min interval
             thirty_minute_historical_prices = bot.grab_single_historical_prices(
