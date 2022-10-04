@@ -439,34 +439,36 @@ class NewsScraper:
         else:
             self.score = 'Neutral'
 
+        return self.score
+
     def startNewsAnalyzer(self):
 
         self.getCompanyName()
-        # self.getFinwizNews()
+        self.getFinwizNews()
         self.getMarketwatchNews()
         self.getSeekingalphaNews()
         self.getBarronNews()
         self.getBenzingaNews()
 
-        self.getSentimentAnalysis(self.all_news)
+        sentiment = self.getSentimentAnalysis(self.all_news)
 
         if self.catalyst_weight >= 3 and self.catalyst_weight < 7:
             return {
-                'sentiment_analysis': self.score,
+                'sentiment_analysis': sentiment,
                 'score': 1
             }
         elif self.catalyst_weight >= 7 and self.catalyst_weight < 12:
             return {
-                'sentiment_analysis': self.score,
+                'sentiment_analysis': sentiment,
                 'score': 2
             }
         elif self.catalyst_weight >= 12:
             return {
-                'sentiment_analysis': self.score,
+                'sentiment_analysis': sentiment,
                 'score': 3
             }
         else:
             return {
-                'sentiment_analysis': self.score,
+                'sentiment_analysis': sentiment,
                 'score': 0
             }
