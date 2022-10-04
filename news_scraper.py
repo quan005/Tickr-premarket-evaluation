@@ -198,30 +198,33 @@ class NewsScraper:
         company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
 
         while count < len(news_tables):
-            print(news_tables[count])
-            text = news_tables[count].a.text
-            print(type(text))
-            print(text)
-            date_scrape = news_tables[count].td.text.split()
+            if news_tables[count].a:
+                text = news_tables[count].a.text
+                print(type(text))
+                print(text)
+                date_scrape = news_tables[count].td.text.split()
 
-            if len(date_scrape) == 1:
-                time = date_scrape[0]
-            else:
-                date_string = date_scrape[0]
-                datetime_parse = datetime.strptime(date_string, '%b-%d-%y')
-                new_tz = datetime_parse.astimezone(timezone.utc)
-                date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
-                time = date_scrape[1]
+                if len(date_scrape) == 1:
+                    time = date_scrape[0]
+                else:
+                    date_string = date_scrape[0]
+                    datetime_parse = datetime.strptime(date_string, '%b-%d-%y')
+                    new_tz = datetime_parse.astimezone(timezone.utc)
+                    date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+                    time = date_scrape[1]
 
-            if company_name_search.search(text) != None or company_ticker_search.search(text) != None:
+                if company_name_search.search(text) != None or company_ticker_search.search(text) != None:
 
-                if new_tz >= self.get_date:
-                    self.catalyst_weight += 0.5
-                    self.finwiz_news.append([self.ticker, date, time, text])
-                    self.all_news.append([self.ticker, date, time, text])
+                    if new_tz >= self.get_date:
+                        self.catalyst_weight += 0.5
+                        self.finwiz_news.append(
+                            [self.ticker, date, time, text])
+                        self.all_news.append([self.ticker, date, time, text])
 
-                count += 1
+                    count += 1
 
+                else:
+                    count += 1
             else:
                 count += 1
 
