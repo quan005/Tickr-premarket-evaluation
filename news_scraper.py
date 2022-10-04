@@ -198,6 +198,7 @@ class NewsScraper:
         company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
 
         while count < len(news_tables):
+            print(news_tables[count])
             text = news_tables[count].a.text
             print(type(text))
             print(text)
