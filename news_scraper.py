@@ -199,6 +199,7 @@ class NewsScraper:
 
         while count < len(news_tables):
             text = news_tables[count].a.text
+            print(type(text))
             print(text)
             date_scrape = news_tables[count].td.text.split()
 
