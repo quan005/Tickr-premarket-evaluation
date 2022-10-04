@@ -189,8 +189,8 @@ class NewsScraper:
         count = 0
 
         req = urllib.request.Request(
-            url=url, headers={'user-agent': 'my-app/0.0.1'})
-        resp = urllib.request.urlopen(req)
+            url=url, headers={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'})
+        resp = urllib.request.urlopen(url=req, timeout=5)
         html = BeautifulSoup(resp, features="lxml")
         news_table = html.find(id='news-table')
         news_tables = news_table.findAll('tr')
