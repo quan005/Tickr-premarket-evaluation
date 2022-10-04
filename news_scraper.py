@@ -194,14 +194,14 @@ class NewsScraper:
         html = BeautifulSoup(resp, features="lxml")
         news_table = html.find(id='news-table')
         news_tables = news_table.findAll('tr')
-        news_tables = news_table.findAll('a')
         company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
         company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
 
         print('finwiz', news_tables)
 
         while count < len(news_tables):
-            text = news_tables[count].get_text()
+            text = news_tables[count].a
+            print(text)
             date_scrape = news_tables[count].td.text.split()
 
             if len(date_scrape) == 1:
