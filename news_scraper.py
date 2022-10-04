@@ -198,7 +198,7 @@ class NewsScraper:
         company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
 
         while count < len(news_tables):
-            text = news_tables[count].a.text.split()
+            text = news_tables[count].a.text
             print(text)
             date_scrape = news_tables[count].td.text.split()
 
