@@ -200,8 +200,6 @@ class NewsScraper:
         while count < len(news_tables):
             if news_tables[count].a:
                 text = news_tables[count].a.text
-                print(type(text))
-                print(text)
                 date_scrape = news_tables[count].td.text.split()
 
                 if len(date_scrape) == 1:
@@ -257,10 +255,6 @@ class NewsScraper:
 
             if news.find('n:stock_tickers'):
                 stock_tickers = news.find('n:stock_tickers').get_text()
-
-            # print(title)
-            # print(company_name_search.search(title))
-            # print(company_ticker_search.search(title))
 
             if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
                 if datetime_parse >= self.get_date:
