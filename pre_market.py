@@ -255,11 +255,11 @@ class Pre_Market:
 
             # add key levels and support and resisitance
             new_opportunity['Key Levels'] = no_duplicates
+            print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
             print('Symbol = ', new_opportunity['Symbol'])
-            print('Key Levels = ', new_opportunity['Key Levels'])
             print('Support Resistance = ',
                   new_opportunity['Support Resistance'])
 
