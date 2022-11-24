@@ -89,7 +89,7 @@ class Indicators():
         else:
             return False
 
-    def s_r_levels(self, dataframe: pd.DataFrame, price_dic={}):
+    def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict):
 
         highPrice = dataframe['high']
         lowPrice = dataframe['low']
@@ -260,8 +260,8 @@ class Indicators():
         key_levels.sort(reverse=True)
 
         return {
-            price_dic,
-            key_levels
+            "price_dic": price_dic,
+            "key_levels": key_levels
         }
 
     def scrub_key_levels(self, key_levels: list):

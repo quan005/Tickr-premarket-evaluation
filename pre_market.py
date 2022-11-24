@@ -177,7 +177,7 @@ class Pre_Market:
 
             # add weekly key levels
             weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
-                weekly_stock_frame.frame)
+                weekly_stock_frame.frame, {})
 
             # thirty minute end date
             thirty_minute_end_date = start_date - timedelta(weeks=157)
