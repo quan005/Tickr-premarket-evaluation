@@ -92,16 +92,16 @@ class Pre_Market:
 
         # based on budget determine which watchlist to use and total opportunity's limit aka self.limit
         if budget >= 500 and budget < 1000:
-            self.limit = 2
+            self.limit = 1
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:
-            self.limit = 6
+            self.limit = 2
             watchlist = self.medium_watchlist
         elif budget >= 5000 and budget < 15000:
-            self.limit = 10
+            self.limit = 3
             watchlist = self.large_watchlist
         elif budget >= 15000:
-            self.limit = 10
+            self.limit = 5
             watchlist = self.xtra_large_watchlist
         else:
             watchlist = None
@@ -176,7 +176,7 @@ class Pre_Market:
                 price_data_frame=weekly_stock_frame)
 
             # add weekly key levels
-            new_opportunity['Key Levels'] = weekly_stock_indicator_client.s_r_levels(
+            weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
                 weekly_stock_frame.frame)
 
             # thirty minute end date
@@ -221,22 +221,9 @@ class Pre_Market:
             thirty_minute_pattern_analysis = thirty_minute_indicator_client.candle_pattern_check(
                 thirty_minute_stock_frame.frame)
 
-            # combine weekly key levels with 30 min key levels
-            new_key_levels = thirty_minute_indicator_client.s_r_levels(
-                thirty_minute_stock_frame.frame) + new_opportunity['Key Levels']
-
-            # remove duplicates
-            no_duplicates = list(OrderedDict.fromkeys(new_key_levels))
-
-            # add key levels and support and resisitance
-            new_opportunity['Key Levels'] = no_duplicates
-            new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
-                new_opportunity['Key Levels'], thirty_minute_close)
-
-            print('Symbol = ', new_opportunity['Symbol'])
-            print('Key Levels = ', new_opportunity['Key Levels'])
-            print('Support Resistance = ',
-                  new_opportunity['Support Resistance'])
+            # add thirty minute key levels
+            thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
+                thirty_minute_stock_frame.frame, weekly_key_levels['price_dic'])
 
             # five minute end date
             five_minute_end_date = start_date - timedelta(weeks=157)
@@ -258,6 +245,23 @@ class Pre_Market:
             # create thirty minute indicator object
             five_minute_indicator_client = Indicators(
                 price_data_frame=five_minute_stock_frame)
+
+            # add five minute key levels
+            five_minute_key_levels = five_minute_indicator_client.s_r_levels(
+                five_minute_stock_frame.frame, thirty_minute_key_levels['price_dic'])
+
+            # remove duplicates
+            no_duplicates = list(OrderedDict.fromkeys(five_minute_key_levels))
+
+            # add key levels and support and resisitance
+            new_opportunity['Key Levels'] = no_duplicates
+            new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
+                new_opportunity['Key Levels'], thirty_minute_close)
+
+            print('Symbol = ', new_opportunity['Symbol'])
+            print('Key Levels = ', new_opportunity['Key Levels'])
+            print('Support Resistance = ',
+                  new_opportunity['Support Resistance'])
 
             # get demand zones using the five minute stock frame
             demand_zones = five_minute_indicator_client.get_demand_zones(

@@ -89,9 +89,7 @@ class Indicators():
         else:
             return False
 
-    def s_r_levels(self, dataframe):
-        price_dic = {}
-        keys = []
+    def s_r_levels(self, dataframe: pd.DataFrame, price_dic={}):
 
         highPrice = dataframe['high']
         lowPrice = dataframe['low']
@@ -100,17 +98,15 @@ class Indicators():
 
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
-        current_price = closePrice[-1]
-        current_price_diff_above = round(current_price + 5, 2)
-        current_price_diff_below = round(current_price - 5, 2)
 
         # Compare current price to each following price
         for a in range(0, len(highPrice) - 1):
 
             h_current = highPrice[a]
-            h_price_diff_below = math.floor(h_current)
-            h_price_diff_above = h_price_diff_below + 1
+            h_current_diff_below = round(h_current - (h_current * 0.003), 2)
+            h_current_diff_above = round((h_current * 0.003) + h_current, 2)
             h_key = f'{h_current}'
+
             if h_key in price_dic.keys():
                 pass
             else:
@@ -118,50 +114,24 @@ class Indicators():
                     'count': 0,
                     'mean': []
                 }
-
-            price_dic[f'{h_current}']['mean'].append(h_current)
-            keys.append(h_current)
+                price_dic[f'{h_current}']['mean'].append(h_current)
 
             for j in range(a + 1, len(highPrice) - 1):
                 h_next_price = highPrice[j]
-                h_next_price_below = math.floor(h_next_price)
-                h_next_price_above = h_next_price_below + 1
+                h_next_price_key = f'{h_next_price}'
 
-                if len(keys) > 0:
-                    added = False
-                    j_count = 0
-
-                    # Check whether price is already in the price_dic
-                    while j_count < len(keys) - 1:
-
-                        # if price is in price_dic increment by one
-                        if keys[j_count] < h_next_price_above and keys[j_count] >= h_next_price_below:
-                            price_dic[f'{keys[j_count]}']['count'] += 1
-                            price_dic[f'{keys[j_count]}']['mean'].append(
-                                h_next_price)
-                            added = True
-                            break
-                        else:
-                            j_count += 1
-
-                    if added == False:
-                        if h_next_price < h_price_diff_above and h_next_price >= h_price_diff_below:
-                            price_dic[f'{h_current}']['count'] += 1
-                            price_dic[f'{h_current}']['mean'].append(
-                                h_next_price)
-                            keys.append(h_current)
-                        else:
-                            pass
-                    elif added == True:
-                        break
-
+                if h_next_price_key in price_dic.keys():
+                    continue
                 else:
-                    # If price is not in price_dic
-                    if h_next_price < h_price_diff_above and h_next_price >= h_price_diff_below:
+                    if h_next_price <= h_current_diff_above and h_next_price >= h_current_diff_below:
                         price_dic[f'{h_current}']['count'] += 1
                         price_dic[f'{h_current}']['mean'].append(h_next_price)
-                        keys.append(h_current)
-                        continue
+                        price_dic[f'{h_next_price}'] = {
+                            'count': 0,
+                            'mean': []
+                        }
+                        price_dic[f'{h_next_price}']['mean'].append(
+                            h_next_price)
                     else:
                         continue
 
@@ -169,9 +139,10 @@ class Indicators():
         for b in range(0, len(lowPrice) - 1):
 
             l_current = lowPrice[b]
-            l_price_diff_below = math.floor(l_current)
-            l_price_diff_above = l_price_diff_below + 1
+            l_current_diff_below = round(l_current - (l_current * 0.003), 2)
+            l_current_diff_above = round((l_current * 0.003) + l_current, 2)
             l_key = f'{l_current}'
+
             if l_key in price_dic.keys():
                 pass
             else:
@@ -179,50 +150,24 @@ class Indicators():
                     'count': 0,
                     'mean': []
                 }
-
-            price_dic[f'{l_current}']['mean'].append(l_current)
-            keys.append(l_current)
+                price_dic[f'{l_current}']['mean'].append(l_current)
 
             for k in range(b + 1, len(lowPrice) - 1):
                 l_next_price = lowPrice[k]
-                l_next_price_below = math.floor(l_next_price)
-                l_next_price_above = l_next_price_below + 1
+                l_next_price_key = f'{l_next_price}'
 
-                if len(keys) > 0:
-                    added = False
-                    k_count = 0
-
-                    # Check whether price is already in the price_dic
-                    while k_count < len(keys) - 1:
-
-                        # if price is in price_dic increment by one
-                        if keys[k_count] < l_next_price_above and keys[k_count] >= l_next_price_below:
-                            price_dic[f'{keys[k_count]}']['count'] += 1
-                            price_dic[f'{keys[k_count]}']['mean'].append(
-                                l_next_price)
-                            added = True
-                            break
-                        else:
-                            k_count += 1
-
-                    if added == False:
-                        if l_next_price < l_price_diff_above and l_next_price >= l_price_diff_below:
-                            price_dic[f'{l_current}']['count'] += 1
-                            price_dic[f'{l_current}']['mean'].append(
-                                l_next_price)
-                            keys.append(l_current)
-                        else:
-                            pass
-                    elif added == True:
-                        break
-
+                if l_next_price_key in price_dic.keys():
+                    continue
                 else:
-                    # If price is not in price_dic
-                    if l_next_price < l_price_diff_above and l_next_price >= l_price_diff_below:
+                    if l_next_price <= l_current_diff_above and l_next_price >= l_current_diff_below:
                         price_dic[f'{l_current}']['count'] += 1
                         price_dic[f'{l_current}']['mean'].append(l_next_price)
-                        keys.append(l_current)
-                        continue
+                        price_dic[f'{l_next_price}'] = {
+                            'count': 0,
+                            'mean': []
+                        }
+                        price_dic[f'{l_next_price}']['mean'].append(
+                            l_next_price)
                     else:
                         continue
 
@@ -230,9 +175,10 @@ class Indicators():
         for c in range(0, len(openPrice)):
 
             o_current = openPrice[c]
-            o_price_diff_below = math.floor(o_current)
-            o_price_diff_above = o_price_diff_below + 1
+            o_current_diff_below = round(o_current - (o_current * 0.003), 2)
+            o_current_diff_above = round((o_current * 0.003) + o_current, 2)
             o_key = f'{o_current}'
+
             if o_key in price_dic.keys():
                 pass
             else:
@@ -240,50 +186,24 @@ class Indicators():
                     'count': 0,
                     'mean': []
                 }
-
-            price_dic[f'{o_current}']['mean'].append(o_current)
-            keys.append(o_current)
+                price_dic[f'{o_current}']['mean'].append(o_current)
 
             for l in range(c + 1, len(openPrice)):
                 o_next_price = openPrice[l]
-                o_next_price_below = math.floor(o_next_price)
-                o_next_price_above = o_next_price_below + 1
+                o_next_price_key = f'{o_next_price}'
 
-                if len(keys) > 0:
-                    added = False
-                    o_count = 0
-
-                    # Check whether price is already in the price_dic
-                    while o_count < len(keys) - 1:
-
-                        # if price is in price_dic increment by one
-                        if keys[o_count] < o_next_price_above and keys[o_count] >= o_next_price_below:
-                            price_dic[f'{keys[o_count]}']['count'] += 1
-                            price_dic[f'{keys[o_count]}']['mean'].append(
-                                o_next_price)
-                            added = True
-                            break
-                        else:
-                            o_count += 1
-
-                    if added == False:
-                        if o_next_price < o_price_diff_above and o_next_price >= o_price_diff_below:
-                            price_dic[f'{o_current}']['count'] += 1
-                            price_dic[f'{o_current}']['mean'].append(
-                                o_next_price)
-                            keys.append(o_current)
-                        else:
-                            pass
-                    elif added == True:
-                        break
-
+                if o_next_price_key in price_dic.keys():
+                    continue
                 else:
-                    # If price is not in price_dic
-                    if o_next_price < o_price_diff_above and o_next_price >= o_price_diff_below:
+                    if o_next_price <= o_current_diff_above and o_next_price >= o_current_diff_below:
                         price_dic[f'{o_current}']['count'] += 1
                         price_dic[f'{o_current}']['mean'].append(o_next_price)
-                        keys.append(o_current)
-                        continue
+                        price_dic[f'{o_next_price}'] = {
+                            'count': 0,
+                            'mean': []
+                        }
+                        price_dic[f'{o_next_price}']['mean'].append(
+                            o_next_price)
                     else:
                         continue
 
@@ -291,9 +211,10 @@ class Indicators():
         for d in range(0, len(closePrice) - 1):
 
             c_current = closePrice[d]
-            c_price_diff_below = math.floor(c_current)
-            c_price_diff_above = c_price_diff_below + 1
+            c_current_diff_below = round(c_current - (c_current * 0.003), 2)
+            c_current_diff_above = round((c_current * 0.003) + c_current, 2)
             c_key = f'{c_current}'
+
             if c_key in price_dic.keys():
                 pass
             else:
@@ -301,61 +222,33 @@ class Indicators():
                     'count': 0,
                     'mean': []
                 }
-
-            price_dic[f'{o_current}']['mean'].append(o_current)
-            keys.append(o_current)
+                price_dic[f'{c_current}']['mean'].append(c_current)
 
             for m in range(d + 1, len(closePrice) - 1):
                 c_next_price = closePrice[m]
-                c_next_price_below = math.floor(c_next_price)
-                c_next_price_above = c_next_price_below + 1
+                c_next_price_key = f'{c_next_price}'
 
-                if len(keys) > 0:
-                    added = False
-                    m_count = 0
-
-                    # Check whether price is already in the price_dic
-                    while m_count < len(keys) - 1:
-
-                        # if price is in price_dic increment by one
-                        if keys[m_count] < c_next_price_above and keys[m_count] >= c_next_price_below:
-                            price_dic[f'{keys[m_count]}']['count'] += 1
-                            price_dic[f'{keys[m_count]}']['mean'].append(
-                                c_next_price)
-                            added = True
-                            break
-                        else:
-                            m_count += 1
-
-                    if added == False:
-                        if c_next_price < c_price_diff_above and c_next_price >= c_price_diff_below:
-                            price_dic[f'{c_current}']['count'] += 1
-                            price_dic[f'{c_current}']['mean'].append(
-                                c_next_price)
-                            keys.append(c_current)
-                        else:
-                            pass
-                    elif added == True:
-                        break
-
+                if c_next_price_key in price_dic.keys():
+                    continue
                 else:
-                    # If price is not in price_dic
-                    if c_next_price < c_price_diff_above and c_next_price >= c_price_diff_below:
+                    if c_next_price <= c_current_diff_above and c_next_price >= c_current_diff_below:
                         price_dic[f'{c_current}']['count'] += 1
                         price_dic[f'{c_current}']['mean'].append(c_next_price)
-                        keys.append(c_current)
-                        continue
+                        price_dic[f'{c_next_price}'] = {
+                            'count': 0,
+                            'mean': []
+                        }
+                        price_dic[f'{c_next_price}']['mean'].append(
+                            c_next_price)
                     else:
                         continue
 
-        # price_dic = {price_key: {count: count_value for count, count_value in price_val.items() if isinstance(count_value, int) and count_value > 5}
-        #              for price_key, price_val in price_dic.items() if float(price_key) >= current_price_diff_below and float(price_key) <= current_price_diff_above}
         # print('price_dic', price_dic)
 
         key_levels = [high, low]
 
         for price in price_dic.items():
-            if float(price[0]) >= current_price_diff_below and float(price[0]) <= current_price_diff_above and price[1]['count'] > 5:
+            if price[1]['count'] > 5:
 
                 price_mean = round(mean(price[1]['mean']), 2)
 
@@ -366,7 +259,10 @@ class Indicators():
 
         key_levels.sort(reverse=True)
 
-        return key_levels
+        return {
+            price_dic,
+            key_levels
+        }
 
     def scrub_key_levels(self, key_levels: list):
         pass
