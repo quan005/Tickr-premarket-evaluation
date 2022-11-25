@@ -175,9 +175,11 @@ class Pre_Market:
             weekly_stock_indicator_client = Indicators(
                 price_data_frame=weekly_stock_frame)
 
+            price_dict = dict()
+
             # add weekly key levels
             weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
-                weekly_stock_frame.frame, {})
+                weekly_stock_frame.frame, price_dict)
 
             # thirty minute end date
             thirty_minute_end_date = start_date - timedelta(weeks=157)

@@ -259,10 +259,12 @@ class Indicators():
 
         key_levels.sort(reverse=True)
 
-        return {
-            "price_dic": price_dic,
-            "key_levels": key_levels
-        }
+        new_dict = dict()
+
+        new_dict['price_dic'] = price_dic
+        new_dict['key_levels'] = key_levels
+
+        return new_dict
 
     def scrub_key_levels(self, key_levels: list):
         pass
