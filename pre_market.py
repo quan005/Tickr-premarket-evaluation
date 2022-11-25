@@ -181,6 +181,10 @@ class Pre_Market:
             weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
                 weekly_stock_frame.frame, price_dict)
 
+            print('weekly_key_levels', weekly_key_levels)
+
+            return weekly_key_levels
+
             # thirty minute end date
             thirty_minute_end_date = start_date - timedelta(weeks=157)
 
