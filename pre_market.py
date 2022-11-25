@@ -253,7 +253,8 @@ class Pre_Market:
                 five_minute_stock_frame.frame, thirty_minute_key_levels['price_dic'])
 
             # remove duplicates
-            no_duplicates = list(OrderedDict.fromkeys(five_minute_key_levels))
+            no_duplicates = list(OrderedDict.fromkeys(
+                five_minute_key_levels['price_dic']))
 
             # add key levels and support and resisitance
             new_opportunity['Key Levels'] = no_duplicates
