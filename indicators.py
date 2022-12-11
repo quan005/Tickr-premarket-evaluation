@@ -1,6 +1,7 @@
 import operator
 import talib
 import math
+import bisect
 import pandas as pd
 import numpy as np
 from statistics import mean
@@ -89,6 +90,27 @@ class Indicators():
         else:
             return False
 
+    def find_surrounding_levels(self, list: list, value: int):
+
+        left = 0
+        right = len(list) - 1
+
+        while left <= right:
+            middle = (left + right) // 2
+
+            if list[middle - 1] >= value and list[middle] <= value:
+                return (middle - 1, middle)
+
+            if list[left] == list[right]:
+                return (middle, middle)
+
+            if list[middle] < value:
+                right = middle - 1
+            elif list[middle] > value:
+                left = middle + 1
+
+        return (None, None)
+
     def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict):
 
         highPrice = dataframe['high']
@@ -99,160 +121,84 @@ class Indicators():
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
 
+        highPrice = highPrice.to_list()
+        lowPrice = lowPrice.to_list()
+        openPrice = openPrice.to_list()
+        closePrice = closePrice.to_list()
+
+        highPrice = highPrice + lowPrice + openPrice + closePrice
+        highPrice.sort(reverse=True)
+
+        a = 0
+        j = a + 1
+        ranges = []
+
         # Compare current price to each following price
-        for a in range(0, len(highPrice) - 1):
+        while a < len(highPrice) - 1:
 
             h_current = highPrice[a]
-            h_current_diff_below = round(h_current - (h_current * 0.003), 2)
-            h_current_diff_above = round((h_current * 0.003) + h_current, 2)
-            h_key = f'{h_current}'
+            h_current_rounded = round(h_current, 0)
+            h_current_diff_below = round(h_current - (h_current * 0.0055), 2)
+            h_current_diff_above = round((h_current * 0.0055) + h_current, 2)
+            h_key = f'{h_current_rounded}'
+            h_current_range = [h_current_diff_above, h_current_diff_below]
+            range_mean = round(mean(h_current_range), 1)
+            range_mean_key = f'{range_mean}'
 
             if h_key in price_dic.keys():
-                pass
+                # check if range_mean is not one of the ranges for that price is in the dict then add it
+                if range_mean_key not in price_dic[f'{h_key}']['ranges'].keys():
+                    price_dic[f'{h_key}']['ranges'][f'{range_mean_key}'] = {
+                        'count': 0,
+                        'mean': []
+                    }
+
+                # then add it to the mean of that key an increment the count
+                price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['count'] += 1
+                price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['mean'].append(
+                    h_current)
+
+                if a == len(highPrice) - 1:
+                    break
+
             else:
-                price_dic[f'{h_current}'] = {
+                price_dic[f'{h_key}'] = {}
+                price_dic[f'{h_key}']['ranges'] = {}
+                price_dic[f'{h_key}']['ranges'][f'{range_mean_key}'] = {
                     'count': 0,
                     'mean': []
                 }
-                price_dic[f'{h_current}']['mean'].append(h_current)
+                price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['mean'].append(
+                    h_current)
+                price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['count'] += 1
 
-            for j in range(a + 1, len(highPrice) - 1):
+            if j >= len(highPrice) - 1:
+                a += 1
+
+            while j < len(highPrice) - 1:
                 h_next_price = highPrice[j]
-                h_next_price_key = f'{h_next_price}'
 
-                if h_next_price_key in price_dic.keys():
+                if h_next_price <= h_current_diff_above and h_next_price >= h_current_diff_below:
+                    price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['count'] += 1
+                    price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['mean'].append(
+                        h_next_price)
+                    j += 1
                     continue
+
                 else:
-                    if h_next_price <= h_current_diff_above and h_next_price >= h_current_diff_below:
-                        price_dic[f'{h_current}']['count'] += 1
-                        price_dic[f'{h_current}']['mean'].append(h_next_price)
-                        price_dic[f'{h_next_price}'] = {
-                            'count': 0,
-                            'mean': []
-                        }
-                        price_dic[f'{h_next_price}']['mean'].append(
-                            h_next_price)
-                    else:
-                        continue
+                    if price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['count'] >= 5:
+                        ranges.append(
+                            price_dic[f'{h_key}']['ranges'][f'{range_mean_key}']['mean'])
+                    a = j
+                    break
 
-        # Compare current price to each following price
-        for b in range(0, len(lowPrice) - 1):
+        key_levels = []
+        key_levels.append(high)
+        key_levels.append(low)
 
-            l_current = lowPrice[b]
-            l_current_diff_below = round(l_current - (l_current * 0.003), 2)
-            l_current_diff_above = round((l_current * 0.003) + l_current, 2)
-            l_key = f'{l_current}'
-
-            if l_key in price_dic.keys():
-                pass
-            else:
-                price_dic[f'{l_current}'] = {
-                    'count': 0,
-                    'mean': []
-                }
-                price_dic[f'{l_current}']['mean'].append(l_current)
-
-            for k in range(b + 1, len(lowPrice) - 1):
-                l_next_price = lowPrice[k]
-                l_next_price_key = f'{l_next_price}'
-
-                if l_next_price_key in price_dic.keys():
-                    continue
-                else:
-                    if l_next_price <= l_current_diff_above and l_next_price >= l_current_diff_below:
-                        price_dic[f'{l_current}']['count'] += 1
-                        price_dic[f'{l_current}']['mean'].append(l_next_price)
-                        price_dic[f'{l_next_price}'] = {
-                            'count': 0,
-                            'mean': []
-                        }
-                        price_dic[f'{l_next_price}']['mean'].append(
-                            l_next_price)
-                    else:
-                        continue
-
-        # Compare current price to each following price
-        for c in range(0, len(openPrice)):
-
-            o_current = openPrice[c]
-            o_current_diff_below = round(o_current - (o_current * 0.003), 2)
-            o_current_diff_above = round((o_current * 0.003) + o_current, 2)
-            o_key = f'{o_current}'
-
-            if o_key in price_dic.keys():
-                pass
-            else:
-                price_dic[f'{o_current}'] = {
-                    'count': 0,
-                    'mean': []
-                }
-                price_dic[f'{o_current}']['mean'].append(o_current)
-
-            for l in range(c + 1, len(openPrice)):
-                o_next_price = openPrice[l]
-                o_next_price_key = f'{o_next_price}'
-
-                if o_next_price_key in price_dic.keys():
-                    continue
-                else:
-                    if o_next_price <= o_current_diff_above and o_next_price >= o_current_diff_below:
-                        price_dic[f'{o_current}']['count'] += 1
-                        price_dic[f'{o_current}']['mean'].append(o_next_price)
-                        price_dic[f'{o_next_price}'] = {
-                            'count': 0,
-                            'mean': []
-                        }
-                        price_dic[f'{o_next_price}']['mean'].append(
-                            o_next_price)
-                    else:
-                        continue
-
-        # Compare current price to each following price
-        for d in range(0, len(closePrice) - 1):
-
-            c_current = closePrice[d]
-            c_current_diff_below = round(c_current - (c_current * 0.003), 2)
-            c_current_diff_above = round((c_current * 0.003) + c_current, 2)
-            c_key = f'{c_current}'
-
-            if c_key in price_dic.keys():
-                pass
-            else:
-                price_dic[f'{c_current}'] = {
-                    'count': 0,
-                    'mean': []
-                }
-                price_dic[f'{c_current}']['mean'].append(c_current)
-
-            for m in range(d + 1, len(closePrice) - 1):
-                c_next_price = closePrice[m]
-                c_next_price_key = f'{c_next_price}'
-
-                if c_next_price_key in price_dic.keys():
-                    continue
-                else:
-                    if c_next_price <= c_current_diff_above and c_next_price >= c_current_diff_below:
-                        price_dic[f'{c_current}']['count'] += 1
-                        price_dic[f'{c_current}']['mean'].append(c_next_price)
-                        price_dic[f'{c_next_price}'] = {
-                            'count': 0,
-                            'mean': []
-                        }
-                        price_dic[f'{c_next_price}']['mean'].append(
-                            c_next_price)
-                    else:
-                        continue
-
-        # print('price_dic', price_dic)
-
-        key_levels = [high, low]
-
-        for price in price_dic.items():
-            if price[1]['count'] > 5:
-
-                price_mean = round(mean(price[1]['mean']), 2)
-
-                key_levels.append(price_mean)
+        for price in ranges:
+            price_mean = round(mean(price), 2)
+            key_levels.append(price_mean)
 
         if 0.0 in key_levels:
             key_levels.remove(0.0)
@@ -267,126 +213,44 @@ class Indicators():
         return new_dict
 
     def scrub_key_levels(self, key_levels: list):
-        pass
+        clean_key_levels = []
+        temp_list = []
 
-    def get_demand_zones(self, dataframe, ticker):
-        demand_zone_dic = {}
+        a = 0
+
+        while a < len(key_levels) - 1:
+
+            if a >= len(key_levels) - 1:
+                break
+
+            # first pointer and first pointer range
+            first_pointer = key_levels[a]
+            first_pointer_above = round(
+                (first_pointer * 0.0055) + first_pointer, 2)
+            first_pointer_below = round(
+                first_pointer - (first_pointer * 0.0055), 2)
+
+            # second pointer
+            second_pointer = a + 1
+
+            # add first pointer to temp_list
+            temp_list.append(first_pointer)
+
+            while key_levels[second_pointer] >= first_pointer_below and key_levels[second_pointer] <= first_pointer_above:
+                temp_list.append(key_levels[second_pointer])
+                second_pointer = second_pointer + 1
+
+                if second_pointer > len(key_levels) - 1:
+                    break
+
+            clean_key_levels.append(round(mean(temp_list), 2))
+            temp_list = []
+            a = second_pointer
+
+        return clean_key_levels
+
+    def get_supply_demand_zones(self, dataframe: pd.DataFrame, ticker: str, key_levels: list):
         demand_zones = []
-
-        highPrice = dataframe['high']
-        lowPrice = dataframe['low']
-        openPrice = dataframe['open']
-        closePrice = dataframe['close']
-        row_index = dataframe.index
-        dateAndTime = list(row_index)
-
-        # iterate through the dataframes
-        for i in range(0, len(closePrice) - 1):
-            if i > 4 and i < len(closePrice) - 5:
-                four_date_ahead_start = str(dateAndTime[i + 4][1])
-                four_date_previous = str(dateAndTime[i - 4][1])
-                df_sorted = dataframe.sort_index()
-                dataframe_slice = df_sorted.loc[(ticker, four_date_previous):(
-                    ticker, four_date_ahead_start)]
-                close_series = dataframe_slice['close']
-                open_series = dataframe_slice['open']
-                volume_series = dataframe_slice['volume']
-                demand_check = self.isDemandCheck(
-                    close_series, open_series, volume_series)
-
-                # find the point with a significant price increase (which is any price increase of .40% and above)
-                if demand_check and i < (len(closePrice) - 5):
-
-                    # find the lowest low of the previous three candles
-                    area_low = lowPrice[i]
-                    area_top = openPrice[i] + .50
-                    date_time = str(dateAndTime[i][1])
-
-                    for j in range(1, 3):
-                        if lowPrice[i - j] < area_low:
-                            area_low = lowPrice[i - j]
-                        else:
-                            pass
-
-                    # check if demand_zones list is empty, if so add the first demand zone
-                    if len(demand_zones) < 1:
-                        # create a string from the index of the candle to use as a key in the demand_zone_dic
-                        new_demand_zone_string = f'{i}'
-                        # create a array using the area_low and area_top
-                        new_demand_zone_array = (
-                            area_low, area_top, date_time)
-                        demand_zones.append(new_demand_zone_array)
-                        demand_zone_dic[new_demand_zone_string] = {
-                            'interaction': 0,
-                            'array': new_demand_zone_array
-                        }
-                    else:
-                        k = 0
-                        in_zone = False
-                        one_previous = f'{i - 1}'
-                        two_previous = f'{i - 2}'
-                        three_previous = f'{i - 3}'
-                        four_previous = f'{i - 4}'
-                        # check if the zone is already in the demand zone
-                        if one_previous in demand_zone_dic or two_previous in demand_zone_dic or three_previous in demand_zone_dic or four_previous in demand_zone_dic:
-                            in_zone = True
-                        # while k < len(demand_zones) - 1 and in_zone == False:
-                        #     # if new zone interacts with an old zone (new_area_low is within an old demand zone)
-                        #     if area_low <= demand_zones[k][0] and area_top <= demand_zones[k][1] or area_low <= demand_zones[k][0] and area_top >= demand_zones[k][1] or area_low > demand_zones[k][0] and area_low < demand_zones[k][1]:
-
-                        #         # create a string from the old zone low (k[0]) and top (k[1]) seperated by a '-', to use as a key in the demand_zone_dic
-                        #         old_zone_string = f'{demand_zones[k][0]}-{demand_zones[k][1]}'
-
-                        #         # check the old demand zone to see how many interactions it has in the demand_zone_dic
-                        #         # if its less than 2 then add 1 to the interaction and continue
-                        #         if demand_zone_dic[old_zone_string]['interaction'] < 3:
-                        #             demand_zone_dic[old_zone_string]['interaction'] + 1
-                        #         # if its 2 or more then continue
-                        #         elif demand_zone_dic[old_zone_string]['interaction'] == 3:
-                        #             demand_zone_dic[old_zone_string]['interaction'] = 0
-
-                        #         in_zone = True
-
-                        #     else:
-                        #         k += 1
-
-                        if in_zone == False:
-                            # create a array using the area_low and area_top
-                            new_demand_zone_array = (
-                                area_low, area_top, date_time)
-
-                            # create a string from the index of the candle to use as a key in the demand_zone_dic
-                            new_demand_zone_string = f'{i}'
-
-                            # add new demand zone to demand_zone_dic using new_demand_zone_string as the key and 0 as the default value representing the zone interactions
-                            demand_zone_dic[new_demand_zone_string] = {
-                                'interaction': 0,
-                                'array': new_demand_zone_array
-                            }
-
-                            # append new_demand_zone_array to the demand_zones list
-                            demand_zones.append(new_demand_zone_array)
-                # to early into the dataframe continue until there is more previous data to compare
-                else:
-                    continue
-            else:
-                pass
-
-        # fliter demand_zone_dic and return list of
-        final_demand_zones = []
-        demand_limit = 0
-
-        for key, value in sorted(demand_zone_dic.items(), key=lambda x: x[1]['array'][2], reverse=True):
-            if value['interaction'] <= 2 and demand_limit < 15 or value['interaction'] <= 2 and len(demand_zone_dic.items()) < 15:
-                final_demand_zones.append(value['array'])
-                demand_limit += 1
-            else:
-                pass
-
-        return final_demand_zones
-
-    def get_supply_zones(self, dataframe, ticker):
-        supply_zone_dic = {}
         supply_zones = []
 
         highPrice = dataframe['high']
@@ -396,109 +260,354 @@ class Indicators():
         row_index = dataframe.index
         dateAndTime = list(row_index)
 
+        i = 0
+        count = 0
+        tolerance = 0
+        first_out_of_range_index = None
+        max_limit = 60
+        min_limit = 2
+        within_range = 0
+
+        surrounding_levels_high = self.find_surrounding_levels(
+            list=key_levels, value=highPrice[i])
+        surrounding_levels_low = self.find_surrounding_levels(
+            list=key_levels, value=lowPrice[i])
+
+        while surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+            i += 1
+            surrounding_levels_high = self.find_surrounding_levels(
+                list=key_levels, value=highPrice[i])
+            surrounding_levels_low = self.find_surrounding_levels(
+                list=key_levels, value=lowPrice[i])
+
+        range_top = key_levels[surrounding_levels_high[0]]
+        range_bottom = key_levels[surrounding_levels_low[1]]
+
         # iterate through the dataframes
-        for i in range(0, len(closePrice) - 1):
-            if i > 4 and i < len(closePrice) - 5:
-                four_date_ahead_start = str(dateAndTime[i + 4][1])
-                four_date_previous = str(dateAndTime[i - 4][1])
-                df_sorted = dataframe.sort_index()
-                dataframe_slice = df_sorted.loc[(ticker, four_date_previous):(
-                    ticker, four_date_ahead_start)]
-                close_series = dataframe_slice['close']
-                open_series = dataframe_slice['open']
-                volume_series = dataframe_slice['volume']
-                supply_check = self.isSupplyCheck(
-                    close_series, open_series, volume_series)
+        while i < len(closePrice) - 1:
 
-                # find the point with a significant price increase (which is any price increase of .40% and above)
-                if supply_check and i < (len(closePrice) - 5):
+            in_range = closePrice[i] >= range_bottom and openPrice[i] <= range_bottom or closePrice[i] <= range_bottom and openPrice[i] >= range_bottom or closePrice[i] <= range_top and openPrice[i] >= range_bottom or closePrice[
+                i] >= range_top and openPrice[i] <= range_top or closePrice[i] <= range_top and openPrice[i] >= range_top or closePrice[i] >= range_top and openPrice[i] <= range_bottom or closePrice[i] >= range_bottom and openPrice[i] <= range_top
+            out_of_range = closePrice[i] <= range_bottom and openPrice[
+                i] <= range_bottom or closePrice[i] >= range_top or openPrice[i] >= range_top
+            within_max_range_percentage = within_range / max_limit
+            within_min_range_percentage = within_range / min_limit
+            max_tolerance_percentage = tolerance / max_limit
+            price_change_percent = (
+                (closePrice[i] - openPrice[i]) / openPrice[i]) * 100
+            allowed_diff_percent = .00049 * 100
+            demand_diff_percent = (
+                ((lowPrice[i] - openPrice[i])/((lowPrice[i] + openPrice[i])) / 2)) * 100
+            supply_diff_percent = (
+                ((highPrice[i] - openPrice[i])/((lowPrice[i] + openPrice[i])) / 2)) * 100
 
-                    # find the highest high of the previous three candles
-                    area_top = highPrice[i]
-                    area_low = openPrice[i] - .50
-                    date_time = str(dateAndTime[i][1])
+            if i == len(closePrice) - 1:
+                break
 
-                    for j in range(1, 3):
-                        if highPrice[i - j] < area_top:
-                            area_top = highPrice[i - j]
+            if range_top == None or range_bottom == None:
+                i += 1
+                count += 1
+                within_range += 1
+                tolerance += 1
+                continue
+
+            if in_range:
+
+                if within_min_range_percentage < .5:
+                    i += 1
+                    count += 1
+                    within_range += 1
+                    continue
+
+                elif within_max_range_percentage < .7:
+
+                    if price_change_percent > .75 and demand_diff_percent <= allowed_diff_percent:
+
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            demand_zone = (
+                                lowPrice[i - 1], closePrice[i - 1], dateAndTime[i - 1][1])
                         else:
+                            demand_zone = (
+                                lowPrice[i - 1], openPrice[i - 1], dateAndTime[i - 1][1])
+
+                        demand_zones.append(demand_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
                             pass
 
-                    # check if supply_zones list is empty, if so add the first demand zone
-                    if len(supply_zones) < 1:
-                        # create a string from the index of the candle to use as a key in the supply_zone_dic
-                        new_supply_zone_string = f'{i}'
-                        # create a array using the area_top and area_low and the
-                        new_supply_zone_array = [area_top, area_low, date_time]
-                        supply_zones.append(new_supply_zone_array)
-                        supply_zone_dic[new_supply_zone_string] = {
-                            'interaction': 0,
-                            'array': new_supply_zone_array
-                        }
-                    else:
-                        k = 0
-                        in_zone = False
-                        one_previous = f'{i - 1}'
-                        two_previous = f'{i - 2}'
-                        three_previous = f'{i - 3}'
-                        four_previous = f'{i - 4}'
-                        # check if the zone is already in the supply zone
-                        if one_previous in supply_zone_dic or two_previous in supply_zone_dic or three_previous in supply_zone_dic or four_previous in supply_zone_dic:
-                            in_zone = True
-                        # while k < len(demand_zones) - 1 and in_zone == False:
-                        #     # if new zone interacts with an old zone (new_area_low is within an old demand zone)
-                        #     if area_low <= demand_zones[k][0] and area_top <= demand_zones[k][1] or area_low <= demand_zones[k][0] and area_top >= demand_zones[k][1] or area_low > demand_zones[k][0] and area_low < demand_zones[k][1]:
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
 
-                        #         # create a string from the old zone low (k[0]) and top (k[1]) seperated by a '-', to use as a key in the demand_zone_dic
-                        #         old_zone_string = f'{demand_zones[k][0]}-{demand_zones[k][1]}'
+                        continue
 
-                        #         # check the old demand zone to see how many interactions it has in the demand_zone_dic
-                        #         # if its less than 2 then add 1 to the interaction and continue
-                        #         if demand_zone_dic[old_zone_string]['interaction'] < 3:
-                        #             demand_zone_dic[old_zone_string]['interaction'] + 1
-                        #         # if its 2 or more then continue
-                        #         elif demand_zone_dic[old_zone_string]['interaction'] == 3:
-                        #             demand_zone_dic[old_zone_string]['interaction'] = 0
+                    elif price_change_percent < -.75 and supply_diff_percent <= allowed_diff_percent:
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            supply_zone = (
+                                highPrice[i - 1], openPrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            supply_zone = (
+                                openPrice[i - 1], lowPrice[i - 1], dateAndTime[i - 1][1])
 
-                        #         in_zone = True
+                        supply_zones.append(supply_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
 
-                        #     else:
-                        #         k += 1
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
 
-                        if in_zone == False:
-                            # create a array using the area_top and area_low
-                            new_supply_zone_array = [
-                                area_top, area_low, date_time]
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
 
-                            # create a string from the index of the candle to use as a key in the supply_zone_dic
-                            new_supply_zone_string = f'{i}'
+                        continue
 
-                            # add new supply zone to supply_zone_dic using new_supply_zone_string as the key and 0 as the default value representing the zone interactions
-                            supply_zone_dic[new_supply_zone_string] = {
-                                'interaction': 0,
-                                'array': new_supply_zone_array
-                            }
+                    elif price_change_percent > .95:
 
-                            # append new_supply_zone_array to the demand_zones list
-                            supply_zones.append(new_supply_zone_array)
-                # to early into the dataframe continue until there is more previous data to compare
-                else:
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            demand_zone = (
+                                lowPrice[i - 1], closePrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            demand_zone = (
+                                lowPrice[i - 1], openPrice[i - 1], dateAndTime[i - 1][1])
+
+                        demand_zones.append(demand_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
+
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
+
+                        continue
+
+                    elif price_change_percent < -.95:
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            supply_zone = (
+                                highPrice[i - 1], openPrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            supply_zone = (
+                                openPrice[i - 1], lowPrice[i - 1], dateAndTime[i - 1][1])
+
+                        supply_zones.append(supply_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
+
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
+
+                        continue
+
+                    i += 1
+                    count += 1
+                    within_range += 1
                     continue
-            else:
-                pass
 
-        # fliter supply_zone_dic and return list of
-        final_supply_zones = []
-        supply_limit = 0
+                else:
+                    if price_change_percent > .75 and demand_diff_percent <= allowed_diff_percent:
 
-        for key, value in sorted(supply_zone_dic.items(), key=lambda x: x[1]['array'][2], reverse=True):
-            if value['interaction'] <= 2 and supply_limit < 15 or value['interaction'] <= 2 and len(supply_zone_dic.items()) < 15:
-                final_supply_zones.append(value['array'])
-                supply_limit += 1
-            else:
-                pass
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            demand_zone = (
+                                lowPrice[i - 1], closePrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            demand_zone = (
+                                closePrice[i - 1], highPrice[i - 1], dateAndTime[i - 1][1])
 
-        return final_supply_zones
+                        demand_zones.append(demand_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
+
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
+
+                        continue
+
+                    elif price_change_percent < -.75 and supply_diff_percent <= allowed_diff_percent:
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            supply_zone = (
+                                highPrice[i - 1], openPrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            supply_zone = (
+                                closePrice[i - 1], lowPrice[i - 1], dateAndTime[i - 1][1])
+
+                        supply_zones.append(supply_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
+
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
+
+                        continue
+
+                    if price_change_percent > .95:
+
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            demand_zone = (
+                                lowPrice[i - 1], closePrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            demand_zone = (
+                                closePrice[i - 1], highPrice[i - 1], dateAndTime[i - 1][1])
+
+                        demand_zones.append(demand_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
+
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
+
+                        continue
+
+                    elif price_change_percent < -.95:
+                        if openPrice[i - 1] < closePrice[i - 1]:
+                            supply_zone = (
+                                highPrice[i - 1], openPrice[i - 1], dateAndTime[i - 1][1])
+                        else:
+                            supply_zone = (
+                                closePrice[i - 1], lowPrice[i - 1], dateAndTime[i - 1][1])
+
+                        supply_zones.append(supply_zone)
+                        i += 1
+                        count = 0
+                        tolerance = 0
+                        within_range = 0
+                        first_out_of_range_index = 0
+                        surrounding_levels_high = self.find_surrounding_levels(
+                            list=key_levels, value=highPrice[i])
+                        surrounding_levels_low = self.find_surrounding_levels(
+                            list=key_levels, value=lowPrice[i])
+
+                        if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                            pass
+
+                        else:
+                            range_top = key_levels[surrounding_levels_high[0]]
+                            range_bottom = key_levels[surrounding_levels_low[1]]
+
+                        continue
+
+                    i += 1
+                    count += 1
+                    within_range += 1
+                    continue
+
+            elif out_of_range:
+
+                if tolerance == 0:
+
+                    if highPrice[i] > key_levels[0] or lowPrice[i] < key_levels[-1]:
+                        pass
+
+                    else:
+                        first_out_of_range_index = i
+                        tolerance += 1
+
+                    i += 1
+                    count += 1
+                    continue
+
+                elif max_tolerance_percentage >= .3:
+                    old_i = i
+                    i = first_out_of_range_index
+                    first_out_of_range_index = None
+                    count = 0
+                    tolerance = 0
+                    within_range = 0
+                    surrounding_levels_high = self.find_surrounding_levels(
+                        list=key_levels, value=highPrice[i])
+                    surrounding_levels_low = self.find_surrounding_levels(
+                        list=key_levels, value=lowPrice[i])
+
+                    if surrounding_levels_high[0] == None or surrounding_levels_low[1] == None:
+                        i = old_i + 1
+
+                    else:
+                        range_top = key_levels[surrounding_levels_high[0]]
+                        range_bottom = key_levels[surrounding_levels_low[1]]
+
+                    continue
+
+                else:
+                    i += 1
+                    count += 1
+                    tolerance += 1
+                    continue
+
+        # fliter demand_zone_dic and return list of
+        final_demand_zones = dict()
+        final_demand_zones['demand_zones'] = demand_zones
+        final_demand_zones['supply_zones'] = supply_zones
+
+        return final_demand_zones
 
     def candle_pattern_check(self, dataframe):
 
@@ -536,7 +645,6 @@ class Indicators():
             pattern_function = getattr(talib, pattern)
             check_for_pattern = pattern_function(
                 dataframe['open'], dataframe['high'], dataframe['low'], dataframe['close'])
-            # last = check_for_pattern.tail(1).values[0]
             last = sum(check_for_pattern.values)
 
             if last > 0:
@@ -562,128 +670,26 @@ class Indicators():
 
         return 'Theres is no Support / Resistance levels'
 
-    def isPriceSideways(self, close_price_series):
+    def isPriceSideways(self, close_price_series: pd.Series, start: int, limit: int):
 
         within_range = 0
 
-        for i in range(-1, -36):
+        for i in range(start, limit):
             j = i - 3
-            diff_above = close_price_series[i] + .45
-            diff_below = close_price_series[i] - .45
+            diff_above = round(
+                (close_price_series[i] * 0.001) + close_price_series[i], 2)
+            diff_below = round(
+                close_price_series[i] - (close_price_series[i] * 0.001), 2)
 
             if close_price_series[j] < diff_above and close_price_series[j] > diff_below:
                 within_range += 1
             else:
                 pass
 
-        diff_percent = within_range / 36
+        diff_percent = within_range / limit
 
-        if diff_percent > .4:
+        if diff_percent >= .4:
             return True
-        else:
-            return False
-
-    def isDemandCheck(self, close_price_series, open_price_series, volume_series):
-
-        main_close_price = 4
-        main_close_price_diff_above = close_price_series[main_close_price] + .45
-        main_close_price_diff_below = close_price_series[main_close_price] - .45
-        one_previous_close_price = main_close_price - 1
-        one_previous_close_price_diff_above = close_price_series[one_previous_close_price] + .45
-        one_previous_close_price_diff_below = close_price_series[one_previous_close_price] - .45
-        two_previous_close_price = main_close_price - 2
-        two_previous_close_price_diff_above = close_price_series[two_previous_close_price] + .45
-        two_previous_close_price_diff_below = close_price_series[two_previous_close_price] - .45
-        three_previous_close_price = main_close_price - 3
-        three_previous_close_price_diff_above = close_price_series[three_previous_close_price] + .45
-        three_previous_close_price_diff_below = close_price_series[three_previous_close_price] - .45
-        four_previous_close_price = main_close_price - 4
-        one_candle_ahead = main_close_price + 1
-        two_candle_ahead = main_close_price + 2
-        three_candle_ahead = main_close_price + 3
-        three_candle_increase = (
-            open_price_series[three_candle_ahead] * .0025) + open_price_series[three_candle_ahead]
-        three_candle_close = close_price_series[three_candle_ahead]
-        four_candle_ahead = main_close_price + 4
-        four_candle_increase = (
-            open_price_series[four_candle_ahead] * .0025) + open_price_series[four_candle_ahead]
-        four_candle_close = close_price_series[four_candle_ahead]
-
-        # find the point with a significant price increase (which is any price increase of .30% and above)
-        if close_price_series[main_close_price] >= ((open_price_series[main_close_price] * .003) + open_price_series[main_close_price]) and volume_series[main_close_price] >= 500000:
-            # check if candle ahead have higher highs
-            if close_price_series[one_candle_ahead] > close_price_series[main_close_price] or close_price_series[one_candle_ahead] > close_price_series[main_close_price] and close_price_series[two_candle_ahead] > close_price_series[one_candle_ahead] or three_candle_close >= three_candle_increase or four_candle_close >= four_candle_increase:
-                if close_price_series[one_previous_close_price] < close_price_series[main_close_price] and close_price_series[one_previous_close_price] < close_price_series[two_previous_close_price]:
-                    return True
-                elif close_price_series[one_previous_close_price] < close_price_series[main_close_price] and close_price_series[two_previous_close_price] <= one_previous_close_price_diff_above and close_price_series[two_previous_close_price] >= one_previous_close_price_diff_below:
-                    return True
-                elif close_price_series[one_previous_close_price] < close_price_series[main_close_price] and close_price_series[two_previous_close_price] < close_price_series[one_previous_close_price]:
-                    return True
-                elif close_price_series[one_previous_close_price] <= main_close_price_diff_above and close_price_series[one_previous_close_price] >= main_close_price_diff_below and close_price_series[two_previous_close_price] > close_price_series[one_previous_close_price]:
-                    return True
-                elif close_price_series[one_previous_close_price] <= main_close_price_diff_above and close_price_series[one_previous_close_price] >= main_close_price_diff_below and close_price_series[two_previous_close_price] < close_price_series[one_previous_close_price]:
-                    return True
-                elif close_price_series[one_previous_close_price] < close_price_series[main_close_price] and close_price_series[two_previous_close_price] < close_price_series[one_previous_close_price]:
-                    return True
-                elif close_price_series[one_previous_close_price] > close_price_series[main_close_price] and close_price_series[two_previous_close_price] < close_price_series[one_previous_close_price]:
-                    return True
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
-
-    def isSupplyCheck(self, close_price_series, open_price_series, volume_series):
-
-        main_close_price = 4
-        main_close_price_diff_above = close_price_series[main_close_price] + .45
-        main_close_price_diff_below = close_price_series[main_close_price] - .45
-        one_candle_ahead = main_close_price + 1
-        two_candle_ahead = main_close_price + 2
-        three_candle_ahead = main_close_price + 3
-        three_candle_close = close_price_series[three_candle_ahead]
-        three_candle_decrease = (
-            open_price_series[three_candle_ahead] * .0025) - open_price_series[three_candle_ahead]
-        four_candle_ahead = main_close_price + 4
-        four_candle_close = close_price_series[four_candle_ahead]
-        four_candle_decrease = (
-            open_price_series[four_candle_ahead] * .0025) - open_price_series[four_candle_ahead]
-        one_previous_candle = main_close_price - 1
-        one_previous_candle_close_price_diff_above = close_price_series[one_previous_candle] + .45
-        one_previous_candle_close_price_diff_below = close_price_series[one_previous_candle] - .45
-        two_previous_candle = main_close_price - 2
-        two_previous_candle_close_price_diff_above = close_price_series[two_previous_candle] + .45
-        two_previous_candle_close_price_diff_below = close_price_series[two_previous_candle] - .45
-        three_previous_candle = main_close_price - 3
-        three_previous_candle_close_price_diff_above = close_price_series[
-            three_previous_candle] + .45
-        three_previous_candle_close_price_diff_below = close_price_series[
-            three_previous_candle] - .45
-        four_previous_candle = main_close_price - 4
-
-        # find the point with a significant price decrease (which is any price decrease of .30% and below)
-        if close_price_series[main_close_price] <= (open_price_series[main_close_price] - (open_price_series[main_close_price] * .0036)) and volume_series[main_close_price] >= 500000:
-            # check if candles ahead have lower highs
-            if close_price_series[one_candle_ahead] < close_price_series[main_close_price] or close_price_series[one_candle_ahead] < close_price_series[main_close_price] and close_price_series[two_candle_ahead] < close_price_series[one_candle_ahead] or three_candle_close <= three_candle_decrease or four_candle_close <= four_candle_decrease:
-                if close_price_series[one_previous_candle] > close_price_series[main_close_price] and close_price_series[two_previous_candle] < close_price_series[one_previous_candle]:
-                    return True
-                elif close_price_series[one_previous_candle] > close_price_series[main_close_price] and close_price_series[two_previous_candle] >= one_previous_candle_close_price_diff_below and two_previous_candle <= one_previous_candle_close_price_diff_above:
-                    return True
-                elif close_price_series[one_previous_candle] >= main_close_price_diff_below and close_price_series[one_previous_candle] <= main_close_price_diff_above and close_price_series[two_previous_candle] < close_price_series[one_previous_candle]:
-                    return True
-                elif close_price_series[one_previous_candle] > close_price_series[main_close_price] and close_price_series[two_previous_candle] > close_price_series[one_previous_candle]:
-                    return True
-                elif close_price_series[one_previous_candle] >= main_close_price_diff_below and close_price_series[one_previous_candle] <= main_close_price_diff_above and close_price_series[two_previous_candle] > close_price_series[one_previous_candle]:
-                    return True
-                elif close_price_series[one_previous_candle] > close_price_series[main_close_price] and close_price_series[two_previous_candle] > close_price_series[main_close_price]:
-                    return True
-                elif close_price_series[one_previous_candle] < close_price_series[main_close_price] and close_price_series[two_previous_candle] > close_price_series[one_previous_candle]:
-                    return True
-                else:
-                    return False
-            else:
-                return False
         else:
             return False
 
@@ -1098,6 +1104,7 @@ class Indicators():
 #     KST = pd.Series(pd.rolling_sum(ROC1, n1) + pd.rolling_sum(ROC2, n2) * 2 + pd.rolling_sum(ROC3, n3) * 3 + pd.rolling_sum(ROC4, n4) * 4, name = 'KST_' + str(r1) + '_' + str(r2) + '_' + str(r3) + '_' + str(r4) + '_' + str(n1) + '_' + str(n2) + '_' + str(n3) + '_' + str(n4))
 #     df = df.join(KST)
 #     return df
+
 
     def refresh(self):
         """Updates the Indicator columns after adding the new rows."""

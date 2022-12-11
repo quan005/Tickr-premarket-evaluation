@@ -154,14 +154,14 @@ class Pre_Market:
             start_date = datetime.today()
 
             # weekly end date
-            weekly_end_date = start_date - timedelta(weeks=157)
+            weekly_end_date = start_date - timedelta(weeks=50)
 
             # grab historical prices using the weekly interval
             weekly_historical_prices = bot.grab_single_historical_prices(
                 symbol=i,
                 start=weekly_end_date,
                 end=start_date,
-                period_type='month',
+                period_type='year',
                 bar_size=1,
                 bar_type='daily'
             )
@@ -175,18 +175,8 @@ class Pre_Market:
             weekly_stock_indicator_client = Indicators(
                 price_data_frame=weekly_stock_frame)
 
-            price_dict = dict()
-
-            # add weekly key levels
-            weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
-                weekly_stock_frame.frame, price_dict)
-
-            print('weekly_key_levels', weekly_key_levels)
-
-            return weekly_key_levels
-
             # thirty minute end date
-            thirty_minute_end_date = start_date - timedelta(weeks=157)
+            thirty_minute_end_date = start_date - timedelta(weeks=56)
 
             # grab thirty minute historical prices using the 30 min interval
             thirty_minute_historical_prices = bot.grab_single_historical_prices(
@@ -227,12 +217,19 @@ class Pre_Market:
             thirty_minute_pattern_analysis = thirty_minute_indicator_client.candle_pattern_check(
                 thirty_minute_stock_frame.frame)
 
-            # add thirty minute key levels
-            thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
-                thirty_minute_stock_frame.frame, weekly_key_levels['price_dic'])
+            # if ema 200 check returns 'ABOVE' and self.limit is > 0 then append opportunity object to the opportunities array
+            if thirty_minute_ema200_analysis == 'ABOVE':
+                new_opportunity['Score'] = new_opportunity['Score'] + 3
+
+            # check if new analyzer catalyst is >= 6, if so append opportunity object to the opportunities array
+            if thirty_minute_pattern_analysis == 'BULLISH' or thirty_minute_pattern_analysis == 'BEARISH':
+                new_opportunity['Score'] = new_opportunity['Score'] + 2
+
+            if new_opportunity['Score'] <= 3:
+                continue
 
             # five minute end date
-            five_minute_end_date = start_date - timedelta(weeks=157)
+            five_minute_end_date = start_date - timedelta(weeks=56)
 
             # grab five minute historical prices using the 5 min interval
             five_minute_historical_prices = bot.grab_single_historical_prices(
@@ -252,16 +249,30 @@ class Pre_Market:
             five_minute_indicator_client = Indicators(
                 price_data_frame=five_minute_stock_frame)
 
+            price_dict = dict()
+
+            # add weekly key levels
+            weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
+                weekly_stock_frame.frame, price_dict)
+
+            # add thirty minute key levels
+            thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
+                thirty_minute_stock_frame.frame, weekly_key_levels['price_dic'])
+
             # add five minute key levels
             five_minute_key_levels = five_minute_indicator_client.s_r_levels(
                 five_minute_stock_frame.frame, thirty_minute_key_levels['price_dic'])
 
             # remove duplicates
             no_duplicates = list(OrderedDict.fromkeys(
-                five_minute_key_levels['price_dic']))
+                five_minute_key_levels['key_levels']))
+
+            # scrub duplicate data
+            cleaned_key_levels = five_minute_indicator_client.scrub_key_levels(
+                no_duplicates)
 
             # add key levels and support and resisitance
-            new_opportunity['Key Levels'] = no_duplicates
+            new_opportunity['Key Levels'] = cleaned_key_levels
             print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
@@ -271,24 +282,11 @@ class Pre_Market:
                   new_opportunity['Support Resistance'])
 
             # get demand zones using the five minute stock frame
-            demand_zones = five_minute_indicator_client.get_demand_zones(
-                dataframe=five_minute_stock_frame.frame, ticker=i)
+            supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
+                dataframe=five_minute_stock_frame.frame, ticker=i, key_levels=new_opportunity['Key Levels'])
 
-            new_opportunity['Demand Zones'] = demand_zones
-
-            # get supply zones using the five minute stock frame
-            supply_zones = five_minute_indicator_client.get_supply_zones(
-                dataframe=five_minute_stock_frame.frame, ticker=i)
-
-            new_opportunity['Supply Zones'] = supply_zones
-
-            # if ema 200 check returns 'ABOVE' and self.limit is > 0 then append opportunity object to the opportunities array
-            if thirty_minute_ema200_analysis == 'ABOVE':
-                new_opportunity['Score'] = new_opportunity['Score'] + 3
-
-            # check if new analyzer catalyst is >= 6, if so append opportunity object to the opportunities array
-            if thirty_minute_pattern_analysis == 'BULLISH' or thirty_minute_pattern_analysis == 'BEARISH':
-                new_opportunity['Score'] = new_opportunity['Score'] + 2
+            new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
+            new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']
 
             # appen new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
@@ -304,16 +302,16 @@ class Pre_Market:
 
         print('opportunities', sorted_temp)
 
-        # # establish a limit_count
-        # limit_count = 0
+        # establish a limit_count
+        limit_count = 0
 
-        # # loop through the sorted_temp
-        # while limit_count < self.limit:
-        #     # create and send a find position event for the current company
-        #     self.send_find_position_event(sorted_temp[limit_count])
+        # loop through the sorted_temp
+        while limit_count < self.limit:
+            # create and send a find position event for the current company
+            self.send_find_position_event(sorted_temp[limit_count])
 
-        #     # increase limit_count by 1
-        #     limit_count += 1
+            # increase limit_count by 1
+            limit_count += 1
 
         return sorted_temp
 
