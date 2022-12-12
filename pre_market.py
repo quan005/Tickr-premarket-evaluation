@@ -440,7 +440,7 @@ class Pre_Market:
         }
         """
 
-        schema_registry_config = {'url': 'http://167.172.137.136:8081'}
+        schema_registry_config = {'url': self.SCHEMA_REGISTRY_URL}
         schema_registry_client = SchemaRegistryClient(schema_registry_config)
         avro_serializer = AvroSerializer(schema_registry_client=schema_registry_client,
                                          schema_str=premarket_schema_str, to_dict=self.premarket_data_to_dict)
