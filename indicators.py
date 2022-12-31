@@ -324,11 +324,17 @@ class Indicators():
                     if price_change_percent > .75 and demand_diff_percent <= allowed_diff_percent:
 
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            demand_zone = [
-                                lowPrice[i - 1], closePrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": lowPrice[i - 1],
+                                "top": closePrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            demand_zone = [
-                                lowPrice[i - 1], openPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": lowPrice[i - 1],
+                                "top": openPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         demand_zones.append(demand_zone)
                         i += 1
@@ -352,11 +358,17 @@ class Indicators():
 
                     elif price_change_percent < -.75 and supply_diff_percent <= allowed_diff_percent:
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            supply_zone = [
-                                highPrice[i - 1], openPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": highPrice[i - 1],
+                                "bottom": openPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            supply_zone = [
-                                openPrice[i - 1], lowPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": openPrice[i - 1],
+                                "bottom": lowPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         supply_zones.append(supply_zone)
                         i += 1
@@ -381,11 +393,17 @@ class Indicators():
                     elif price_change_percent > .95:
 
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            demand_zone = [
-                                lowPrice[i - 1], closePrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": lowPrice[i - 1],
+                                "top": closePrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            demand_zone = [
-                                lowPrice[i - 1], openPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": lowPrice[i - 1],
+                                "top": openPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         demand_zones.append(demand_zone)
                         i += 1
@@ -409,11 +427,17 @@ class Indicators():
 
                     elif price_change_percent < -.95:
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            supply_zone = [
-                                highPrice[i - 1], openPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": highPrice[i - 1],
+                                "bottom": openPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            supply_zone = [
-                                openPrice[i - 1], lowPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": openPrice[i - 1],
+                                "bottom": lowPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         supply_zones.append(supply_zone)
                         i += 1
@@ -444,11 +468,17 @@ class Indicators():
                     if price_change_percent > .75 and demand_diff_percent <= allowed_diff_percent:
 
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            demand_zone = [
-                                lowPrice[i - 1], closePrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": lowPrice[i - 1],
+                                "top": closePrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            demand_zone = [
-                                closePrice[i - 1], highPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": closePrice[i - 1],
+                                "top": highPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         demand_zones.append(demand_zone)
                         i += 1
@@ -472,11 +502,17 @@ class Indicators():
 
                     elif price_change_percent < -.75 and supply_diff_percent <= allowed_diff_percent:
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            supply_zone = [
-                                highPrice[i - 1], openPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": highPrice[i - 1],
+                                "bottom": openPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            supply_zone = [
-                                closePrice[i - 1], lowPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top":  closePrice[i - 1],
+                                "bottom": lowPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         supply_zones.append(supply_zone)
                         i += 1
@@ -501,11 +537,17 @@ class Indicators():
                     if price_change_percent > .95:
 
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            demand_zone = [
-                                lowPrice[i - 1], closePrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": lowPrice[i - 1],
+                                "top": closePrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            demand_zone = [
-                                closePrice[i - 1], highPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            demand_zone = {
+                                "bottom": closePrice[i - 1],
+                                "top": highPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         demand_zones.append(demand_zone)
                         i += 1
@@ -529,11 +571,17 @@ class Indicators():
 
                     elif price_change_percent < -.95:
                         if openPrice[i - 1] < closePrice[i - 1]:
-                            supply_zone = [
-                                highPrice[i - 1], openPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": highPrice[i - 1],
+                                "bottom": openPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
                         else:
-                            supply_zone = [
-                                closePrice[i - 1], lowPrice[i - 1], str(dateAndTime[i - 1][1])]
+                            supply_zone = {
+                                "top": closePrice[i - 1],
+                                "bottom": lowPrice[i - 1],
+                                "dateTime": str(dateAndTime[i - 1][1])
+                            }
 
                         supply_zones.append(supply_zone)
                         i += 1
@@ -1104,7 +1152,6 @@ class Indicators():
 #     KST = pd.Series(pd.rolling_sum(ROC1, n1) + pd.rolling_sum(ROC2, n2) * 2 + pd.rolling_sum(ROC3, n3) * 3 + pd.rolling_sum(ROC4, n4) * 4, name = 'KST_' + str(r1) + '_' + str(r2) + '_' + str(r3) + '_' + str(r4) + '_' + str(n1) + '_' + str(n2) + '_' + str(n3) + '_' + str(n4))
 #     df = df.join(KST)
 #     return df
-
 
     def refresh(self):
         """Updates the Indicator columns after adding the new rows."""
