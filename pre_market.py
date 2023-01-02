@@ -32,7 +32,7 @@ class Pre_Market:
         self.large_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA',
                                 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
         self.xtra_large_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG',
-                                     'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID', 'GOOG', 'FL', 'EBAY', 'CMG', 'BA', 'MU', 'BYND', 'DOCU']
+                                     'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID', 'GOOG', 'FL', 'EBAY', 'CMG', 'BA', 'BYND', 'DOCU']
         self.limit = 0
         self.opportunities = []
 
