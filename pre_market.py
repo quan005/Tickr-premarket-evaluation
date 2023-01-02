@@ -413,43 +413,49 @@ class Pre_Market:
                 {
                     "name": "demandZones",
                     "type": {
-                        "name": "demandZonesRecord",
-                        "type": "record",
-                        "fields": [
-                            {
-                                "name": "bottom",
-                                "type": "double"
-                            },
-                            {
-                                "name": "top",
-                                "type": "double"
-                            },
-                            {
-                                "name": "datetime",
-                                "type": "string"
-                            }
-                        ]
+                        "type": "array",
+                        "items": {
+                            "name": "demandZone",
+                            "type": "record",
+                            "fields": [
+                                {
+                                    "name": "bottom",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "top",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "datetime",
+                                    "type": "string"
+                                }
+                            ]
+                        }
                     }
                 },
                 {
                     "name": "supplyZones",
                     "type": {
-                        "name": "supplyZonesRecord",
-                        "type": "record",
-                        "fields": [
-                            {
-                                "name": "top",
-                                "type": "double"
-                            },
-                            {
-                                "name": "bottom",
-                                "type": "double"
-                            },
-                            {
-                                "name": "datetime",
-                                "type": "string"
-                            }
-                        ]
+                        "type": "array",
+                        "items": {
+                            "name": "supplyZone",
+                            "type": "record",
+                            "fields": [
+                                {
+                                    "name": "top",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "bottom",
+                                    "type": "double"
+                                },
+                                {
+                                    "name": "datetime",
+                                    "type": "string"
+                                }
+                            ]
+                        }
                     }
                 }
             ]
