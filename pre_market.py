@@ -419,7 +419,7 @@ class Pre_Market:
                                 "type": "double"
                             },
                             {
-                                "name" "top",
+                                "name": "top",
                                 "type": "double"
                             },
                             {
@@ -436,7 +436,7 @@ class Pre_Market:
                         "name": "supplyZonesRecord",
                         "fields": [
                             {
-                                "name" "top",
+                                "name": "top",
                                 "type": "double"
                             },
                             {
