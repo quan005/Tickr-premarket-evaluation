@@ -325,6 +325,8 @@ class Pre_Market:
             Returns:
                 dict: Dict populated with premarket_data attributes to be serialized.
         """
+        print('premarket data', premarket_data)
+        print('demandZones', premarket_data['Demand Zones'])
         return dict(
             limit=premarket_data['Limit'],
             budget=premarket_data['Budget'],
@@ -411,8 +413,8 @@ class Pre_Market:
                 {
                     "name": "demandZones",
                     "type": {
-                        "type": "record",
                         "name": "demandZonesRecord",
+                        "type": "record",
                         "fields": [
                             {
                                 "name": "bottom",
@@ -432,8 +434,8 @@ class Pre_Market:
                 {
                     "name": "supplyZones",
                     "type": {
-                        "type": "record",
                         "name": "supplyZonesRecord",
+                        "type": "record",
                         "fields": [
                             {
                                 "name": "top",
