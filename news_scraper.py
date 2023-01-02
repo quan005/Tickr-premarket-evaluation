@@ -33,6 +33,38 @@ class NewsScraper:
             self.company_name = 'Apple'
             return self.company_name
 
+        elif self.ticker == 'UAA':
+            self.company_name = 'Under Armour Inc'
+            return self.company_name
+
+        elif self.ticker == 'UAL':
+            self.company_name = 'United Airlines Holdings Inc'
+            return self.company_name
+
+        elif self.ticker == 'CCL':
+            self.company_name = 'Carnival Corp'
+            return self.company_name
+
+        elif self.ticker == 'MRO':
+            self.company_name = 'Marathon Oil Corp'
+            return self.company_name
+
+        elif self.ticker == 'MU':
+            self.company_name = 'Micron Technology Inc'
+            return self.company_name
+
+        elif self.ticker == 'RIVN':
+            self.company_name = 'Rivian Automotive Inc'
+            return self.company_name
+
+        elif self.ticker == 'FCX':
+            self.company_name = 'Freeport-McMoRan Inc'
+            return self.company_name
+
+        elif self.ticker == 'PBR':
+            self.company_name = 'Petrobras'
+            return self.company_name
+
         elif self.ticker == 'NVDA':
             self.company_name = 'Nvidia'
             return self.company_name
@@ -45,8 +77,8 @@ class NewsScraper:
             self.company_name = 'Netflix'
             return self.company_name
 
-        elif self.ticker == 'FB':
-            self.company_name = 'Facebook'
+        elif self.ticker == 'META':
+            self.company_name = 'Meta Platforms Inc'
             return self.company_name
 
         elif self.ticker == 'DKNG':
@@ -58,7 +90,7 @@ class NewsScraper:
             return self.company_name
 
         elif self.ticker == 'GOOG':
-            self.company_name = 'Google'
+            self.company_name = 'Alphabet Inc'
             return self.company_name
 
         elif self.ticker == 'TSLA':
