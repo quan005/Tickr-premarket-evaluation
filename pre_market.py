@@ -428,7 +428,8 @@ class Pre_Market:
                                 },
                                 {
                                     "name": "datetime",
-                                    "type": "string"
+                                    "type": "string",
+                                    "default": ""
                                 }
                             ]
                         }
@@ -452,7 +453,8 @@ class Pre_Market:
                                 },
                                 {
                                     "name": "datetime",
-                                    "type": "string"
+                                    "type": "string",
+                                    "default": ""
                                 }
                             ]
                         }
