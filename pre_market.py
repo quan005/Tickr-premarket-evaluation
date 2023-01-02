@@ -325,8 +325,7 @@ class Pre_Market:
             Returns:
                 dict: Dict populated with premarket_data attributes to be serialized.
         """
-        print('premarket data', premarket_data)
-        print('demandZones', premarket_data['Demand Zones'])
+
         return dict(
             limit=premarket_data['Limit'],
             budget=premarket_data['Budget'],
