@@ -306,7 +306,7 @@ class Pre_Market:
         limit_count = 0
 
         # loop through the sorted_temp
-        while limit_count < self.limit:
+        while limit_count < self.limit and limit_count < len(sorted_temp):
             # create and send a find position event for the current company
             self.send_find_position_event(sorted_temp[limit_count])
 
