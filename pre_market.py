@@ -136,7 +136,7 @@ class Pre_Market:
                 new_opportunity['Score'] + news_analyzer['score'])
 
             # initialize HistoricalAnalysis ie. ha = HistoricalAnalysis('aapl')
-            print('symbol', new_opportunity['Symbol'])
+            # print('symbol', new_opportunity['Symbol'])
             ha = HistoricalAnalysis(i)
 
             # start historical_analysis ie. ha.start_historical_analysis() and apply result to score
@@ -273,27 +273,27 @@ class Pre_Market:
 
             # add key levels and support and resisitance
             new_opportunity['Key Levels'] = cleaned_key_levels
-            print('Key Levels = ', new_opportunity['Key Levels'])
+            # print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
-            print('Symbol = ', new_opportunity['Symbol'])
-            print('Support Resistance = ',
-                  new_opportunity['Support Resistance'])
+            # print('Symbol = ', new_opportunity['Symbol'])
+            # print('Support Resistance = ',
+            #   new_opportunity['Support Resistance'])
 
             # get demand zones using the five minute stock frame
             supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
                 dataframe=five_minute_stock_frame.frame, ticker=i, key_levels=new_opportunity['Key Levels'])
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
-            print('Demand Zones', supply_demand_zones['demand_zones'])
+            # print('Demand Zones', supply_demand_zones['demand_zones'])
             new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']
-            print('Supply Zones', supply_demand_zones['supply_zones'])
+            # print('Supply Zones', supply_demand_zones['supply_zones'])
 
             # appen new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
 
-            print('Opps', temp_opportunity_list)
+            # print('Opps', temp_opportunity_list)
 
             # remove the current ticker from the position
             bot_portfolio.remove_position(
@@ -304,13 +304,14 @@ class Pre_Market:
         sorted_temp = sorted(temp_opportunity_list,
                              key=lambda i: i['Score'], reverse=True)
 
-        print('opportunities', sorted_temp)
+        # print('opportunities', sorted_temp)
 
         # establish a limit_count
         limit_count = 0
 
         # loop through the sorted_temp
         while limit_count < self.limit and limit_count < len(sorted_temp):
+            print(sorted_temp[limit_count])
             # create and send a find position event for the current company
             self.send_find_position_event(sorted_temp[limit_count])
 
