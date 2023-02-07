@@ -298,6 +298,8 @@ class Pre_Market:
                 symbol=i
             )
 
+        print('Opps', temp_opportunity_list)
+
         # sort temporary opportunities list by score
         sorted_temp = sorted(temp_opportunity_list,
                              key=lambda i: i['Score'], reverse=True)
