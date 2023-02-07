@@ -293,12 +293,12 @@ class Pre_Market:
             # appen new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
 
+            print('Opps', temp_opportunity_list)
+
             # remove the current ticker from the position
             bot_portfolio.remove_position(
                 symbol=i
             )
-
-        print('Opps', temp_opportunity_list)
 
         # sort temporary opportunities list by score
         sorted_temp = sorted(temp_opportunity_list,
