@@ -286,7 +286,9 @@ class Pre_Market:
                 dataframe=five_minute_stock_frame.frame, ticker=i, key_levels=new_opportunity['Key Levels'])
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
+            print('Demand Zones', supply_demand_zones['demand_zones'])
             new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']
+            print('Supply Zones', supply_demand_zones['supply_zones'])
 
             # appen new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
