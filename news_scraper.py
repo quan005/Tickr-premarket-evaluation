@@ -484,6 +484,9 @@ class NewsScraper:
 
         sentiment = self.getSentimentAnalysis(self.all_news)
 
+        if sentiment == None:
+            sentiment = 'Neutral'
+
         if self.catalyst_weight >= 3 and self.catalyst_weight < 7:
             return {
                 'sentiment_analysis': sentiment,
