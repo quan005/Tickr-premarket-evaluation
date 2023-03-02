@@ -707,8 +707,21 @@ class Indicators():
         # are surrounding the current price.
         if len(sr_list) > 1:
             for i in range(len(sr_list)):
+                if i >= len(sr_list) - 1:
+                    if close_price_series[-2] <= sr_list[i]:
+                        return {
+                            'resistance': sr_list[i],
+                            'support': 0,
+                        }
+                    elif close_price_series[-2] >= sr_list[i]:
+                        return {
+                            'resistance': sr_list[i - 1],
+                            'support': sr_list[i],
+                        }
+                    else:
+                        return 'Theres is no Support / Resistance levels'
 
-                if close_price_series[-2] <= sr_list[i] and close_price_series[-2] >= sr_list[i + 1]:
+                elif close_price_series[-2] <= sr_list[i] and close_price_series[-2] >= sr_list[i + 1]:
                     return {
                         'resistance': sr_list[i],
                         'support': sr_list[i + 1],
