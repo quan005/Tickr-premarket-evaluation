@@ -91,7 +91,7 @@ class Pre_Market:
             return 'Not Enough Capital'
 
         # based on budget determine which watchlist to use and total opportunity's limit aka self.limit
-        if budget >= 450 and budget < 1000:
+        if budget >= 430 and budget < 1000:
             self.limit = 1
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:
