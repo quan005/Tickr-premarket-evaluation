@@ -26,7 +26,7 @@ class Pre_Market:
         self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
         self.TOKEN = None
         self.small_watchlist = ['AMD', 'NKE', 'AAL',
-                                'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL']
+                                'UAA', 'SPY', 'PFE', 'BAC', 'CCL']
         self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL',
                                  'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU']
         self.large_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA',
