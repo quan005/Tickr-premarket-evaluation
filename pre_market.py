@@ -26,7 +26,7 @@ class Pre_Market:
         self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
         self.TOKEN = None
         self.small_watchlist = ['AMD', 'NKE', 'AAL',
-                                'UAA', 'SPY', 'PFE', 'BAC', 'CCL']
+                                'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL']
         self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL',
                                  'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU']
         self.large_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA',
@@ -94,16 +94,16 @@ class Pre_Market:
 
         # based on budget determine which watchlist to use and total opportunity's limit aka self.limit
         if budget >= 200 and budget < 1000:
-            self.limit = 1
+            self.limit = 3
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:
-            self.limit = 2
+            self.limit = 4
             watchlist = self.medium_watchlist
         elif budget >= 5000 and budget < 15000:
-            self.limit = 3
+            self.limit = 6
             watchlist = self.large_watchlist
         elif budget >= 15000:
-            self.limit = 5
+            self.limit = 7
             watchlist = self.xtra_large_watchlist
         else:
             watchlist = None
