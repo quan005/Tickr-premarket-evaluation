@@ -83,7 +83,7 @@ class StockFrame():
         # Make a data frame.
         price_df = pd.DataFrame(data=self._data)
         price_df = self._parse_datetime_column(price_df=price_df)
-        price_df = self._set_multi_index(price_df=price_df)
+        # price_df = self._set_multi_index(price_df=price_df)
 
         return price_df
 
@@ -126,7 +126,7 @@ class StockFrame():
         pd.DataFrame -- A pandas dataframe.
         """
 
-        price_df = price_df.set_index(['symbol', 'datetime'], append=TRUE)
+        price_df = price_df.set_index(['symbol', 'datetime'], append=True)
 
         print('mullti columns', price_df.columns)
 
