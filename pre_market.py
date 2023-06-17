@@ -198,6 +198,8 @@ class Pre_Market:
             thirty_minute_indicator_client = Indicators(
                 price_data_frame=thirty_minute_stock_frame)
 
+            newSupportResistance = thirty_minute_indicator_client.getSupportResistance(thirty_minute_stock_frame.frame)
+
             # add the thirty minute 200 ema to the thirty minuteindicator
             thirty_minute_indicator_client.ema(period=200)
 
@@ -278,8 +280,6 @@ class Pre_Market:
             # print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
-
-            newSupportResistance = thirty_minute_indicator_client.getSupportResistance(thirty_minute_stock_frame.frame)
 
             print('Symbol = ', new_opportunity['Symbol'])
             print('Support Resistance = ',

@@ -214,7 +214,7 @@ class Indicators():
     
     def getSupportResistance(self, dataframe):
         print('columns', dataframe.columns)
-        dataframe.reset_index(drop=True)
+        dataframe.reset_index()
 
         print('new columns', dataframe.columns)
 
