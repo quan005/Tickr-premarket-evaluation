@@ -211,6 +211,58 @@ class Indicators():
         new_dict['key_levels'] = key_levels
 
         return new_dict
+    
+    def getSupportResistance(self, dataframe: pd.Dataframe):
+        dataframe['datetime'] = pd.to_datetime(dataframe['datetime'])
+
+        # Set the 'datetime' column as the index of the DataFrame
+        dataframe.set_index('datetime', inplace=True)
+
+        # Resample the data to 1-hour intervals
+        hourly_data = dataframe.resample('1H').agg({'open': 'first', 'high': 'max', 'low': 'min', 'close': 'last', 'volume': 'sum'})
+
+        # Calculate pivot points
+        hourly_data['pivot'] = (hourly_data['high'] + hourly_data['low'] + hourly_data['close']) / 3
+
+        # Calculate support levels
+        support_levels = []
+        for i in range(1, 8):
+            support_level = f'support{i}'
+            hourly_data[support_level] = (2 * hourly_data['pivot']) - hourly_data['high'].shift(i)
+            support_levels.append(support_level)
+
+        # Calculate resistance levels
+        resistance_levels = []
+        for i in range(1, 8):
+            resistance_level = f'resistance{i}'
+            hourly_data[resistance_level] = (2 * hourly_data['pivot']) - hourly_data['low'].shift(i)
+            resistance_levels.append(resistance_level)
+
+        # Find the volume spike hours
+        volume_spike_hours = hourly_data[hourly_data['volume'] > hourly_data['volume'].mean() + (2 * hourly_data['volume'].std())]
+
+        # Cross-analyze support and resistance levels with volume spike hours
+        support_levels_with_strength = []
+        resistance_levels_with_strength = []
+
+        for level in support_levels:
+            strength = volume_spike_hours[level].sum()
+            support_levels_with_strength.append((level, strength))
+
+        for level in resistance_levels:
+            strength = volume_spike_hours[level].sum()
+            resistance_levels_with_strength.append((level, strength))
+
+        # Sort the support and resistance levels by strength in descending order
+        support_levels_with_strength.sort(key=lambda x: x[1], reverse=True)
+        resistance_levels_with_strength.sort(key=lambda x: x[1], reverse=True)
+
+        new_dict = dict()
+
+        new_dict[supportLevels] = support_levels_with_strength
+        new_dict[resistanceLevels] = resistance_levels_with_strength
+
+        return new_dict
 
     def scrub_key_levels(self, key_levels: list):
         clean_key_levels = []

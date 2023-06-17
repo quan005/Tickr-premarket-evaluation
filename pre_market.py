@@ -279,9 +279,12 @@ class Pre_Market:
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
-            # print('Symbol = ', new_opportunity['Symbol'])
-            # print('Support Resistance = ',
-            #   new_opportunity['Support Resistance'])
+            newSupportResistance = thirty_minute_indicator_client.getSupportResistance(thirty_minute_stock_frame.frame)
+
+            print('Symbol = ', new_opportunity['Symbol'])
+            print('Support Resistance = ',
+              new_opportunity['Support Resistance'])
+            print('new Support Resistance =', newSupportResistance)
 
             # get demand zones using the five minute stock frame
             supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
