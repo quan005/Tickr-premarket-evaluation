@@ -212,7 +212,7 @@ class Indicators():
 
         return new_dict
     
-    def getSupportResistance(self, dataframe: pd.Dataframe):
+    def getSupportResistance(self, dataframe):
         dataframe['datetime'] = pd.to_datetime(dataframe['datetime'])
 
         # Set the 'datetime' column as the index of the DataFrame
