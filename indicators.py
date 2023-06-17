@@ -213,7 +213,7 @@ class Indicators():
         return new_dict
     
     def getSupportResistance(self, dataframe):
-        dataframe.reset_index()
+        dataframe.reset_index(drop=True)
 
         # Set the 'datetime' column as the index of the DataFrame
         dataframe.set_index('datetime', inplace=True)
