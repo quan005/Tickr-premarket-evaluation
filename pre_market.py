@@ -194,6 +194,8 @@ class Pre_Market:
                 data=thirty_minute_historical_prices['aggregated']
             )
 
+            print('thirty minute frame = ', thirty_minute_stock_frame.frame)
+
             # create thirty minute indicator object
             thirty_minute_indicator_client = Indicators(
                 price_data_frame=thirty_minute_stock_frame)
