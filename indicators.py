@@ -232,14 +232,14 @@ class Indicators():
         for i in range(1, 8):
             support_level = f'support{i}'
             hourly_data[support_level] = (2 * hourly_data['pivot']) - hourly_data['high'].shift(i)
-            support_levels.append(support_level)
+            support_levels.append(hourly_data[support_level])
 
         # Calculate resistance levels
         resistance_levels = []
         for i in range(1, 8):
             resistance_level = f'resistance{i}'
             hourly_data[resistance_level] = (2 * hourly_data['pivot']) - hourly_data['low'].shift(i)
-            resistance_levels.append(resistance_level)
+            resistance_levels.append(hourly_data[resistance_level])
 
         print('support_levels', support_levels)
         print('resistance_levels', resistance_levels)
