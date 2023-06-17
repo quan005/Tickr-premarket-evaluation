@@ -262,8 +262,8 @@ class Indicators():
 
         new_dict = dict()
 
-        new_dict[supportLevels] = support_levels_with_strength
-        new_dict[resistanceLevels] = resistance_levels_with_strength
+        new_dict['supportLevels'] = support_levels_with_strength
+        new_dict['resistanceLevels'] = resistance_levels_with_strength
 
         return new_dict
 
