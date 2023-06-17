@@ -126,7 +126,7 @@ class StockFrame():
         pd.DataFrame -- A pandas dataframe.
         """
 
-        price_df = price_df.set_index(keys=['symbol', 'datetime'], inplace=True)
+        price_df = price_df.set_index(keys=['symbol', 'datetime'])
 
         return price_df
 
