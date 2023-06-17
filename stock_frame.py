@@ -108,9 +108,6 @@ class StockFrame():
 
         price_df.columns.str.strip()
 
-        print('parse datetime columns', price_df.columns)
-        print('parse datetime head', price_df['datetime'].head())
-
         # price_df['datetime'] = pd.to_datetime(
         #     price_df['datetime'],
         #     unit='ms',
@@ -129,7 +126,7 @@ class StockFrame():
         pd.DataFrame -- A pandas dataframe.
         """
 
-        price_df = price_df.set_index(keys=['symbol', 'datetime'])
+        price_df = price_df.set_index(keys=['symbol', 'datetime'], inplace=True)
 
         return price_df
 
