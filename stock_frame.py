@@ -126,7 +126,7 @@ class StockFrame():
         pd.DataFrame -- A pandas dataframe.
         """
 
-        price_df = price_df.set_index(['symbol', 'datetime'])
+        price_df = price_df.set_index(['symbol', 'datetime'], append=TRUE)
 
         print('mullti columns', price_df.columns)
 
