@@ -241,6 +241,9 @@ class Indicators():
             hourly_data[resistance_level] = (2 * hourly_data['pivot']) - hourly_data['low'].shift(i)
             resistance_levels.append(resistance_level)
 
+        print('support_levels', support_levels)
+        print('resistance_levels', resistance_levels)
+
         # Find the volume spike hours
         volume_spike_hours = hourly_data[hourly_data['volume'] > hourly_data['volume'].mean() + (2 * hourly_data['volume'].std())]
 
