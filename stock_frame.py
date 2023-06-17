@@ -106,7 +106,10 @@ class StockFrame():
             origin='unix'
         )
 
+        price_df.columns.str.strip()
+
         print('parse datetime columns', price_df.columns)
+        print('parse datetime head', price_df['datetime'].head())
 
         # price_df['datetime'] = pd.to_datetime(
         #     price_df['datetime'],
