@@ -214,6 +214,9 @@ class Indicators():
     
     def getSupportResistance(self, dataframe):
 
+        # Set the 'datetime' column as the index of the DataFrame
+        dataframe.set_index('datetime', inplace=True)
+
         # Resample the data to 1-hour intervals
         hourly_data = dataframe.resample('1H').agg({'open': 'first', 'high': 'max', 'low': 'min', 'close': 'last', 'volume': 'sum'})
 
