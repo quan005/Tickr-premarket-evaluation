@@ -78,7 +78,7 @@ class HistoricalAnalysis:
         red = 0
 
         for i in range(len(dataframe)):
-            high = dataframe.iloc[i, 0] + 2
+            high = dataframe.iloc[i, 2] + 2
             day = date.strftime(date_list[i][1], '%Y-%m-%d')
             dayday = date.fromisoformat(day).weekday()
             if date.fromisoformat(day).weekday() == self.date:
