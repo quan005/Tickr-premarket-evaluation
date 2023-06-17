@@ -128,6 +128,8 @@ class StockFrame():
 
         price_df = price_df.set_index(keys=['symbol', 'datetime'])
 
+        print('mullti columns', price_df.columns)
+
         return price_df
 
     def add_rows(self, data: Dict) -> None:
