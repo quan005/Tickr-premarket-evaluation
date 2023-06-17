@@ -47,7 +47,7 @@ class StockFrame():
 
         # Group by Symbol.
         self._symbol_groups: DataFrameGroupBy = self._frame.groupby(
-            by='symbol',
+            by=self._frame.index.get_level_values('symbol'),
             as_index=False,
             sort=True
         )
