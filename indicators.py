@@ -253,15 +253,17 @@ class Indicators():
 
         for level in support_levels:
             support_data = volume_spike_hours[[level, 'volume']].dropna()
-            support_data['volume_strength'] = (support_data['volume'] - volume_mean) / volume_std
-            max_strength_index = support_data['volume_strength'].idxmax()
-            support_levels_with_strength.append((support_data.loc[max_strength_index, level], max_strength_index, support_data.loc[max_strength_index, 'volume']))
+            if not support_data.empty:
+                support_data['volume_strength'] = (support_data['volume'] - volume_mean) / volume_std
+                max_strength_index = support_data['volume_strength'].idxmax()
+                support_levels_with_strength.append((support_data.loc[max_strength_index, level], max_strength_index, support_data.loc[max_strength_index, 'volume']))
 
         for level in resistance_levels:
             resistance_data = volume_spike_hours[[level, 'volume']].dropna()
-            resistance_data['volume_strength'] = (resistance_data['volume'] - volume_mean) / volume_std
-            max_strength_index = resistance_data['volume_strength'].idxmax()
-            resistance_levels_with_strength.append((resistance_data.loc[max_strength_index, level], max_strength_index, resistance_data.loc[max_strength_index, 'volume']))
+            if not resistance_data.empty:
+                resistance_data['volume_strength'] = (resistance_data['volume'] - volume_mean) / volume_std
+                max_strength_index = resistance_data['volume_strength'].idxmax()
+                resistance_levels_with_strength.append((resistance_data.loc[max_strength_index, level], max_strength_index, resistance_data.loc[max_strength_index, 'volume']))
 
         # Sort the support and resistance levels by volume strength in descending order
         support_levels_with_strength.sort(key=lambda x: x[2], reverse=True)
