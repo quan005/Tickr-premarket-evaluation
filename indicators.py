@@ -162,6 +162,9 @@ class Indicators():
         key_levels = list(filter(lambda x: x != 0.0, key_levels))
         key_levels.sort(reverse=True)
 
+        print('price_dic', price_dic)
+        print('key_levels', key_levels)
+        
         new_dict = {
             'price_dic': price_dic,
             'key_levels': key_levels

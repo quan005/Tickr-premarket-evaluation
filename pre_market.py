@@ -269,12 +269,8 @@ class Pre_Market:
             no_duplicates = list(OrderedDict.fromkeys(
                 five_minute_key_levels['key_levels']))
 
-            # scrub duplicate data
-            cleaned_key_levels = five_minute_indicator_client.scrub_key_levels(
-                no_duplicates)
-
             # add key levels and support and resisitance
-            new_opportunity['Key Levels'] = cleaned_key_levels
+            new_opportunity['Key Levels'] = no_duplicates
             # print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
@@ -282,7 +278,7 @@ class Pre_Market:
             print('Symbol = ', new_opportunity['Symbol'])
             print('Support Resistance = ',
               new_opportunity['Support Resistance'])
-            print('key levels =', new_opportunity['Key Levels'])
+            print('key levels from pre_market =', new_opportunity['Key Levels'])
 
             # get demand zones using the five minute stock frame
             supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
