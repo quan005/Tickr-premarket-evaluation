@@ -135,7 +135,9 @@ class Indicators():
                 }
 
             price_dic[key]['occurrences'] += 1
-            for range_key in price_dic[key]['ranges']:
+            ranges_keys = list(price_dic[key]['ranges'].keys())  # Copy the keys to iterate over
+
+            for range_key in ranges_keys:
                 range_mean = round(mean(price_dic[key]['ranges'][range_key]['mean']), 1)
                 if range_mean != rounded_price:
                     del price_dic[key]['ranges'][range_key]
