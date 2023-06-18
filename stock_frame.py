@@ -83,9 +83,7 @@ class StockFrame():
         # Make a data frame.
         price_df = pd.DataFrame(data=self._data)
         price_df = self._parse_datetime_column(price_df=price_df)
-        print('single columns', price_df)
         price_df = self._set_multi_index(price_df=price_df)
-        print('mullti columns', price_df)
 
         return price_df
 
