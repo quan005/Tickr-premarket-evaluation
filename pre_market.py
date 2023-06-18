@@ -198,8 +198,6 @@ class Pre_Market:
             thirty_minute_indicator_client = Indicators(
                 price_data_frame=thirty_minute_stock_frame)
 
-            newSupportResistance = thirty_minute_indicator_client.getSupportResistance(thirty_minute_stock_frame.frame)
-
             # add the thirty minute 200 ema to the thirty minuteindicator
             thirty_minute_indicator_client.ema(period=200)
 
@@ -288,7 +286,7 @@ class Pre_Market:
 
             # get demand zones using the five minute stock frame
             supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
-                dataframe=five_minute_stock_frame.frame, ticker=i, key_levels=new_opportunity['Key Levels'])
+                dataframe=five_minute_stock_frame.frame, key_levels=new_opportunity['Key Levels'], price_threshold=.75)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             # print('Demand Zones', supply_demand_zones['demand_zones'])
