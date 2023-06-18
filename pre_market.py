@@ -282,7 +282,7 @@ class Pre_Market:
             print('Symbol = ', new_opportunity['Symbol'])
             print('Support Resistance = ',
               new_opportunity['Support Resistance'])
-            print('new Support Resistance =', newSupportResistance)
+            print('key levels =', new_opportunity['Key Levels'])
 
             # get demand zones using the five minute stock frame
             supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
