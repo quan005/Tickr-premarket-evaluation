@@ -200,11 +200,10 @@ class Indicators():
             previous_price = close_prices[i - 1]
             is_increase = current_price > previous_price
 
-            # Calculate the price change and check if it exceeds the threshold
-            price_change = current_price - previous_price
-            abs_price_change = abs(price_change)
+            # Calculate the price change percentage
+            price_change_percentage = abs((current_price - previous_price) / previous_price) * 100
 
-            if abs_price_change >= price_threshold:
+            if price_change_percentage >= price_threshold:
                 # Check if the price crossed a key level
                 if is_increase and previous_price <= min_key_level <= current_price <= max_key_level:
                     demand_zones.append({
@@ -226,8 +225,6 @@ class Indicators():
             'supply_zones': supply_zones,
             'broke_key_level': broke_key_level
         }
-
-        print('final_demand_supply_zones', final_demand_supply_zones)
 
         return final_demand_supply_zones
 
