@@ -122,9 +122,9 @@ class Indicators():
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
 
-        prices = set(highPrice).union(lowPrice).union(openPrice).union(closePrice)
+        all_prices = set(highPrice).union(lowPrice).union(openPrice).union(closePrice)
 
-        for price in prices:
+        for price in all_prices:
             rounded_price = round(price, 0)
             key = f'{rounded_price}'
 
@@ -135,12 +135,6 @@ class Indicators():
                 }
 
             price_dic[key]['occurrences'] += 1
-            ranges_keys = list(price_dic[key]['ranges'].keys())  # Copy the keys to iterate over
-
-            for range_key in ranges_keys:
-                range_mean = round(mean(price_dic[key]['ranges'][range_key]['mean']), 1)
-                if range_mean != rounded_price:
-                    del price_dic[key]['ranges'][range_key]
 
             for i in range(1, 8):
                 diff_below = round(price - (price * 0.0055 * i), 2)
@@ -164,7 +158,7 @@ class Indicators():
 
         print('price_dic', price_dic)
         print('key_levels', key_levels)
-        
+
         new_dict = {
             'price_dic': price_dic,
             'key_levels': key_levels
@@ -196,60 +190,51 @@ class Indicators():
         supply_zones = []
         broke_key_level = []
 
+        high_prices = dataframe['high'].values
+        low_prices = dataframe['low'].values
+        open_prices = dataframe['open'].values
         close_prices = dataframe['close'].values
         date_and_time = dataframe.index
 
         min_key_level = np.min(key_levels)
         max_key_level = np.max(key_levels)
 
+        # Calculate price changes and their magnitudes
         price_changes = close_prices[1:] - close_prices[:-1]
-        price_increased = price_changes > 0
-        price_decreased = price_changes < 0
+        abs_price_changes = np.abs(price_changes)
 
-        increased_prices = np.where(price_increased, close_prices[1:], np.nan)
-        decreased_prices = np.where(price_decreased, close_prices[1:], np.nan)
+        # Find indices where price changes exceed the threshold
+        significant_changes_indices = np.where(abs_price_changes >= price_threshold)[0]
 
-        demand_mask = (increased_prices >= min_key_level) & (increased_prices <= max_key_level)
-        supply_mask = (decreased_prices <= max_key_level) & (decreased_prices >= min_key_level)
+        # Iterate over the significant price changes
+        for i in significant_changes_indices:
+            current_price = close_prices[i + 1]
+            previous_price = close_prices[i]
+            is_increase = price_changes[i] > 0
 
-        demand_prices = increased_prices[demand_mask]
-        supply_prices = decreased_prices[supply_mask]
-
-        demand_zones = [
-            {
-                "bottom": prev_price,
-                "top": curr_price,
-                "dateTime": str(date_and_time[i])
-            }
-            for i, (prev_price, curr_price) in enumerate(zip(close_prices[:-1], demand_prices), 1)
-            if abs(curr_price - prev_price) >= price_threshold
-        ]
-
-        supply_zones = [
-            {
-                "top": prev_price,
-                "bottom": curr_price,
-                "dateTime": str(date_and_time[i])
-            }
-            for i, (prev_price, curr_price) in enumerate(zip(close_prices[:-1], supply_prices), 1)
-            if abs(curr_price - prev_price) >= price_threshold
-        ]
-
-        broke_key_level = [
-            (prev_price, curr_price, 'demand_zone')
-            for prev_price, curr_price in zip(close_prices[:-1], demand_prices)
-            if (prev_price <= min_key_level) and (curr_price >= min_key_level) and (curr_price <= max_key_level)
-        ] + [
-            (prev_price, curr_price, 'supply_zone')
-            for prev_price, curr_price in zip(close_prices[:-1], supply_prices)
-            if (prev_price >= max_key_level) and (curr_price >= min_key_level) and (curr_price <= max_key_level)
-        ]
+            # Check if the price crossed a key level
+            if is_increase and previous_price <= min_key_level <= current_price <= max_key_level:
+                demand_zones.append({
+                    "bottom": previous_price,
+                    "top": current_price,
+                    "dateTime": str(date_and_time[i])
+                })
+                broke_key_level.append((previous_price, current_price, 'demand_zone'))
+            elif not is_increase and max_key_level >= previous_price >= min_key_level >= current_price:
+                supply_zones.append({
+                    "top": previous_price,
+                    "bottom": current_price,
+                    "dateTime": str(date_and_time[i])
+                })
+                broke_key_level.append((previous_price, current_price, 'supply_zone'))
 
         final_demand_supply_zones = {
             'demand_zones': demand_zones,
             'supply_zones': supply_zones,
             'broke_key_level': broke_key_level
         }
+
+        print('final_demand_supply_zones', final_demand_supply_zones)
 
         return final_demand_supply_zones
 
