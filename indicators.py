@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from statistics import mean
 from datetime import time, datetime, timezone, timedelta
-from typing import Any, List, Dict, Union, Opt
+from typing import Any, List, Dict, Union
 from collections import defaultdict
 from statistics import mean
 from stock_frame import StockFrame
