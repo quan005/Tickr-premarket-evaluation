@@ -102,6 +102,7 @@ class Indicators():
         openPrice = dataframe['open']
         closePrice = dataframe['close']
         volume = dataframe['volume']
+        count = [None] * len(dataframe)
 
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
@@ -161,12 +162,14 @@ class Indicators():
 
         for price_key, info in price_levels.items():
             price_dic[price_key] = info
+            count.append(info['count'])
 
         key_levels = [high, low]
+        average_count = np.round(np.mean(count), 1)
 
         for price, info in price_levels.items():
             print('info', price, info['count'])
-            if info['count'] > 70:
+            if info['count'] > average_count:
                 mean_price = np.round(np.mean(info['mean']), 2)
                 avg_volume = info['volume_sum'] / info['count']
 
