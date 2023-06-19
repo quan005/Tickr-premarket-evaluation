@@ -82,11 +82,11 @@ class HistoricalAnalysis:
             day = date.strftime(date_list[i][1], '%Y-%m-%d')
             dayday = date.fromisoformat(day).weekday()
             if date.fromisoformat(day).weekday() == self.date:
-                if dataframe.iloc[i, 1] > dataframe.iloc[i, 0]:
+                if dataframe.iloc[i, 3] > dataframe.iloc[i, 2]:
                     green += 1
-                elif dataframe.iloc[i, 1] < dataframe.iloc[i, 0] and dataframe.iloc[i, 2] >= high:
+                elif dataframe.iloc[i, 3] < dataframe.iloc[i, 2] and dataframe.iloc[i, 4] >= high:
                     green += 1
-                elif dataframe.iloc[i, 1] < dataframe.iloc[i, 0]:
+                elif dataframe.iloc[i, 3] < dataframe.iloc[i, 2]:
                     red += 1
 
                 analysis += 1
