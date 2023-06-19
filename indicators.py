@@ -113,46 +113,170 @@ class Indicators():
         return (None, None)
 
     def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict):
-
         highPrice = dataframe['high']
         lowPrice = dataframe['low']
         openPrice = dataframe['open']
         closePrice = dataframe['close']
+        volume = dataframe['volume']
 
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
 
-        all_prices = np.concatenate([highPrice.values, lowPrice.values, openPrice.values, closePrice.values])
-        unique_prices, price_counts = np.unique(all_prices, return_counts=True)
+        for i in range(len(highPrice)):
+            h_current = highPrice[i]
+            h_current_diff_below = round(h_current - (h_current * 0.003), 2)
+            h_current_diff_above = round((h_current * 0.003) + h_current, 2)
+            h_key = f'{h_current}'
 
-        for price, count in zip(unique_prices, price_counts):
-            rounded_price = round(price, 0)
-            key = f'{rounded_price}'
+            if h_key in price_dic:
+                continue
 
-            if key not in price_dic:
-                price_dic[key] = {
-                    'ranges': defaultdict(lambda: {'count': 0, 'mean': []}),
-                    'occurrences': count
-                }
-            
-            for i in range(1, 8):
-                diff_below = round(price - (price * 0.0055 * i), 2)
-                diff_above = round((price * 0.0055 * i) + price, 2)
-                range_key = f'{diff_below}_{diff_above}'
-                price_dic[key]['ranges'][range_key]['count'] += count
-                price_dic[key]['ranges'][range_key]['mean'].extend([price] * count)
+            price_dic[h_key] = {
+                'count': 0,
+                'mean': [],
+                'volume_sum': 0
+            }
+            price_dic[h_key]['mean'].append(h_current)
 
-        ranges = []
-        common_prices = []
-        for key, value in price_dic.items():
-            if value['occurrences'] == len(dataframe):
-                common_prices.append(float(key))
-                for mean_key, mean_value in value['ranges'].items():
-                    if mean_value['count'] >= 5:
-                        ranges.append(mean_value['mean'])
+            for j in range(i + 1, len(highPrice)):
+                h_next_price = highPrice[j]
+                h_next_price_key = f'{h_next_price}'
 
-        key_levels = [high, low] + common_prices + [np.mean(price_range) for price_range in ranges]
-        key_levels = list(filter(lambda x: x != 0.0, key_levels))
+                if h_next_price_key in price_dic:
+                    continue
+
+                if h_next_price <= h_current_diff_above and h_next_price >= h_current_diff_below:
+                    price_dic[h_key]['count'] += 1
+                    price_dic[h_key]['mean'].append(h_next_price)
+                    price_dic[h_key]['volume_sum'] += volume[j]
+                    price_dic[h_next_price_key] = {
+                        'count': 0,
+                        'mean': [],
+                        'volume_sum': volume[j]
+                    }
+                    price_dic[h_next_price_key]['mean'].append(h_next_price)
+                else:
+                    continue
+
+        for i in range(len(lowPrice)):
+            l_current = lowPrice[i]
+            l_current_diff_below = round(l_current - (l_current * 0.003), 2)
+            l_current_diff_above = round((l_current * 0.003) + l_current, 2)
+            l_key = f'{l_current}'
+
+            if l_key in price_dic:
+                continue
+
+            price_dic[l_key] = {
+                'count': 0,
+                'mean': [],
+                'volume_sum': 0
+            }
+            price_dic[l_key]['mean'].append(l_current)
+
+            for j in range(i + 1, len(lowPrice)):
+                l_next_price = lowPrice[j]
+                l_next_price_key = f'{l_next_price}'
+
+                if l_next_price_key in price_dic:
+                    continue
+
+                if l_next_price <= l_current_diff_above and l_next_price >= l_current_diff_below:
+                    price_dic[l_key]['count'] += 1
+                    price_dic[l_key]['mean'].append(l_next_price)
+                    price_dic[l_key]['volume_sum'] += volume[j]
+                    price_dic[l_next_price_key] = {
+                        'count': 0,
+                        'mean': [],
+                        'volume_sum': volume[j]
+                    }
+                    price_dic[l_next_price_key]['mean'].append(l_next_price)
+                else:
+                    continue
+
+        for i in range(len(openPrice)):
+            o_current = openPrice[i]
+            o_current_diff_below = round(o_current - (o_current * 0.003), 2)
+            o_current_diff_above = round((o_current * 0.003) + o_current, 2)
+            o_key = f'{o_current}'
+
+            if o_key in price_dic:
+                continue
+
+            price_dic[o_key] = {
+                'count': 0,
+                'mean': [],
+                'volume_sum': 0
+            }
+            price_dic[o_key]['mean'].append(o_current)
+
+            for j in range(i + 1, len(openPrice)):
+                o_next_price = openPrice[j]
+                o_next_price_key = f'{o_next_price}'
+
+                if o_next_price_key in price_dic:
+                    continue
+
+                if o_next_price <= o_current_diff_above and o_next_price >= o_current_diff_below:
+                    price_dic[o_key]['count'] += 1
+                    price_dic[o_key]['mean'].append(o_next_price)
+                    price_dic[o_key]['volume_sum'] += volume[j]
+                    price_dic[o_next_price_key] = {
+                        'count': 0,
+                        'mean': [],
+                        'volume_sum': volume[j]
+                    }
+                    price_dic[o_next_price_key]['mean'].append(o_next_price)
+                else:
+                    continue
+
+        for i in range(len(closePrice)):
+            c_current = closePrice[i]
+            c_current_diff_below = round(c_current - (c_current * 0.003), 2)
+            c_current_diff_above = round((c_current * 0.003) + c_current, 2)
+            c_key = f'{c_current}'
+
+            if c_key in price_dic:
+                continue
+
+            price_dic[c_key] = {
+                'count': 0,
+                'mean': [],
+                'volume_sum': 0
+            }
+            price_dic[c_key]['mean'].append(c_current)
+
+            for j in range(i + 1, len(closePrice)):
+                c_next_price = closePrice[j]
+                c_next_price_key = f'{c_next_price}'
+
+                if c_next_price_key in price_dic:
+                    continue
+
+                if c_next_price <= c_current_diff_above and c_next_price >= c_current_diff_below:
+                    price_dic[c_key]['count'] += 1
+                    price_dic[c_key]['mean'].append(c_next_price)
+                    price_dic[c_key]['volume_sum'] += volume[j]
+                    price_dic[c_next_price_key] = {
+                        'count': 0,
+                        'mean': [],
+                        'volume_sum': volume[j]
+                    }
+                    price_dic[c_next_price_key]['mean'].append(c_next_price)
+                else:
+                    continue
+
+        key_levels = [high, low]
+
+        for price, info in price_dic.items():
+            if info['count'] > 5:
+                mean_price = round(mean(info['mean']), 2)
+                avg_volume = info['volume_sum'] / info['count']
+                
+                if avg_volume >= 0.5 * dataframe['volume'].mean():
+                    key_levels.append(mean_price)
+
+        key_levels = list(set(key_levels))  # Remove duplicate levels
         key_levels.sort(reverse=True)
 
         new_dict = {
@@ -181,49 +305,69 @@ class Indicators():
 
         return clean_key_levels
 
-    def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_threshold: float):
+    def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_change_threshold_percentage: float = 0, volume_range_distance: int = 10):
         demand_zones = []
         supply_zones = []
-        broke_key_level = []
 
-        high_prices = dataframe['high'].values
-        low_prices = dataframe['low'].values
-        close_prices = dataframe['close'].values
-        date_and_time = dataframe.index
+        highPrice = dataframe['high']
+        lowPrice = dataframe['low']
+        openPrice = dataframe['open']
+        closePrice = dataframe['close']
+        volume = dataframe['volume']
+        row_index = dataframe.index
+        dateAndTime = list(row_index)
 
-        min_key_level = np.min(key_levels)
-        max_key_level = np.max(key_levels)
+        i = 0
 
-        # Iterate over the price data
-        for i in range(1, len(close_prices)):
-            current_price = close_prices[i]
-            previous_price = close_prices[i - 1]
-            is_increase = current_price > previous_price
+        while i < len(closePrice) - 1:
+            current_close = closePrice[i]
+            current_open = openPrice[i]
+            current_high = highPrice[i]
+            current_low = lowPrice[i]
+            current_volume = volume[i]
 
-            # Calculate the price change percentage
-            price_change_percentage = abs((current_price - previous_price) / previous_price) * 100
+            # Check if the current price is within the range of nearby key levels
+            in_range = False
+            for level in key_levels:
+                if level['bottom'] <= current_low <= level['top'] or level['bottom'] <= current_high <= level['top']:
+                    in_range = True
+                    break
 
-            if price_change_percentage >= price_threshold:
-                # Check if the price crossed a key level
-                if is_increase and previous_price <= min_key_level <= current_price <= max_key_level:
-                    demand_zones.append({
-                        "bottom": previous_price,
-                        "top": current_price,
-                        "dateTime": str(date_and_time[i - 1])
-                    })
-                    broke_key_level.append((previous_price, current_price, 'demand_zone'))
-                elif not is_increase and max_key_level >= previous_price >= min_key_level >= current_price:
-                    supply_zones.append({
-                        "top": previous_price,
-                        "bottom": current_price,
-                        "dateTime": str(date_and_time[i - 1])
-                    })
-                    broke_key_level.append((previous_price, current_price, 'supply_zone'))
+            if in_range:
+                # Additional confirmation criteria: Volume Analysis
+                volume_range = volume[max(0, i - volume_range_distance):i+1]  # Adjust the range as per your requirement
+                average_volume = sum(volume_range) / len(volume_range)
+
+                # Find the price change percentage
+                price_change_percent = ((current_close - current_open) / current_open) * 100
+
+                # Look for increased selling volume during downward price movements
+                if price_change_percent < price_change_threshold_percentage and current_volume > average_volume:
+                    # Add supply zone
+                    supply_zone = {
+                        "bottom": current_low,
+                        "top": current_high,
+                        "volume": current_volume,
+                        "datetime": str(dateAndTime[i])
+                    }
+                    supply_zones.append(supply_zone)
+
+                # Look for increased buying volume during upward price movements (optional)
+                if price_change_percent > price_change_threshold_percentage and current_volume > average_volume:
+                    # Add demand zone
+                    demand_zone = {
+                        "bottom": current_low,
+                        "top": current_high,
+                        "volume": current_volume,
+                        "datetime": str(dateAndTime[i])
+                    }
+                    demand_zones.append(demand_zone)
+
+            i += 1
 
         final_demand_supply_zones = {
             'demand_zones': demand_zones,
             'supply_zones': supply_zones,
-            'broke_key_level': broke_key_level
         }
 
         return final_demand_supply_zones

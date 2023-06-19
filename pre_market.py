@@ -282,7 +282,7 @@ class Pre_Market:
 
             # get demand zones using the five minute stock frame
             supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
-                dataframe=five_minute_stock_frame.frame, key_levels=new_opportunity['Key Levels'], price_threshold=0.007)
+                dataframe=five_minute_stock_frame.frame, key_levels=new_opportunity['Key Levels'], price_change_threshold_percentage=0.007, volume_range_distance=10)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             # print('Demand Zones', supply_demand_zones['demand_zones'])
