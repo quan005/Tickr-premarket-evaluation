@@ -165,7 +165,7 @@ class Indicators():
         key_levels = [high, low]
 
         for price, info in price_levels.items():
-            if info['count'] > 10:
+            if info['count'] > 20:
                 mean_price = np.round(np.mean(info['mean']), 2)
                 avg_volume = info['volume_sum'] / info['count']
 
@@ -221,7 +221,7 @@ class Indicators():
             current_volume = volume[i]
 
             # Check if the current price is surrounded by any key levels
-            surround_levels = find_surrounding_levels(key_levels, current_close)
+            surround_levels = self.find_surrounding_levels(list=key_levels, value=current_close)
             if surround_levels[0] is not None and surround_levels[1] is not None:
                 # Additional confirmation criteria: Volume Analysis
                 volume_range = volume[max(0, i - volume_range_distance):i+1]
