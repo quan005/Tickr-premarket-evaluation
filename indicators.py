@@ -117,8 +117,8 @@ class Indicators():
         }
 
         def process_price_data(price_key, price_list, volume_list):
-            price_diff_below = np.round(price_list - (price_list * 0.003), 2)
-            price_diff_above = np.round((price_list * 0.003) + price_list, 2)
+            price_diff_below = np.round(price_list - (price_list * 0.0055), 2)
+            price_diff_above = np.round((price_list * 0.0055) + price_list, 2)
             price_levels = defaultdict(lambda: {'count': 0, 'mean': [], 'volume_sum': 0})
 
             for i in range(len(price_list)):
