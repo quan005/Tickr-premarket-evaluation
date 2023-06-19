@@ -270,11 +270,12 @@ class Indicators():
         key_levels = [high, low]
 
         for price, info in price_dic.items():
-            mean_price = round(mean(info['mean']), 2)
-            avg_volume = info['volume_sum'] / info['count']
-            
-            if info['count'] > 10 and avg_volume >= complete_volume_avg:
-                key_levels.append(mean_price)
+            if info['count'] > 10:
+                mean_price = round(mean(info['mean']), 2)
+                avg_volume = info['volume_sum'] / info['count']
+
+                if avg_volume >= complete_volume_avg:
+                    key_levels.append(mean_price)
 
         key_levels = list(set(key_levels))  # Remove duplicate levels
         key_levels.sort(reverse=True)
