@@ -161,12 +161,11 @@ class Indicators():
             price_levels.update(current_levels)
 
         for price_key, info in price_levels.items():
-            print('info',info)
             price_dic[price_key] = info
             count.append(info['count'])
-            print('count', count)
 
         key_levels = [high, low]
+        count = [integer for integer in count if integer is not None]
         average_count = np.round(np.mean(count), 1)
 
         for price, info in price_levels.items():
