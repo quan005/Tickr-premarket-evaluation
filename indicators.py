@@ -306,7 +306,7 @@ class Indicators():
 
         return clean_key_levels
 
-    def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_change_threshold_percentage: float = 0, volume_range_distance: int = 10):
+    def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_change_threshold_percentage: float, volume_range_distance: int):
         demand_zones = []
         supply_zones = []
 
@@ -329,21 +329,27 @@ class Indicators():
 
             # Check if the current price is within the range of nearby key levels
             in_range = False
-            for j in range(len(key_levels) - 1):
-                if key_levels[j] > current_close and key_levels[j + 1] < current_close:
-                    surrounded_by_levels = True
-                    break
+            surround_levels = self.find_surrounding_levels(list=key_levels, value=current_close)
+
+            if surround_levels[0] != None and surround_levels[1] != None:
+                in_range = True
+                print('in range is true')
 
             if in_range:
+                print('in range')
                 # Additional confirmation criteria: Volume Analysis
                 volume_range = volume[max(0, i - volume_range_distance):i+1]  # Adjust the range as per your requirement
                 average_volume = sum(volume_range) / len(volume_range)
+
+                print('volume_range', volume_range)
+                print('average_volume', average_volume)
+                print('current_volume', current_volume)
 
                 # Find the price change percentage
                 price_change_percent = ((current_close - current_open) / current_open) * 100
 
                 # Look for increased selling volume during downward price movements
-                if price_change_percent < price_change_threshold_percentage and current_volume > average_volume:
+                if price_change_percent < -price_change_threshold_percentage and current_volume > average_volume:
                     # Add supply zone
                     supply_zone = {
                         "bottom": current_open,
