@@ -165,6 +165,7 @@ class Indicators():
         key_levels = [high, low]
 
         for price, info in price_levels.items():
+            print('info', price, info['count'])
             if info['count'] > 20:
                 mean_price = np.round(np.mean(info['mean']), 2)
                 avg_volume = info['volume_sum'] / info['count']
