@@ -121,6 +121,7 @@ class Indicators():
 
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
+        complete_volume_avg = volume.mean()
 
         for i in range(len(highPrice)):
             h_current = highPrice[i]
@@ -269,12 +270,11 @@ class Indicators():
         key_levels = [high, low]
 
         for price, info in price_dic.items():
-            if info['count'] > 5:
-                mean_price = round(mean(info['mean']), 2)
-                avg_volume = info['volume_sum'] / info['count']
-                
-                if avg_volume >= 0.5 * dataframe['volume'].mean():
-                    key_levels.append(mean_price)
+            mean_price = round(mean(info['mean']), 2)
+            avg_volume = info['volume_sum'] / info['count']
+            
+            if info['count'] > 10 and avg_volume >= complete_volume_avg:
+                key_levels.append(mean_price)
 
         key_levels = list(set(key_levels))  # Remove duplicate levels
         key_levels.sort(reverse=True)
@@ -328,9 +328,9 @@ class Indicators():
 
             # Check if the current price is within the range of nearby key levels
             in_range = False
-            for level in key_levels:
-                if level['bottom'] <= current_low <= level['top'] or level['bottom'] <= current_high <= level['top']:
-                    in_range = True
+            for j in range(len(key_levels) - 1):
+                if key_levels[j] > current_close and key_levels[j + 1] < current_close:
+                    surrounded_by_levels = True
                     break
 
             if in_range:
@@ -345,7 +345,7 @@ class Indicators():
                 if price_change_percent < price_change_threshold_percentage and current_volume > average_volume:
                     # Add supply zone
                     supply_zone = {
-                        "bottom": current_low,
+                        "bottom": current_open,
                         "top": current_high,
                         "volume": current_volume,
                         "datetime": str(dateAndTime[i])
@@ -357,7 +357,7 @@ class Indicators():
                     # Add demand zone
                     demand_zone = {
                         "bottom": current_low,
-                        "top": current_high,
+                        "top": current_open,
                         "volume": current_volume,
                         "datetime": str(dateAndTime[i])
                     }
