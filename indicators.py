@@ -341,7 +341,6 @@ class Indicators():
                 volume_range = volume[max(0, i - volume_range_distance):i+1]  # Adjust the range as per your requirement
                 average_volume = sum(volume_range) / len(volume_range)
 
-                print('volume_range', volume_range)
                 print('average_volume', average_volume)
                 print('current_volume', current_volume)
 
