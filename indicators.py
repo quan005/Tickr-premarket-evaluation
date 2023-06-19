@@ -92,8 +92,8 @@ class Indicators():
             return False
 
     def find_surrounding_levels(self, list: list, value: int):
-        left = bisect.bisect_right(lst, value)
-        right = bisect.bisect_left(lst, value)
+        left = bisect.bisect_right(list, value)
+        right = bisect.bisect_left(list, value)
         return (left - 1, right) if left > 0 and right < len(lst) else (None, None)
 
     def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict):
@@ -166,7 +166,7 @@ class Indicators():
 
         for price, info in price_levels.items():
             print('info', price, info['count'])
-            if info['count'] > 20:
+            if info['count'] > 70:
                 mean_price = np.round(np.mean(info['mean']), 2)
                 avg_volume = info['volume_sum'] / info['count']
 
