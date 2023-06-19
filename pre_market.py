@@ -231,7 +231,7 @@ class Pre_Market:
                 continue
 
             # five minute end date
-            five_minute_end_date = start_date - timedelta(weeks=56)
+            five_minute_end_date = start_date - timedelta(weeks=30)
 
             # grab five minute historical prices using the 5 min interval
             five_minute_historical_prices = bot.grab_single_historical_prices(
