@@ -365,6 +365,9 @@ class Indicators():
                     demand_zones.append(demand_zone)
 
             i += 1
+        
+        print('demand_zones', demand_zones)
+        print('supply_zones', supply_zones)
 
         final_demand_supply_zones = {
             'demand_zones': demand_zones,
