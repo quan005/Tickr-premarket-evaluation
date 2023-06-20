@@ -166,11 +166,11 @@ class Indicators():
 
         key_levels = [high, low]
         count = [integer for integer in count if integer is not None]
-        average_count = np.round(np.mean(count), 1)
+        print('count', count)
+        average_count = np.round(np.mean(count))
         print('average_count', average_count)
 
         for price, info in price_levels.items():
-            print('info', price, info['count'])
             if info['count'] > average_count:
                 mean_price = np.round(np.mean(info['mean']), 2)
                 avg_volume = info['volume_sum'] / info['count']
