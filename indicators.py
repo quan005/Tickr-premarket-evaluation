@@ -165,7 +165,7 @@ class Indicators():
             count.append(info['count'])
 
         key_levels = [high, low]
-        count = [integer for integer in count if integer is not None]
+        count = [integer for integer in count if integer is not None and integer > 2]
         print('count', count)
         average_count = np.round(np.mean(count))
         print('average_count', average_count)
