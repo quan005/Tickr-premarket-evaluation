@@ -110,7 +110,7 @@ class Indicators():
         complete_volume_avg = vol.mean()
 
         for price, volume in zip(prices, volumes):
-            rounded_price = round(price, 2)
+            rounded_price = round(price, 1)
             # price_diff_high = round(price - (price * tolerance), 2)
             # price_diff_low = round(price + (price * tolerance), 2)
             key = f'{rounded_price}'
@@ -131,7 +131,7 @@ class Indicators():
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
         key_levels = [high, low]
         for idx, (key, value) in enumerate(sorted_dic.items()):
-            price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 1)
+            price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 2)
             if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
                 key_levels.append(price_avg)
 
