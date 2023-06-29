@@ -110,17 +110,22 @@ class Indicators():
         complete_volume_avg = vol.mean()
 
         for price, volume in zip(prices, volumes):
+            rounded_price = round(price, 2)
+            # price_diff_high = round(price - (price * tolerance), 2)
+            # price_diff_low = round(price + (price * tolerance), 2)
+            key = f'{rounded_price}'
+            # price_range = (price_diff_high, price_diff_low)
+            # price_range_avg = round(sum(price_range) / len(price_range), 1)
+            # price_range_avg_key = f'{price_range_avg}'
             added_to_existing_range = False
-            for key in price_dic:
-                low, high = key
-                if low <= price <= high:
-                    price_dic[key]['prices'].append((price, volume))
-                    price_dic[key]['total_count'] += 1
-                    added_to_existing_range = True
-                    break
+
+            if key in price_dic:
+                price_dic[key]['prices'].append((price, volume))
+                price_dic[key]['total_count'] += 1
+                added_to_existing_range = True
+                break
             if not added_to_existing_range:
-                range_key = (price-tolerance, price+tolerance)
-                price_dic[range_key] = {'prices': [(price, volume)], 'total_count': 1}
+                price_dic[key] = {'prices': [(price, volume)], 'total_count': 1}
 
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
