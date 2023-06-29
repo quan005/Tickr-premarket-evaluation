@@ -80,7 +80,7 @@ class Pre_Market:
         available_cash = account_info['securitiesAccount']['currentBalances']['cashAvailableForTrading']
 
         # set budget
-        if available_cash >= 200 and available_cash < 300:
+        if available_cash >= 0 and available_cash < 300:
             budget = 1 * available_cash
         elif available_cash >= 300 and available_cash < 1500:
             budget = .9 * available_cash
@@ -93,7 +93,7 @@ class Pre_Market:
             return 'Not Enough Capital'
 
         # based on budget determine which watchlist to use and total opportunity's limit aka self.limit
-        if budget >= 200 and budget < 1000:
+        if budget >= 0 and budget < 1000:
             self.limit = 3
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:

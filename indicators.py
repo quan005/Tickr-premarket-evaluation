@@ -101,92 +101,39 @@ class Indicators():
         lowPrice = dataframe['low']
         openPrice = dataframe['open']
         closePrice = dataframe['close']
-        volume = dataframe['volume']
-        count = [None] * len(dataframe)
+        vol = dataframe['volume']
 
+        prices = openPrice.tolist() + closePrice.tolist() + highPrice.tolist() + lowPrice.tolist()
+        volumes = vol.tolist()
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
-        complete_volume_avg = volume.mean()
+        complete_volume_avg = vol.mean()
 
-        price_data = {
-            'highPrice': highPrice,
-            'lowPrice': lowPrice,
-            'openPrice': openPrice,
-            'closePrice': closePrice,
-            'volume': volume
-        }
+        for price, volume in zip(prices, volumes):
+            added_to_existing_range = False
+            for key in price_dic:
+                low, high = map(float, key.split('-'))
+                if low <= price <= high:
+                    price_dic[key]['prices'].append((price, volume))
+                    price_dic[key]['total_count'] += 1
+                    added_to_existing_range = True
+                    break
+            if not added_to_existing_range:
+                range_key = f"{price-tolerance}-{price+tolerance}"
+                price_dic[range_key] = {'prices': [(price, volume)], 'total_count': 1}
 
-        def process_price_data(price_key, price_list, volume_list):
-            price_diff_below = np.round(price_list - (price_list * 0.0055), 2)
-            price_diff_above = np.round((price_list * 0.0055) + price_list, 2)
-            price_levels = defaultdict(lambda: {'count': 0, 'mean': [], 'volume_sum': 0})
-
-            for i in range(len(price_list)):
-                current_price = price_list[i]
-                current_diff_below = price_diff_below[i]
-                current_diff_above = price_diff_above[i]
-                current_key = current_price
-
-                if current_key in price_dic:
-                    price_levels[current_key] = price_dic[current_key]
-                    continue
-
-                price_levels[current_key]['mean'].append(current_price)
-
-                next_prices = price_list[i + 1:]
-                next_volumes = volume_list[i + 1:]
-                next_price_keys = next_prices[(next_prices <= current_diff_above) & (next_prices >= current_diff_below)]
-                next_volume_sum = np.sum(next_volumes[(next_prices <= current_diff_above) & (next_prices >= current_diff_below)])
-
-                for next_price_key, next_volume in zip(next_price_keys, next_volumes):
-                    price_levels[current_key]['count'] += 1
-                    price_levels[current_key]['mean'].append(next_price_key)
-                    price_levels[current_key]['volume_sum'] += next_volume
-                    price_levels[next_price_key] = {
-                        'count': 0,
-                        'mean': [next_price_key],
-                        'volume_sum': next_volume
-                    }
-
-                if len(next_price_keys) > 0:
-                    price_levels[current_key]['volume_sum'] += next_volume_sum
-
-            return price_levels
-
-        price_keys = ['highPrice', 'lowPrice', 'openPrice', 'closePrice']
-        price_levels = defaultdict(lambda: {'count': 0, 'mean': [], 'volume_sum': 0})
-
-        for price_key in price_keys:
-            current_levels = process_price_data(price_key, price_data[price_key], volume)
-            price_levels.update(current_levels)
-
-        for price_key, info in price_levels.items():
-            price_dic[price_key] = info
-            count.append(info['count'])
-
+        duplicate_dic = dict(price_dic)
+        sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
         key_levels = [high, low]
-        count = [integer for integer in count if integer is not None and integer > 2]
-        print('count', count)
-        average_count = np.round(np.mean(count))
-        print('average_count', average_count)
-
-        for price, info in price_levels.items():
-            if info['count'] > average_count:
-                mean_price = np.round(np.mean(info['mean']), 2)
-                avg_volume = info['volume_sum'] / info['count']
-
-                if avg_volume >= complete_volume_avg:
-                    key_levels.append(mean_price)
+        for idx, (key, value) in enumerate(sorted_dic.items()):
+            price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 1)
+            if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
+                key_levels.append(price_avg)
 
         key_levels = list(set(key_levels))
         key_levels.sort(reverse=True)
 
-        new_dict = {
-            'price_dic': price_dic,
-            'key_levels': key_levels
-        }
-
-        return new_dict
+        return {'price_dic': price_dic, 'key_levels': key_levels}
 
     def scrub_key_levels(self, key_levels: list):
         clean_key_levels = []
