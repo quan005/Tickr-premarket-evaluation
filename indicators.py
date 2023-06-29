@@ -96,7 +96,7 @@ class Indicators():
         right = bisect.bisect_left(list, value)
         return (left - 1, right) if left > 0 and right < len(list) else (None, None)
 
-    def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict):
+    def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict, tolerance: float):
         highPrice = dataframe['high']
         lowPrice = dataframe['low']
         openPrice = dataframe['open']

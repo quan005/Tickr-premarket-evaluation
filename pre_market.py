@@ -255,15 +255,15 @@ class Pre_Market:
 
             # add weekly key levels
             weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
-                weekly_stock_frame.frame, price_dict)
+                weekly_stock_frame.frame, price_dict, 0.0055)
 
             # add thirty minute key levels
             thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
-                thirty_minute_stock_frame.frame, weekly_key_levels['price_dic'])
+                thirty_minute_stock_frame.frame, weekly_key_levels['price_dic'], 0.0055)
 
             # add five minute key levels
             five_minute_key_levels = five_minute_indicator_client.s_r_levels(
-                five_minute_stock_frame.frame, thirty_minute_key_levels['price_dic'])
+                five_minute_stock_frame.frame, thirty_minute_key_levels['price_dic'], 0.0055)
 
             # remove duplicates
             no_duplicates = list(OrderedDict.fromkeys(
