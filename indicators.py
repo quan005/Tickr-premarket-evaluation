@@ -112,7 +112,6 @@ class Indicators():
         for price, volume in zip(prices, volumes):
             added_to_existing_range = False
             for key in price_dic:
-                print('key', key)
                 low, high = map(float, key.split('-'))
                 if low <= price <= high:
                     price_dic[key]['prices'].append((price, volume))
