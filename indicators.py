@@ -129,9 +129,10 @@ class Indicators():
 
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
+        print('sorted_dic: ', sorted_dic)
         key_levels = [high, low]
         for idx, (key, value) in enumerate(sorted_dic.items()):
-            price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 2)
+            price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 3)
             if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
                 key_levels.append(price_avg)
 
