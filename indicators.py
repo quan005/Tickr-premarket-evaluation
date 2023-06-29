@@ -112,14 +112,14 @@ class Indicators():
         for price, volume in zip(prices, volumes):
             added_to_existing_range = False
             for key in price_dic:
-                low, high = map(float, key.split('-'))
+                low, high = key
                 if low <= price <= high:
                     price_dic[key]['prices'].append((price, volume))
                     price_dic[key]['total_count'] += 1
                     added_to_existing_range = True
                     break
             if not added_to_existing_range:
-                range_key = f"{price-tolerance}-{price+tolerance}"
+                range_key = (price-tolerance, price+tolerance)
                 price_dic[range_key] = {'prices': [(price, volume)], 'total_count': 1}
 
         duplicate_dic = dict(price_dic)
