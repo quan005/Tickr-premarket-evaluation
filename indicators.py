@@ -102,7 +102,7 @@ class Indicators():
         openPrices = list(zip(dataframe['open'].tolist(), dataframe['volume'].tolist()))
         closePrices = list(zip(dataframe['close'].tolist(), dataframe['volume'].tolist()))
         vol = dataframe['volume']
-        # key_levels = [None] * 40
+        key_levels = [None] * 40
 
         prices = highPrices + lowPrices + openPrices + closePrices
         print('prices', prices)
@@ -136,17 +136,18 @@ class Indicators():
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
         print('sorted_dic: ', sorted_dic)
+        i = 1
         for key in sorted_dic:
             print('key', key)
-        # for idx, (key, value) in enumerate(sorted_dic.items()):
-        #     price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 3)
-        #     if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
-        #         key_levels.append(price_avg)
+            volume_avg = mean(sorted_dic[key]['volumes'])
+            if i < 20 or volume_avg >= complete_volume_avg:
+                key_levels.append(round(mean(sorted_dic[key]['prices']), 3))
+                i += 1
 
-        # key_levels = list(set(key_levels))
-        # key_levels.sort(reverse=True)
+        key_levels = list(set(key_levels))
+        key_levels.sort(reverse=True)
 
-        return {'price_dic': price_dic}
+        return {'price_dic': price_dic, 'key_levels': key_levels}
 
     def scrub_key_levels(self, key_levels: list):
         clean_key_levels = []
