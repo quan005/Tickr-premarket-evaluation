@@ -102,7 +102,7 @@ class Indicators():
         openPrices = list(zip(dataframe['open'].tolist(), dataframe['volume'].tolist()))
         closePrices = list(zip(dataframe['close'].tolist(), dataframe['volume'].tolist()))
         vol = dataframe['volume']
-        key_levels = [None] * 40
+        # key_levels = [None] * 40
 
         prices = highPrices + lowPrices + openPrices + closePrices
         print('prices', prices)
