@@ -127,7 +127,6 @@ class Indicators():
                 price_dic[key]['prices'].append((prices[i], volumes[i]))
                 price_dic[key]['total_count'] += 1
                 added_to_existing_range = True
-                break
             if not added_to_existing_range:
                 price_dic[key] = {'prices': [(prices[i], volumes[i])], 'total_count': 1}
 
