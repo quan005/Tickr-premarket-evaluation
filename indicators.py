@@ -113,7 +113,7 @@ class Indicators():
         for i in range(len(prices) - 1):
             print(f"Iteration {i}")
             print('price', prices[i])
-            rounded_price = round(prices[i])
+            rounded_price = round(prices[i][0])
             print('rounded_price', rounded_price)
             # price_diff_high = round(price - (price * tolerance), 2)
             # price_diff_low = round(price + (price * tolerance), 2)
