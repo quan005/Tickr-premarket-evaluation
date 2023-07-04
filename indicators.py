@@ -110,7 +110,9 @@ class Indicators():
         complete_volume_avg = vol.mean()
 
         for price, volume in zip(prices, volumes):
-            rounded_price = round(price, 1)
+            print('price', price)
+            rounded_price = round(price)
+            print('rounded_price', rounded_price)
             # price_diff_high = round(price - (price * tolerance), 2)
             # price_diff_low = round(price + (price * tolerance), 2)
             key = f'{rounded_price}'
