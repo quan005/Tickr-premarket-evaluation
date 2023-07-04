@@ -143,8 +143,8 @@ class Indicators():
         #     if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
         #         key_levels.append(price_avg)
 
-        key_levels = list(set(key_levels))
-        key_levels.sort(reverse=True)
+        # key_levels = list(set(key_levels))
+        # key_levels.sort(reverse=True)
 
         return {'price_dic': price_dic, 'key_levels': key_levels}
 
