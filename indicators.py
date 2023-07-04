@@ -134,8 +134,8 @@ class Indicators():
 
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
-        # print('sorted_dic: ', sorted_dic)
-        # key_levels = [high, low]
+        print('sorted_dic: ', sorted_dic)
+        key_levels = [high, low]
         # for key in sorted_dic:
         #     print('key', key)
         # for idx, (key, value) in enumerate(sorted_dic.items()):
