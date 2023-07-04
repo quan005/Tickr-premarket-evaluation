@@ -131,9 +131,9 @@ class Indicators():
                 price_dic[key] = {'prices': [prices[i]], 'total_count': 1}
 
 
-        # duplicate_dic = dict(price_dic)
-        # sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
-        # print('sorted_dic: ', sorted_dic)
+        duplicate_dic = dict(price_dic)
+        sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
+        print('sorted_dic: ', sorted_dic)
         # key_levels = [high, low]
         # for idx, (key, value) in enumerate(sorted_dic.items()):
         #     price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 3)
