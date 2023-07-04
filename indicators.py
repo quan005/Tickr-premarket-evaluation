@@ -134,7 +134,7 @@ class Indicators():
                 i += 1
         key_levels.append(high)
         key_levels.append(low)
-        key_levels = [zone for zone in demand_zones if zone is not None or zone is not 0]
+        key_levels = [zone for zone in key_levels if zone is not None or zone is not 0]
         key_levels = list(set(key_levels))
         key_levels.sort(reverse=True)
         print('key_levels', key_levels)
