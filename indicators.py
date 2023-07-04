@@ -105,23 +105,13 @@ class Indicators():
         key_levels = [None] * 40
 
         prices = highPrices + lowPrices + openPrices + closePrices
-        print('prices', prices)
         high = dataframe['high'].max()
         low = dataframe['low'].min(skipna=True)
         complete_volume_avg = vol.mean()
-        print(f"Prices length: {len(prices) - 1}")
 
         for i in range(len(prices) - 1):
-            print(f"Iteration {i}")
-            print('price', prices[i])
             rounded_price = round(prices[i][0])
-            print('rounded_price', rounded_price)
-            # price_diff_high = round(price - (price * tolerance), 2)
-            # price_diff_low = round(price + (price * tolerance), 2)
             key = f'{rounded_price}'
-            # price_range = (price_diff_high, price_diff_low)
-            # price_range_avg = round(sum(price_range) / len(price_range), 1)
-            # price_range_avg_key = f'{price_range_avg}'
             added_to_existing_range = False
 
             if key in price_dic:
@@ -138,14 +128,15 @@ class Indicators():
         print('sorted_dic: ', sorted_dic)
         i = 1
         for key in sorted_dic:
-            print('key', key)
             volume_avg = mean(sorted_dic[key]['volumes'])
             if i < 20 or volume_avg >= complete_volume_avg:
                 key_levels.append(round(mean(sorted_dic[key]['prices']), 3))
                 i += 1
-
+        key_levels.append(high)
+        key_levels.append(low)
         key_levels = list(set(key_levels))
         key_levels.sort(reverse=True)
+        print('key_levels', key_levels)
 
         return {'price_dic': price_dic, 'key_levels': key_levels}
 
