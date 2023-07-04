@@ -105,7 +105,7 @@ class Indicators():
 
         prices = openPrice.tolist() + closePrice.tolist() + highPrice.tolist() + lowPrice.tolist()
         print('prices', prices)
-        volumes = vol.tolist()
+        volumes = vol.tolist() * 4
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
         complete_volume_avg = vol.mean()
