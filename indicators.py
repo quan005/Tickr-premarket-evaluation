@@ -97,21 +97,19 @@ class Indicators():
         return (left - 1, right) if left > 0 and right < len(list) else (None, None)
 
     def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict, tolerance: float):
-        highPrice = dataframe['high']
-        lowPrice = dataframe['low']
-        openPrice = dataframe['open']
-        closePrice = dataframe['close']
+        highPrices = list(zip(dataframe['high'].tolist(), dataframe['volume'].tolist()))
+        lowPrices = list(zip(dataframe['low'].tolist(), dataframe['volume'].tolist()))
+        openPrices = list(zip(dataframe['open'].tolist(), dataframe['volume'].tolist()))
+        closePrices = list(zip(dataframe['close'].tolist(), dataframe['volume'].tolist()))
         vol = dataframe['volume']
 
-        prices = openPrice.tolist() + closePrice.tolist() + highPrice.tolist() + lowPrice.tolist()
+        prices = highPrices + lowPrices + openPrices + closePrices
         print('prices', prices)
-        volumes = vol.tolist() * 4
-        high = highPrice.max()
-        low = lowPrice.min(skipna=True)
+        high = dataframe['high'].max()
+        low = dataframe['low'].min(skipna=True)
         complete_volume_avg = vol.mean()
-        print(f"Pri9ces length: {len(prices) - 1}")
+        print(f"Prices length: {len(prices) - 1}")
 
-        # for price, volume in zip(prices, volumes):
         for i in range(len(prices) - 1):
             print(f"Iteration {i}")
             print('price', prices[i])
@@ -126,25 +124,26 @@ class Indicators():
             added_to_existing_range = False
 
             if key in price_dic:
-                price_dic[key]['prices'].append((prices[i], volumes[i]))
+                price_dic[key]['prices'].append(prices[i])
                 price_dic[key]['total_count'] += 1
                 added_to_existing_range = True
             else:
-                price_dic[key] = {'prices': [(prices[i], volumes[i])], 'total_count': 1}
+                price_dic[key] = {'prices': [prices[i]], 'total_count': 1}
 
-        duplicate_dic = dict(price_dic)
-        sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
-        print('sorted_dic: ', sorted_dic)
-        key_levels = [high, low]
-        for idx, (key, value) in enumerate(sorted_dic.items()):
-            price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 3)
-            if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
-                key_levels.append(price_avg)
 
-        key_levels = list(set(key_levels))
-        key_levels.sort(reverse=True)
+        # duplicate_dic = dict(price_dic)
+        # sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
+        # print('sorted_dic: ', sorted_dic)
+        # key_levels = [high, low]
+        # for idx, (key, value) in enumerate(sorted_dic.items()):
+        #     price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 3)
+        #     if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
+        #         key_levels.append(price_avg)
 
-        return {'price_dic': price_dic, 'key_levels': key_levels}
+        # key_levels = list(set(key_levels))
+        # key_levels.sort(reverse=True)
+
+        # return {'price_dic': price_dic, 'key_levels': key_levels}
 
     def scrub_key_levels(self, key_levels: list):
         clean_key_levels = []
