@@ -102,6 +102,7 @@ class Indicators():
         openPrices = list(zip(dataframe['open'].tolist(), dataframe['volume'].tolist()))
         closePrices = list(zip(dataframe['close'].tolist(), dataframe['volume'].tolist()))
         vol = dataframe['volume']
+        key_levels = [None] * 40
 
         prices = highPrices + lowPrices + openPrices + closePrices
         print('prices', prices)
@@ -135,7 +136,6 @@ class Indicators():
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
         print('sorted_dic: ', sorted_dic)
-        key_levels = []
         # for key in sorted_dic:
         #     print('key', key)
         # for idx, (key, value) in enumerate(sorted_dic.items()):
