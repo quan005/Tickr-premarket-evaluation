@@ -104,6 +104,7 @@ class Indicators():
         vol = dataframe['volume']
 
         prices = openPrice.tolist() + closePrice.tolist() + highPrice.tolist() + lowPrice.tolist()
+        print('prices', prices)
         volumes = vol.tolist()
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
