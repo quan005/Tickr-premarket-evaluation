@@ -136,7 +136,7 @@ class Indicators():
         key_levels.append(low)
         key_levels = [zone for zone in key_levels if zone is not None or zone != 0]
         key_levels = list(set(key_levels))
-        key_levels.sort(reverse=True)
+        key_levels.sort(key=lambda x: (-float('inf') if x is None else x), reverse=True)
         print('key_levels', key_levels)
 
         return {'price_dic': price_dic, 'key_levels': key_levels}
