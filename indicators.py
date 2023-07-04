@@ -124,11 +124,12 @@ class Indicators():
             added_to_existing_range = False
 
             if key in price_dic:
-                price_dic[key]['prices'].append(prices[i])
+                price_dic[key]['prices'].append(prices[i][0])
+                price_dic[key]['volumes'].append(prices[i][1])
                 price_dic[key]['total_count'] += 1
                 added_to_existing_range = True
             else:
-                price_dic[key] = {'prices': [prices[i]], 'total_count': 1}
+                price_dic[key] = {'prices': [prices[i][0]], 'volumes': [prices[i][1]], 'total_count': 1}
 
 
         duplicate_dic = dict(price_dic)
@@ -136,8 +137,7 @@ class Indicators():
         print('sorted_dic: ', sorted_dic)
         key_levels = [high, low]
         for key in sorted_dic:
-            price_avg = round(sum(p[1] for p in sorted_dic[key]['prices']), 3)
-            print('price_avg', price_avg)
+            print('key', key)
         # for idx, (key, value) in enumerate(sorted_dic.items()):
         #     price_avg = round(sum(p[0] for p in value['prices']) / len(value['prices']), 3)
         #     if idx < 20 or sum(p[1] for p in value['prices']) / len(value['prices']) >= complete_volume_avg:
