@@ -109,9 +109,11 @@ class Indicators():
         high = highPrice.max()
         low = lowPrice.min(skipna=True)
         complete_volume_avg = vol.mean()
+        print(f"Pri9ces length: {len(prices) - 1}")
 
         # for price, volume in zip(prices, volumes):
         for i in range(len(prices) - 1):
+            print(f"Iteration {i}")
             print('price', prices[i])
             rounded_price = round(prices[i])
             print('rounded_price', rounded_price)
