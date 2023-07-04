@@ -129,7 +129,7 @@ class Indicators():
                 price_dic[key]['prices'].append((prices[i], volumes[i]))
                 price_dic[key]['total_count'] += 1
                 added_to_existing_range = True
-            if not added_to_existing_range:
+            else:
                 price_dic[key] = {'prices': [(prices[i], volumes[i])], 'total_count': 1}
 
         duplicate_dic = dict(price_dic)
