@@ -98,7 +98,7 @@ class Indicators():
         right = bisect.bisect_left(list, value)
         return (left - 1, right) if left > 0 and right < len(list) else (None, None)
 
-    def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict, tolerance: float):
+    def s_r_levels(self, dataframe: pd.DataFrame, price_dic: dict):
         highPrices = list(zip(dataframe['high'].tolist(), dataframe['volume'].tolist()))
         lowPrices = list(zip(dataframe['low'].tolist(), dataframe['volume'].tolist()))
         openPrices = list(zip(dataframe['open'].tolist(), dataframe['volume'].tolist()))
@@ -127,7 +127,6 @@ class Indicators():
 
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
-        print('sorted_dic: ', sorted_dic)
         i = 1
         for key in sorted_dic:
             volume_avg = mean(sorted_dic[key]['volumes'])
@@ -136,7 +135,6 @@ class Indicators():
                 i += 1
         key_levels.append(high)
         key_levels.append(low)
-        # key_levels = [zone for zone in key_levels if zone is not None]
         key_levels = list(set(key_levels))
         key_levels.sort(key=lambda x: (-float('inf') if x is None else x), reverse=True)
         key_levels = [zone for zone in key_levels if zone is not None]

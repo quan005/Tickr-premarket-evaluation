@@ -252,25 +252,25 @@ class Pre_Market:
 
             price_dict = dict()
 
-            # add weekly key levels
-            weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
-                weekly_stock_frame.frame, price_dict, 0.0055)
+            # add five minute key levels
+            five_minute_key_levels = five_minute_indicator_client.s_r_levels(
+                five_minute_stock_frame.frame, price_dict)
 
             # add thirty minute key levels
             thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
-                thirty_minute_stock_frame.frame, weekly_key_levels['price_dic'], 0.0055)
+                thirty_minute_stock_frame.frame, five_minute_key_levels['price_dic'])
 
-            # add five minute key levels
-            five_minute_key_levels = five_minute_indicator_client.s_r_levels(
-                five_minute_stock_frame.frame, thirty_minute_key_levels['price_dic'], 0.0055)
+            # add weekly key levels
+            weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
+                weekly_stock_frame.frame, thirty_minute_key_levels['price_dic'])
 
             # remove duplicates
             no_duplicates = list(OrderedDict.fromkeys(
-                five_minute_key_levels['key_levels']))
+                weekly_key_levels['key_levels']))
 
             # add key levels and support and resisitance
             new_opportunity['Key Levels'] = no_duplicates
-            # print('Key Levels = ', new_opportunity['Key Levels'])
+            print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
