@@ -92,6 +92,8 @@ class Indicators():
             return False
 
     def find_surrounding_levels(self, list: list, value: int):
+        list = [x for x in list if x is not None]
+
         left = bisect.bisect_right(list, value)
         right = bisect.bisect_left(list, value)
         return (left - 1, right) if left > 0 and right < len(list) else (None, None)
