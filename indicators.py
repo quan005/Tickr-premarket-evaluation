@@ -131,7 +131,7 @@ class Indicators():
         for key in sorted_dic:
             volume_avg = mean(sorted_dic[key]['volumes'])
             if i < 20 or volume_avg >= complete_volume_avg:
-                key_levels.append(round(mean(sorted_dic[key]['prices']), 3))
+                key_levels.append(round(mean(sorted_dic[key]['prices']), 2))
                 i += 1
         key_levels.append(high)
         key_levels.append(low)
