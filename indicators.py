@@ -112,7 +112,7 @@ class Indicators():
         complete_volume_avg = vol.mean()
 
         for i in range(len(prices) - 1):
-            rounded_price = round(prices[i][0])
+            rounded_price = round(prices[i][0], 2)
             key = f'{rounded_price}'
             added_to_existing_range = False
 

@@ -229,36 +229,36 @@ class Pre_Market:
             if new_opportunity['Score'] <= 3:
                 continue
 
-            # five minute end date
-            five_minute_end_date = start_date - timedelta(weeks=30)
+            # one minute end date
+            one_minute_end_date = start_date - timedelta(weeks=24)
 
-            # grab five minute historical prices using the 5 min interval
-            five_minute_historical_prices = bot.grab_single_historical_prices(
+            # grab one minute historical prices using the 5 min interval
+            one_minute_historical_prices = bot.grab_single_historical_prices(
                 symbol=i,
-                start=five_minute_end_date,
+                start=one_minute_end_date,
                 end=start_date,
-                bar_size=5,
+                bar_size=1,
                 bar_type='minute'
             )
 
-            # convert five minute historical prices to a pandas dataframe using the stock frame
-            five_minute_stock_frame = bot.create_stock_frame(
-                data=five_minute_historical_prices['aggregated']
+            # convert one minute historical prices to a pandas dataframe using the stock frame
+            one_minute_stock_frame = bot.create_stock_frame(
+                data=one_minute_historical_prices['aggregated']
             )
 
             # create thirty minute indicator object
-            five_minute_indicator_client = Indicators(
-                price_data_frame=five_minute_stock_frame)
+            one_minute_indicator_client = Indicators(
+                price_data_frame=one_minute_stock_frame)
 
             price_dict = dict()
 
-            # add five minute key levels
-            five_minute_key_levels = five_minute_indicator_client.s_r_levels(
-                five_minute_stock_frame.frame, price_dict)
+            # add one minute key levels
+            one_minute_key_levels = one_minute_indicator_client.s_r_levels(
+                one_minute_stock_frame.frame, price_dict)
 
             # add thirty minute key levels
             thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
-                thirty_minute_stock_frame.frame, five_minute_key_levels['price_dic'])
+                thirty_minute_stock_frame.frame, one_minute_key_levels['price_dic'])
 
             # add weekly key levels
             weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
@@ -279,9 +279,9 @@ class Pre_Market:
               new_opportunity['Support Resistance'])
             print('key levels from pre_market =', new_opportunity['Key Levels'])
 
-            # get demand zones using the five minute stock frame
-            supply_demand_zones = five_minute_indicator_client.get_supply_demand_zones(
-                dataframe=five_minute_stock_frame.frame, key_levels=new_opportunity['Key Levels'], price_change_threshold_percentage=0.007, volume_range_distance=10)
+            # get demand zones using the one minute stock frame
+            supply_demand_zones = one_minute_indicator_client.get_supply_demand_zones(
+                dataframe=one_minute_stock_frame.frame, key_levels=new_opportunity['Key Levels'], price_change_threshold_percentage=0.007, volume_range_distance=10)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             # print('Demand Zones', supply_demand_zones['demand_zones'])
