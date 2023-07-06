@@ -166,7 +166,7 @@ class Indicators():
                 sequence_mean = round(mean(temp_list), 2)
                 clean_key_levels.append(sequence_mean)
 
-    return clean_key_levels
+        return clean_key_levels
 
     def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_change_threshold_percentage: float, volume_range_distance: int):
         demand_zones = [None] * len(dataframe)
