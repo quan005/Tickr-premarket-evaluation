@@ -126,11 +126,11 @@ class Indicators():
 
 
         duplicate_dic = dict(price_dic)
-        sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
+        sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:60])
         i = 1
         for key in sorted_dic:
             volume_avg = mean(sorted_dic[key]['volumes'])
-            if i < 20 or volume_avg >= complete_volume_avg:
+            if i < 30 or volume_avg >= complete_volume_avg:
                 key_levels.append(round(mean(sorted_dic[key]['prices']), 2))
                 i += 1
         key_levels.append(high)
@@ -138,7 +138,7 @@ class Indicators():
         key_levels = list(set(key_levels))
         key_levels.sort(key=lambda x: (-float('inf') if x is None else x), reverse=True)
         key_levels = [zone for zone in key_levels if zone is not None]
-        # print({'price_dic': price_dic, 'key_levels': key_levels})
+        print({'price_dic': price_dic, 'key_levels': key_levels})
         return {'price_dic': price_dic, 'key_levels': key_levels}
 
     def scrub_key_levels(self, key_levels: list):
@@ -147,18 +147,26 @@ class Indicators():
             return clean_key_levels
 
         range_threshold = 0.0055
+        i = 0
 
-        for i, first_pointer in enumerate(key_levels):
+        while i < len(key_levels):
+            first_pointer = key_levels[i]
             first_pointer_above = first_pointer * (1 + range_threshold)
             first_pointer_below = first_pointer * (1 - range_threshold)
 
-            temp_list = [first_pointer] + [val for val in key_levels[i + 1:] if first_pointer_below <= val <= first_pointer_above]
+            temp_list = [key_levels.pop(i)] 
+            j = i
+            while j < len(key_levels):
+                if first_pointer_below <= key_levels[j] <= first_pointer_above:
+                    temp_list.append(key_levels.pop(j))
+                else:
+                    j += 1
 
             if temp_list:
                 sequence_mean = round(mean(temp_list), 2)
                 clean_key_levels.append(sequence_mean)
 
-        return clean_key_levels
+    return clean_key_levels
 
     def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_change_threshold_percentage: float, volume_range_distance: int):
         demand_zones = [None] * len(dataframe)
