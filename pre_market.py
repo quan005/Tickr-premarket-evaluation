@@ -274,7 +274,7 @@ class Pre_Market:
             no_duplicates = list(OrderedDict.fromkeys(scrubbed_key_levels))
 
             # add key levels and support and resisitance
-            new_opportunity['Key Levels'] = no_duplicates
+            new_opportunity['Key Levels'] = no_duplicates.sort(key=lambda x: (-float('inf') if x is None else x), reverse=True)
             new_opportunity['Support Resistance'] = one_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], one_minute_close)
 
