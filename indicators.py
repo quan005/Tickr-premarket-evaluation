@@ -167,7 +167,7 @@ class Indicators():
 
         return clean_key_levels
 
-    def get_supply_demand_zones(self, dataframe: pd.DataFrame, key_levels: list, price_change_threshold_percentage: float, volume_range_distance: int):
+    def get_supply_demand_zones(self, dataframe: pd.DataFrame, price_change_threshold_percentage: float, volume_range_distance: int):
         demand_zones = [None] * len(dataframe)
         supply_zones = [None] * len(dataframe)
 
@@ -186,35 +186,33 @@ class Indicators():
             current_low = lowPrice[i]
             current_volume = volume[i]
 
-            # Check if the current price is surrounded by any key levels
-            surround_levels = self.find_surrounding_levels(list=key_levels, value=current_close)
-            if surround_levels[0] is not None and surround_levels[1] is not None:
-                # Additional confirmation criteria: Volume Analysis
-                volume_range = volume[max(0, i - volume_range_distance):i+1]
-                average_volume = sum(volume_range) / len(volume_range)
+            # Additional confirmation criteria: Volume Analysis
+            volume_range = volume[max(0, i - volume_range_distance):i+1]
+            average_volume = sum(volume_range) / len(volume_range)
 
-                # Find the price change percentage
-                price_change_percent = ((current_close - current_open) / current_open) * 100
+            # Find the price change percentage
+            price_change_percent = ((current_close - current_open) / current_open) * 100
 
-                # Look for increased selling volume during downward price movements
-                if price_change_percent < -price_change_threshold_percentage and current_volume > average_volume:
-                    # Add supply zone
-                    supply_zones[i] = {
-                        "bottom": current_open,
-                        "top": current_high,
-                        "volume": current_volume,
-                        "datetime": str(dateAndTime[i])
-                    }
+            # Look for increased selling volume during downward price movements
+            if price_change_percent < -price_change_threshold_percentage and current_volume > average_volume:
+                # Add supply zone
+                supply_zones[i] = {
+                    "bottom": current_open,
+                    "top": current_high,
+                    "volume": current_volume,
+                    "datetime": str(dateAndTime[i])
+                }
 
-                # Look for increased buying volume during upward price movements (optional)
-                if price_change_percent > price_change_threshold_percentage and current_volume > average_volume:
-                    # Add demand zone
-                    demand_zones[i] = {
-                        "bottom": current_low,
-                        "top": current_open,
-                        "volume": current_volume,
-                        "datetime": str(dateAndTime[i])
-                    }
+            # Look for increased buying volume during upward price movements (optional)
+            if price_change_percent > price_change_threshold_percentage and current_volume > average_volume:
+                # Add demand zone
+                demand_zones[i] = {
+                    "bottom": current_low,
+                    "top": current_open,
+                    "volume": current_volume,
+                    "datetime": str(dateAndTime[i])
+                }
+                
 
         demand_zones = [zone for zone in demand_zones if zone is not None]
         supply_zones = [zone for zone in supply_zones if zone is not None]

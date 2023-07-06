@@ -250,6 +250,8 @@ class Pre_Market:
             one_minute_indicator_client = Indicators(
                 price_data_frame=one_minute_stock_frame)
 
+            one_minute_close = one_minute_stock_frame.frame['close']
+
             price_dict = dict()
 
             # add one minute key levels
@@ -268,16 +270,15 @@ class Pre_Market:
 
             scrubbed_key_levels = weekly_stock_indicator_client.scrub_key_levels(key_levels=key_levels)
 
-            print('scrubbed key levels = ', scrubbed_key_levels)
-
             # remove duplicates
             no_duplicates = list(OrderedDict.fromkeys(scrubbed_key_levels))
 
+            sorted_no_duplicates = no_duplicates.sort(key=lambda x: (-float('inf') if x is None else x), reverse=True)
+
             # add key levels and support and resisitance
-            new_opportunity['Key Levels'] = no_duplicates
-            # print('Key Levels = ', new_opportunity['Key Levels'])
-            new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
-                new_opportunity['Key Levels'], thirty_minute_close)
+            new_opportunity['Key Levels'] = sorted_no_duplicates
+            new_opportunity['Support Resistance'] = one_minute_indicator_client.get_support_resistance(
+                new_opportunity['Key Levels'], one_minute_close)
 
             # print('Symbol = ', new_opportunity['Symbol'])
             # print('Support Resistance = ',
@@ -286,7 +287,7 @@ class Pre_Market:
 
             # get demand zones using the one minute stock frame
             supply_demand_zones = one_minute_indicator_client.get_supply_demand_zones(
-                dataframe=one_minute_stock_frame.frame, key_levels=new_opportunity['Key Levels'], price_change_threshold_percentage=0.007, volume_range_distance=10)
+                dataframe=one_minute_stock_frame.frame, price_change_threshold_percentage=0.007, volume_range_distance=10)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             # print('Demand Zones', supply_demand_zones['demand_zones'])
