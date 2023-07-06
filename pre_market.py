@@ -268,14 +268,14 @@ class Pre_Market:
 
             scrubbed_key_levels = weekly_stock_indicator_client.scrub_key_levels(key_levels=key_levels)
 
-            print('scrubbed key levels = ', scrubbed_key_levels)
+            # print('scrubbed key levels = ', scrubbed_key_levels)
 
             # remove duplicates
             no_duplicates = list(OrderedDict.fromkeys(scrubbed_key_levels))
 
             # add key levels and support and resisitance
             new_opportunity['Key Levels'] = no_duplicates
-            print('Key Levels = ', new_opportunity['Key Levels'])
+            # print('Key Levels = ', new_opportunity['Key Levels'])
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
