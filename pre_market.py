@@ -268,7 +268,7 @@ class Pre_Market:
 
             scrubbed_key_levels = weekly_stock_indicator_client.scrub_key_levels(key_levels=key_levels)
 
-            # print('scrubbed key levels = ', scrubbed_key_levels)
+            print('scrubbed key levels = ', scrubbed_key_levels)
 
             # remove duplicates
             no_duplicates = list(OrderedDict.fromkeys(scrubbed_key_levels))
