@@ -217,9 +217,6 @@ class Indicators():
         demand_zones = [zone for zone in demand_zones if zone is not None]
         supply_zones = [zone for zone in supply_zones if zone is not None]
 
-        print('demand_zones', demand_zones)
-        print('supply_zones', supply_zones)
-
         final_demand_supply_zones = {
             'demand_zones': demand_zones,
             'supply_zones': supply_zones,
