@@ -256,23 +256,22 @@ class Pre_Market:
             one_minute_key_levels = one_minute_indicator_client.s_r_levels(
                 one_minute_stock_frame.frame, price_dict)
 
-            print('one minute price_dic = ', one_minute_key_levels['price_dic'])
-
             # add thirty minute key levels
             thirty_minute_key_levels = thirty_minute_indicator_client.s_r_levels(
                 thirty_minute_stock_frame.frame, one_minute_key_levels['price_dic'])
 
-            print('thirty minute price_dic = ', thirty_minute_key_levels['price_dic'])
-
             # add weekly key levels
             weekly_key_levels = weekly_stock_indicator_client.s_r_levels(
                 weekly_stock_frame.frame, thirty_minute_key_levels['price_dic'])
-            
-            print('weekly price_dic = ', weekly_key_levels['price_dic'])
+
+            key_levels = weekly_key_levels['key_levels'] + thirty_minute_close['key_levels'] + one_minute_key_levels['key_levels']
+
+            scrubbed_key_levels = weekly_stock_indicator_client.scrub_key_levels(key_levels=key_levels)
+
+            print('scrubbed key levels = ', scrubbed_key_levels)
 
             # remove duplicates
-            no_duplicates = list(OrderedDict.fromkeys(
-                weekly_key_levels['key_levels']))
+            no_duplicates = list(OrderedDict.fromkeys(scrubbed_key_levels))
 
             # add key levels and support and resisitance
             new_opportunity['Key Levels'] = no_duplicates
@@ -280,10 +279,10 @@ class Pre_Market:
             new_opportunity['Support Resistance'] = thirty_minute_indicator_client.get_support_resistance(
                 new_opportunity['Key Levels'], thirty_minute_close)
 
-            print('Symbol = ', new_opportunity['Symbol'])
-            print('Support Resistance = ',
-              new_opportunity['Support Resistance'])
-            print('key levels from pre_market =', new_opportunity['Key Levels'])
+            # print('Symbol = ', new_opportunity['Symbol'])
+            # print('Support Resistance = ',
+            #   new_opportunity['Support Resistance'])
+            # print('key levels from pre_market =', new_opportunity['Key Levels'])
 
             # get demand zones using the one minute stock frame
             supply_demand_zones = one_minute_indicator_client.get_supply_demand_zones(

@@ -138,7 +138,7 @@ class Indicators():
         key_levels = list(set(key_levels))
         key_levels.sort(key=lambda x: (-float('inf') if x is None else x), reverse=True)
         key_levels = [zone for zone in key_levels if zone is not None]
-        print('key_levels', key_levels)
+        print({'price_dic': price_dic, 'key_levels': key_levels})
         return {'price_dic': price_dic, 'key_levels': key_levels}
 
     def scrub_key_levels(self, key_levels: list):
