@@ -128,7 +128,6 @@ class Indicators():
         duplicate_dic = dict(price_dic)
         sorted_dic = dict(sorted(duplicate_dic.items(), key=lambda item: item[1]['total_count'], reverse=True)[:40])
         i = 1
-        print('sorted_dic', sorted_dic)
         for key in sorted_dic:
             volume_avg = mean(sorted_dic[key]['volumes'])
             if i < 20 or volume_avg >= complete_volume_avg:
