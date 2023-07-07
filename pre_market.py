@@ -215,19 +215,26 @@ class Pre_Market:
                 }
             )
 
+            # check the ADX (Average Directional Index)
+            thirty_minute_adx_analysis = thirty_minute_indicator_client.adx(dataframe=thirty_minute_stock_frame.frame, period=14)
+
             # check the pattern analysis
             thirty_minute_pattern_analysis = thirty_minute_indicator_client.candle_pattern_check(
                 thirty_minute_stock_frame.frame)
-
-            # if ema 200 check returns 'ABOVE' and self.limit is > 0 then append opportunity object to the opportunities array
-            if thirty_minute_ema200_analysis == 'ABOVE':
-                new_opportunity['Score'] = new_opportunity['Score'] + 3
 
             # check if new analyzer catalyst is >= 6, if so append opportunity object to the opportunities array
             if thirty_minute_pattern_analysis == 'BULLISH' or thirty_minute_pattern_analysis == 'BEARISH':
                 new_opportunity['Score'] = new_opportunity['Score'] + 2
 
-            if new_opportunity['Score'] <= 3:
+            # check the adx value to determine the strenght of the trend
+            if thirty_minute_adx_analysis >= 25 and thirty_minute_adx_analysis < 50:
+                new_opportunity['Score'] = new_opportunity['Score'] + 5
+            elif thirty_minute_adx_analysis >= 50:
+                new_opportunity['Score'] = new_opportunity['Score'] + 10
+            else:
+                new_opportunity['Score'] = new_opportunity['Score'] - 3
+
+            if new_opportunity['Score'] <= 5:
                 continue
 
             # one minute end date
@@ -289,14 +296,12 @@ class Pre_Market:
                 dataframe=weekly_stock_frame.frame, price_change_threshold_percentage=0.007, volume_range_distance=10)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
-            # print('Demand Zones', supply_demand_zones['demand_zones'])
             new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']
-            # print('Supply Zones', supply_demand_zones['supply_zones'])
+
+            print('New Opportunity', new_opportunity)
 
             # append new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
-
-            print('Opps', temp_opportunity_list)
 
             # remove the current ticker from the position
             bot_portfolio.remove_position(

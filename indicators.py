@@ -568,6 +568,17 @@ class Indicators():
         )
 
         return self._frame
+    
+    def adx(self, dataframe: pd.DataFrame, period: int):
+        highPrice = dataframe['high']
+        lowPrice = dataframe['low']
+        closePrice = dataframe['close']
+
+        adx = talib.ADX(highPrice, lowPrice, closePrice, timeperiod=period)
+
+        last_adx = adx.iloc[-1]
+
+        return last_adx
 
     def chaikin_oscillator(self, period: int) -> pd.DataFrame:
         """Calculates the Chaikin Oscillator.
