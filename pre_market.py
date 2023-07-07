@@ -284,16 +284,16 @@ class Pre_Market:
             #   new_opportunity['Support Resistance'])
             # print('key levels from pre_market =', new_opportunity['Key Levels'])
 
-            # get demand zones using the one minute stock frame
-            supply_demand_zones = one_minute_indicator_client.get_supply_demand_zones(
-                dataframe=one_minute_stock_frame.frame, price_change_threshold_percentage=0.007, volume_range_distance=10)
+            # get demand zones using the weekly stock frame
+            supply_demand_zones = weekly_stock_indicator_client.get_supply_demand_zones(
+                dataframe=weekly_stock_frame.frame, price_change_threshold_percentage=0.007, volume_range_distance=10)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             # print('Demand Zones', supply_demand_zones['demand_zones'])
             new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']
             # print('Supply Zones', supply_demand_zones['supply_zones'])
 
-            # appen new opportunity to the temp opportunity list
+            # append new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
 
             print('Opps', temp_opportunity_list)
