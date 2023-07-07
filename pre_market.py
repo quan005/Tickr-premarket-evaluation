@@ -298,8 +298,6 @@ class Pre_Market:
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']
 
-            print('New Opportunity', new_opportunity)
-
             # append new opportunity to the temp opportunity list
             temp_opportunity_list.append(new_opportunity)
 
