@@ -43,8 +43,10 @@ jobs:
             echo "SCHEMA_REGISTRY_URL = $SCHEMA_REGISTRY_URL" >> configs.ini
             pip3 install --upgrade --force-reinstall TA-Lib 
             pip3 install --upgrade --force-reinstall confluent-kafka[avro]
+            pip3 install --upgrade --force-reinstall transformers
+            pip3 install --upgrade --force-reinstall torch
+            pip3 install --upgrade --force-reinstall xformers
             pip3 install -r requirements.txt
-            python3 -m nltk.downloader -d /usr/share/nltk_data all
             sudo pip3 install --upgrade numpy TA-Lib
             echo 'Deployment Successful'
             
