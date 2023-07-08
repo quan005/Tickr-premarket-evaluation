@@ -178,7 +178,7 @@ class Pre_Market:
                 price_data_frame=weekly_stock_frame)
 
             # thirty minute end date
-            thirty_minute_end_date = start_date - timedelta(weeks=56)
+            thirty_minute_end_date = start_date - timedelta(weeks=30)
 
             # grab thirty minute historical prices using the 30 min interval
             thirty_minute_historical_prices = bot.grab_single_historical_prices(
@@ -292,8 +292,8 @@ class Pre_Market:
             # print('key levels from pre_market =', new_opportunity['Key Levels'])
 
             # get demand zones using the weekly stock frame
-            supply_demand_zones = weekly_stock_indicator_client.get_supply_demand_zones(
-                dataframe=weekly_stock_frame.frame, price_change_threshold_percentage=0.007, volume_range_distance=10)
+            supply_demand_zones = thirty_minute_indicator_client.get_supply_demand_zones(
+                dataframe=thirty_minute_stock_frame.frame, price_change_threshold_percentage=0.007, volume_range_distance=10)
 
             new_opportunity['Demand Zones'] = supply_demand_zones['demand_zones']
             new_opportunity['Supply Zones'] = supply_demand_zones['supply_zones']

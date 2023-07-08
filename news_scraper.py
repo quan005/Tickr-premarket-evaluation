@@ -4,7 +4,8 @@ import re
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, timezone
 import urllib.request
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from transformers import pipeline
+# from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
 class NewsScraper:
@@ -16,6 +17,11 @@ class NewsScraper:
         self.barron_news = []
         self.seekingalpha_news = []
         self.benzinga_news = []
+        self.ft_news = []
+        self.bloomberg_news = []
+        self.reuters_news = []
+        self.wsj_news = []
+        self.cnbc_news = []
         self.all_news = []
         self.score = ''
         self.catalyst_weight = 0
@@ -212,7 +218,6 @@ class NewsScraper:
         self.company_name = split_name[0]
 
     def getFinwizNews(self):
-
         finwiz_url = 'https://finviz.com/quote.ashx?t='
         url = finwiz_url + self.ticker
         if len(self.company_name) == 0:
@@ -258,50 +263,47 @@ class NewsScraper:
             else:
                 count += 1
 
-        # print(self.finwiz_news)
-        # print(self.catalyst_weight)
         return self.finwiz_news
 
     def getMarketwatchNews(self):
+        marketwatch_urls = ['https://www.marketwatch.com/mw_news_sitemap_1.xml', 'https://www.marketwatch.com/mw_news_sitemap_2.xml']
 
-        marketwatch_url = 'https://www.marketwatch.com/mw_news_sitemap.xml'
         if len(self.company_name) == 0:
             self.getCompanyName()
         news_tables = {}
 
-        req = urllib.request.Request(url=marketwatch_url, headers={
+        for url in marketwatch_urls:
+            req = urllib.request.Request(url=url, headers={
                                      'user-agent': 'Googlebot-News'})
-        resp = urllib.request.urlopen(req)
-        lxml = BeautifulSoup(resp, features="lxml")
-        news_tables = lxml.find_all('n:news')
-        company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
-        company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
+            resp = urllib.request.urlopen(req)
+            lxml = BeautifulSoup(resp, features="lxml")
+            news_tables = lxml.find_all('n:news')
+            company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
+            company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
 
-        for news in news_tables:
-            title = news.find('n:title').get_text()
-            date_scrape = news.find('n:publication_date').get_text()
-            datetime_parse = datetime.fromisoformat(date_scrape)
-            date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
-            time = f'{datetime_parse.hour}:{datetime_parse.minute}'
-            stock_tickers = ''
+            for news in news_tables:
+                title = news.find('n:title').get_text()
+                date_scrape = news.find('n:publication_date').get_text()
+                datetime_parse = datetime.fromisoformat(date_scrape)
+                date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+                time = f'{datetime_parse.hour}:{datetime_parse.minute}'
+                stock_tickers = ''
 
-            if news.find('n:stock_tickers'):
-                stock_tickers = news.find('n:stock_tickers').get_text()
+                if news.find('n:stock_tickers'):
+                    stock_tickers = news.find('n:stock_tickers').get_text()
 
-            if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
-                if datetime_parse >= self.get_date:
-                    self.catalyst_weight += 0.5
-                    self.marketwatch_news.append(
-                        [self.ticker, date, time, title])
-                    self.all_news.append([self.ticker, date, time, title])
-            else:
-                pass
+                if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
+                    if datetime_parse >= self.get_date:
+                        self.catalyst_weight += 0.5
+                        self.marketwatch_news.append(
+                            [self.ticker, date, time, title])
+                        self.all_news.append([self.ticker, date, time, title])
+                else:
+                    pass
 
-        # print(self.marketwatch_news)
         return self.marketwatch_news
 
     def getBarronNews(self):
-
         barron_url = 'https://www.barrons.com/bol_news_sitemap.xml'
         if len(self.company_name) == 0:
             self.getCompanyName()
@@ -335,11 +337,9 @@ class NewsScraper:
             else:
                 pass
 
-        # print(self.barron_news)
         return self.barron_news
 
     def getSeekingalphaNews(self):
-
         seekingalpha_url = 'https://seekingalpha.com/sitemap_news.xml'
         if len(self.company_name) == 0:
             self.getCompanyName()
@@ -374,11 +374,9 @@ class NewsScraper:
             else:
                 pass
 
-        # print(self.seekingalpha_news)
         return self.seekingalpha_news
 
     def getBenzingaNews(self):
-
         benzinga_url = 'https://www.benzinga.com/googlenews.xml'
         if len(self.company_name) == 0:
             self.getCompanyName()
@@ -412,57 +410,216 @@ class NewsScraper:
             else:
                 pass
 
-        # print(self.benzinga_news)
-        # print(self.catalyst_weight)
         return self.benzinga_news
+    
+    def getFinancialTimesNews(self):
+        ft_url = 'https://www.ft.com/sitemaps/news.xml'
+        if len(self.company_name) == 0:
+            self.getCompanyName()
+        news_tables = {}
+
+        req = urllib.request.Request(url=ft_url, headers={
+                                     'user-agent': 'bingbot'})
+        resp = urllib.request.urlopen(req)
+        lxml = BeautifulSoup(resp, features="lxml")
+        news_tables = lxml.find_all('news:news')
+        company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
+        company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
+
+        for news in news_tables:
+            title = news.find('news:title').get_text()
+            date_scrape = news.find('news:publication_date').get_text()
+            date_update = date_scrape[:-1]
+            datetime_parse = datetime.strptime(
+                date_update, '%Y-%m-%dT%H:%M:%S.%f').replace(tzinfo=timezone.utc)
+            date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+            time = f'{datetime_parse.hour}:{datetime_parse.minute}'
+            stock_tickers = ''
+
+            if news.find('news:stock_tickers'):
+                stock_tickers = news.find('news:stock_tickers').get_text()
+
+            if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
+                if datetime_parse >= self.get_date:
+                    self.catalyst_weight += 0.5
+                    self.ft_news.append([self.ticker, date, time, title])
+                    self.all_news.append([self.ticker, date, time, title])
+            else:
+                pass
+
+        return self.ft_news
+
+    def getBloomBergNews(self):
+        bloomberg_url = 'https://www.bloomberg.com/feeds/sitemap_news.xml'
+        if len(self.company_name) == 0:
+            self.getCompanyName()
+        news_tables = {}
+
+        req = urllib.request.Request(url=bloomberg_url, headers={
+                                     'user-agent': 'bingbot'})
+        resp = urllib.request.urlopen(req)
+        lxml = BeautifulSoup(resp, features="lxml")
+        news_tables = lxml.find_all('news:news')
+        company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
+        company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
+
+        for news in news_tables:
+            title = news.find('news:title').get_text()
+            date_scrape = news.find('news:publication_date').get_text()
+            date_update = date_scrape[:-1]
+            datetime_parse = datetime.strptime(
+                date_update, '%Y-%m-%dT%H:%M:%S.%f').replace(tzinfo=timezone.utc)
+            date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+            time = f'{datetime_parse.hour}:{datetime_parse.minute}'
+            stock_tickers = ''
+
+            if news.find('news:stock_tickers'):
+                stock_tickers = news.find('news:stock_tickers').get_text()
+
+            if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
+                if datetime_parse >= self.get_date:
+                    self.catalyst_weight += 0.5
+                    self.bloomberg_news.append([self.ticker, date, time, title])
+                    self.all_news.append([self.ticker, date, time, title])
+            else:
+                pass
+
+        return self.bloomberg_news
+
+    def getReutersNews(self):
+        reuters_url = 'https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml'
+        if len(self.company_name) == 0:
+            self.getCompanyName()
+        news_tables = {}
+
+        req = urllib.request.Request(url=reuters_url, headers={
+                                     'user-agent': 'bingbot'})
+        resp = urllib.request.urlopen(req)
+        lxml = BeautifulSoup(resp, features="xml")
+        news_tables = lxml.find_all('news:news')
+        company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
+        company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
+
+        for news in news_tables:
+            title = news.find('news:title').string
+            date_scrape = news.find('news:publication_date').get_text()
+            date_update = date_scrape[:-1]
+            datetime_parse = datetime.strptime(
+                date_update, '%Y-%m-%dT%H:%M:%S.%f').replace(tzinfo=timezone.utc)
+            date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+            time = f'{datetime_parse.hour}:{datetime_parse.minute}'
+            stock_tickers = ''
+
+            if news.find('news:stock_tickers'):
+                stock_tickers = news.find('news:stock_tickers').get_text()
+
+            if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
+                if datetime_parse >= self.get_date:
+                    self.catalyst_weight += 0.5
+                    self.reuters_news.append([self.ticker, date, time, title])
+                    self.all_news.append([self.ticker, date, time, title])
+            else:
+                pass
+
+        return self.reuters_news
+
+    def getWallStreetJournalNews(self):
+        wsj_url = 'https://www.wsj.com/wsjsitemaps/wsj_google_news.xml'
+        if len(self.company_name) == 0:
+            self.getCompanyName()
+        news_tables = {}
+
+        req = urllib.request.Request(url=wsj_url, headers={
+                                     'user-agent': 'bingbot'})
+        resp = urllib.request.urlopen(req)
+        lxml = BeautifulSoup(resp, features="lxml")
+        news_tables = lxml.find_all('news:news')
+        company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
+        company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
+
+        for news in news_tables:
+            title = news.find('news:title').get_text()
+            date_scrape = news.find('news:publication_date').get_text()
+            try:
+                datetime_parse = datetime.strptime(
+                    date_scrape, '%Y-%m-%dT%H:%M:%S.%f%z')
+            except ValueError:
+                datetime_parse = datetime.strptime(
+                    date_scrape, '%Y-%m-%dT%H:%M:%S%z')
+            date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+            time = f'{datetime_parse.hour}:{datetime_parse.minute}'
+            stock_tickers = ''
+
+            if news.find('news:stock_tickers'):
+                stock_tickers = news.find('news:stock_tickers').get_text()
+
+            if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
+                if datetime_parse >= self.get_date:
+                    self.catalyst_weight += 0.5
+                    self.wsj_news.append([self.ticker, date, time, title])
+                    self.all_news.append([self.ticker, date, time, title])
+            else:
+                pass
+
+        return self.wsj_news
+
+    def getCnbcNews(self):
+        cnbc_url = 'https://www.cnbc.com/sitemap_news.xml'
+        if len(self.company_name) == 0:
+            self.getCompanyName()
+        news_tables = {}
+
+        req = urllib.request.Request(url=cnbc_url, headers={
+                                     'user-agent': 'bingbot'})
+        resp = urllib.request.urlopen(req)
+        lxml = BeautifulSoup(resp, features="lxml")
+        news_tables = lxml.find_all('n:news')
+        company_name_search = re.compile(r'\b%s\b' % self.company_name, re.I)
+        company_ticker_search = re.compile(r'\b%s\b' % self.ticker, re.I)
+
+        for news in news_tables:
+            title = news.find('n:title').get_text()
+            date_scrape = news.find('n:publication_date').get_text()
+            try:
+                datetime_parse = datetime.strptime(
+                    date_scrape, '%Y-%m-%dT%H:%M:%S.%f%z')
+            except ValueError:
+                datetime_parse = datetime.strptime(
+                    date_scrape, '%Y-%m-%dT%H:%M:%S%z')
+            date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
+            time = f'{datetime_parse.hour}:{datetime_parse.minute}'
+            stock_tickers = ''
+
+            if news.find('n:stock_tickers'):
+                stock_tickers = news.find('n:stock_tickers').get_text()
+
+            if company_name_search.search(title) != None or company_ticker_search.search(title) != None:
+                if datetime_parse >= self.get_date:
+                    self.catalyst_weight += 0.5
+                    self.cnbc_news.append([self.ticker, date, time, title])
+                    self.all_news.append([self.ticker, date, time, title])
+            else:
+                pass
+
+        return self.cnbc_news
 
     def getCompanyAnalysis(self):
         pass
 
     def getSentimentAnalysis(self, list):
+        nlp = pipeline("text-classification", model="cardiffnlp/twitter-roberta-base-sentiment")
+        news_data = pd.DataFrame.from_records(list, columns=['Ticker', 'Date', 'Time', 'Headline'])
+        news_data['score'] = news_data['Headline'].apply(lambda headline: nlp(headline, max_length=10)[0]['score'])
+        news_data['sentiment'] = news_data['score'].apply(lambda score: 'Positive' if score >= 0.7 else 'Neutral' if 0.64 < score < 0.7 else 'Negative')
 
-        headline_posiive_words = {
-            'event': 20,
-            'host': 20,
-            'crushes': 10,
-            'cruises': 10,
-            'leads': 10,
-            'outperforms': 10,
-            'outperformed': 10,
-            'beat': 5,
-            'beats': 5,
-            'misses': -5,
-            'missed': -5,
-            'slipping': -5,
-            'slipped': -5,
-            'trouble': -10,
-            'erases': -5,
-            'falls': -100,
-            'Undervalued': 50,
-            'split': 10,
-            'splits': 10,
-            'launches': 10,
-            'launched': 10,
-            'rolls': 10,
-            'rolled': 10,
-            'cheaper': 10,
-            'gains': 10,
-            'gained': 10,
-        }
-        analyzer = SentimentIntensityAnalyzer()
-        analyzer.lexicon.update(headline_posiive_words)
-
-        columns = ['Ticker', 'Date', 'Time', 'Headline']
-        news = pd.DataFrame.from_records(list, columns=columns)
-        scores = news['Headline'].apply(analyzer.polarity_scores).tolist()
-        df_scores = pd.DataFrame(scores)
-        news = news.join(df_scores, rsuffix='_right')
-
-        if len(news) == 0:
+        if len(news_data) == 0:
             return
 
-        negative_score = sum(news['neg'])
-        positve_score = sum(news['pos'])
+        negative_score = (news_data['sentiment'] == 'Negative').sum()
+        positve_score = (news_data['sentiment'] == 'Positive').sum()
+
+        print('negative_score', negative_score)
+        print('positve_score', positve_score)
 
         if negative_score > positve_score:
             self.score = 'Negative'
@@ -481,6 +638,11 @@ class NewsScraper:
         self.getSeekingalphaNews()
         self.getBarronNews()
         self.getBenzingaNews()
+        self.getFinancialTimesNews()
+        self.getBloomBergNews()
+        self.getReutersNews()
+        self.getWallStreetJournalNews()
+        self.getCnbcNews()
 
         sentiment = self.getSentimentAnalysis(self.all_news)
 
@@ -507,3 +669,8 @@ class NewsScraper:
                 'sentiment_analysis': sentiment,
                 'score': 0
             }
+
+
+if __name__ == '__main__':
+    news = NewsScraper(ticker='META')
+    news.startNewsAnalyzer()

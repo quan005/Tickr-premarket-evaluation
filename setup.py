@@ -42,6 +42,9 @@ setup(
         'selenium==4.1.0'
         'urllib3==1.26.7'
         'chromedriver-py==97.0.4692.37'
+        'transformers==4.12.5'
+        'torch==1.10.2'
+        'xformers==0.1.0'
     ],
 
     keywords='finance, td ameritrade, api, trading robot',
