@@ -47,7 +47,8 @@ jobs:
             pip3 install --upgrade --force-reinstall torch
             pip3 install --upgrade --force-reinstall xformers
             pip3 install -r requirements.txt
-            pip3 install --upgrade --force-reinstall urllib3==1.26.7
+            pip3 uninstall urllib3 -y
+            pip3 install urllib3==1.26.7
             sudo pip3 install --upgrade numpy TA-Lib
             echo 'Deployment Successful'
             
