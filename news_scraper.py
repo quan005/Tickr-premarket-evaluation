@@ -618,9 +618,6 @@ class NewsScraper:
         negative_score = (news_data['sentiment'] == 'Negative').sum()
         positve_score = (news_data['sentiment'] == 'Positive').sum()
 
-        print('negative_score', negative_score)
-        print('positve_score', positve_score)
-
         if negative_score > positve_score:
             self.score = 'Negative'
         elif positve_score > negative_score:
@@ -669,8 +666,3 @@ class NewsScraper:
                 'sentiment_analysis': sentiment,
                 'score': 0
             }
-
-
-if __name__ == '__main__':
-    news = NewsScraper(ticker='META')
-    news.startNewsAnalyzer()
