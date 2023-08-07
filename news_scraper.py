@@ -10,7 +10,6 @@ from transformers import pipeline
 
 class NewsScraper:
     def __init__(self, ticker=None):
-
         self.ticker = ticker.upper()
         self.finwiz_news = []
         self.marketwatch_news = []
@@ -504,8 +503,12 @@ class NewsScraper:
             title = news.find('news:title').string
             date_scrape = news.find('news:publication_date').get_text()
             date_update = date_scrape[:-1]
-            datetime_parse = datetime.strptime(
+            try:
+                datetime_parse = datetime.strptime(
                 date_update, '%Y-%m-%dT%H:%M:%S.%f').replace(tzinfo=timezone.utc)
+            except ValueError:
+                datetime_parse = datetime.strptime(
+                    date_scrape, '%Y-%m-%dT%H:%M:%S%z')
             date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
             time = f'{datetime_parse.hour}:{datetime_parse.minute}'
             stock_tickers = ''
@@ -641,6 +644,8 @@ class NewsScraper:
         self.getWallStreetJournalNews()
         self.getCnbcNews()
 
+        print(self.all_news)
+
         sentiment = self.getSentimentAnalysis(self.all_news)
 
         if sentiment == None:
@@ -666,3 +671,7 @@ class NewsScraper:
                 'sentiment_analysis': sentiment,
                 'score': 0
             }
+
+if __name__ == '__main__':
+    news = NewsScraper(ticker='META')
+    news.startNewsAnalyzer()

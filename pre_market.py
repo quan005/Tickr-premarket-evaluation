@@ -124,7 +124,7 @@ class Pre_Market:
             new_opportunity['Symbol'] = i
             new_opportunity['Score'] = 0
             new_opportunity['Limit'] = self.limit
-            new_opportunity['Budget'] = budget // self.limit
+            new_opportunity['Budget'] = budget
             new_opportunity['Client Id'] = self.CLIENT_ID
             new_opportunity['Account Id'] = self.ACCOUNT_ID
 
