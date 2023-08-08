@@ -41,6 +41,130 @@ class NewsScraper:
         elif self.ticker == 'UAA':
             self.company_name = 'Under Armour Inc'
             return self.company_name
+        
+        elif self.ticker == 'CSCO':
+            self.company_name = 'Cisco Systems Inc'
+            return self.company_name
+        
+        elif self.ticker == 'BMY':
+            self.company_name = 'Bristol-Myers Squibb Company'
+            return self.company_name
+        
+        elif self.ticker == 'KO':
+            self.company_name = 'Coca Cola Company'
+            return self.company_name
+        
+        elif self.ticker == 'SCHW':
+            self.company_name = 'Charles Schwab Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'NEE':
+            self.company_name = 'Nextera Energy Inc'
+            return self.company_name
+        
+        elif self.ticker == 'JNJ':
+            self.company_name = 'Johnson & Johnson'
+            return self.company_name
+        
+        elif self.ticker == 'MDLZ':
+            self.company_name = 'Mondelez International Inc'
+            return self.company_name
+        
+        elif self.ticker == 'MDT':
+            self.company_name = 'Medtronic Plc'
+            return self.company_name
+        
+        elif self.ticker == 'PDD':
+            self.company_name = 'Pdd Holdings Inc'
+            return self.company_name
+        
+        elif self.ticker == 'RTX':
+            self.company_name = 'Rtx Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'MS':
+            self.company_name = 'Morgan Stanley'
+            return self.company_name
+        
+        elif self.ticker == 'PM':
+            self.company_name = 'Philip Morris International Inc'
+            return self.company_name
+        
+        elif self.ticker == 'SBUX':
+            self.company_name = 'Starbucks Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'BX':
+            self.company_name = 'Blackstone Inc'
+            return self.company_name
+        
+        elif self.ticker == 'MRK':
+            self.company_name = 'Merck & Company Inc'
+            return self.company_name
+        
+        elif self.ticker == 'ABT':
+            self.company_name = 'Abbott Laboratories'
+            return self.company_name
+        
+        elif self.ticker == 'XOM':
+            self.company_name = 'Exxon Mobil Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'COP':
+            self.company_name = 'Conocophillips'
+            return self.company_name
+        
+        elif self.ticker == 'GE':
+            self.company_name = 'General Electric Company'
+            return self.company_name
+        
+        elif self.ticker == 'ORCL':
+            self.company_name = 'Oracle Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'QCOM':
+            self.company_name = 'Qualcomm Incoporated'
+            return self.company_name
+        
+        elif self.ticker == 'TMUS':
+            self.company_name = 'T-mobile Us Inc'
+            return self.company_name
+        
+        elif self.ticker == 'IBM':
+            self.company_name = 'International Business Machines Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'AMAT':
+            self.company_name = 'Applied Materials Inc'
+            return self.company_name
+        
+        elif self.ticker == 'ABBV':
+            self.company_name = 'Abbvie Inc'
+            return self.company_name
+        
+        elif self.ticker == 'PG':
+            self.company_name = 'Proctor & Gamble Company'
+            return self.company_name
+        
+        elif self.ticker == 'V':
+            self.company_name = 'Visa Inc'
+            return self.company_name
+        
+        elif self.ticker == 'CVX':
+            self.company_name = 'Chevron Corporation'
+            return self.company_name
+        
+        elif self.ticker == 'AXP':
+            self.company_name = 'American Express Company'
+            return self.company_name
+        
+        elif self.ticker == 'TXN':
+            self.company_name = 'Texas Instruments Incorporated'
+            return self.company_name
+        
+        elif self.ticker == 'PEP':
+            self.company_name = 'Pepsico Inc'
+            return self.company_name
 
         elif self.ticker == 'UAL':
             self.company_name = 'United Airlines Holdings Inc'

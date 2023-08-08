@@ -25,14 +25,10 @@ class Pre_Market:
         self.BOOTSTRAP_SERVER = config.get('main', 'BOOTSTRAP_SERVER')
         self.SCHEMA_REGISTRY_URL = config.get('main', 'SCHEMA_REGISTRY_URL')
         self.TOKEN = None
-        self.small_watchlist = ['AMD', 'NKE', 'AAL',
-                                'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL']
-        self.medium_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL',
-                                 'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU']
-        self.large_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA',
-                                'PYPL', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
-        self.xtra_large_watchlist = ['AMD', 'NKE', 'AAL', 'UAA', 'SPY', 'PFE', 'BAC', 'CCL', 'AAPL', 'MSFT', 'CRM', 'BABA', 'PYPL', 'DKNG',
-                                     'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU', 'ROKU', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID', 'GOOG', 'FL', 'EBAY', 'CMG', 'BA', 'BYND', 'DOCU']
+        self.small_watchlist = ['NKE', 'CSCO', 'BMY', 'KO', 'SCHW', 'SPY', 'NEE', 'JNJ', 'MDLZ', 'MDT', 'RTX', 'MS', 'PM', 'SBUX', 'BX', 'MRK', 'ABT', 'GE', 'TMUS', 'ORCL', 'IBM']
+        self.medium_watchlist = self.small_watchlist + ['AMD', 'ABBV', 'AXP', 'AMAT', 'XOM', 'COP', 'QCOM', 'AAPL', 'PDD', 'PEP', 'MSFT', 'CRM', 'BABA', 'PYPL', 'PG', 'DKNG', 'WMT', 'JPM', 'DIS', 'PBR', 'UAL', 'RIVN', 'FCX', 'MRO', 'MU']
+        self.large_watchlist = self.medium_watchlist + ['ROKU', 'CVX', 'SQ', 'NFLX', 'TSLA', 'AMZN', 'SHOP', 'ZM', 'NVDA', 'LCID']
+        self.xtra_large_watchlist = self.large_watchlist + ['GOOG', 'FL', 'TXN', 'V', 'EBAY', 'CMG', 'BA', 'BYND', 'DOCU']
         self.limit = 0
         self.opportunities = []
 
