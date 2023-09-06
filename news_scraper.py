@@ -364,9 +364,13 @@ class NewsScraper:
 
                 if len(date_scrape) == 1:
                     time = date_scrape[0]
+                    date = datetime.now().strftime('%m-%d-%Y')
                 else:
                     date_string = date_scrape[0]
-                    datetime_parse = datetime.strptime(date_string, '%b-%d-%y')
+                    if date_string == 'Today':
+                        datetime_parse = datetime.now()
+                    else:
+                        datetime_parse = datetime.strptime(date_string, '%b-%d-%y')
                     new_tz = datetime_parse.astimezone(timezone.utc)
                     date = f'{datetime_parse.month}-{datetime_parse.day}-{datetime_parse.year}'
                     time = date_scrape[1]
