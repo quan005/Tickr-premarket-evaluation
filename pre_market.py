@@ -90,7 +90,7 @@ class Pre_Market:
 
         # based on budget determine which watchlist to use and total opportunity's limit aka self.limit
         if budget >= 0 and budget < 1000:
-            self.limit = 3
+            self.limit = 1
             watchlist = self.small_watchlist
         elif budget >= 1000 and budget < 5000:
             self.limit = 4
